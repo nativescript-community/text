@@ -13,7 +13,8 @@
         "plugin.watch.tsc": "npm run tsc -- -w",
         "plugin.watch.android": "npm i && npm-watch build.android",
         "plugin.watch.ios": "npm i && npm-watch build.ios",
-        "plugin.watch": "npm run plugin.watch.tsc & npm run plugin.watch.android & npm run plugin.watch.ios"
+        "plugin.watch": "npm run plugin.watch.tsc & npm run plugin.watch.android & npm run plugin.watch.ios",
+        "commitmsg": "commitlint -e $GIT_PARAMS"
     },
     "devDependencies": {
         "@commitlint/cli": "^11.0.0",
