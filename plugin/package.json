@@ -1,0 +1,30 @@
+{
+    "name": "@nativescript-community/text",
+    "version": "1.2.4",
+    "description": "Nativescript ExtendedInfo plugin.",
+    "main": "./extendedinfo",
+    "sideEffects": false,
+    "typings": "./extendedinfo.d.ts",
+    "nativescript": {
+        "platforms": {
+            "android": "3.0.0",
+            "ios": "3.0.0"
+        }
+    },
+    "keywords": [
+        "NativeScript",
+        "JavaScript",
+        "Android",
+        "iOS"
+    ],
+    "author": {
+        "name": "Martin Guillon",
+        "email": "martin@akylas.fr"
+    },
+    "bugs": {
+        "url": "https://github.com/nativescript-community/text/issues"
+    },
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/nativescript-community/text",
+    "readmeFilename": "README.md"
+}
