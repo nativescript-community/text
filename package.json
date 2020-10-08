@@ -46,5 +46,10 @@
     "homepage": "https://github.com/nativescript-community/text#readme",
     "dependencies": {
         "ts-node": "^9.0.0"
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
     }
 }
