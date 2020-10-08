@@ -1,6 +1,6 @@
 {
     "name": "@nativescript-community/text",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "description": "Nativescript ExtendedInfo plugin.",
     "main": "./extendedinfo",
     "sideEffects": false,
