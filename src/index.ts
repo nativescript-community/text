@@ -1,4 +1,4 @@
-import { InheritedCssProperty, makeParser, makeValidator, Style } from '@nativescript/core';
+import { InheritedCssProperty, Style, makeParser, makeValidator } from '@nativescript/core';
 import { TextAlignment } from '@nativescript/core/ui/text-base';
 
 export const cssProperty = (target: Object, key: string | symbol) => {
