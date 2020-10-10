@@ -1,6 +1,7 @@
 import { Color, FormattedString } from '@nativescript/core';
 import { TextAlignment } from '@nativescript/core/ui/text-base';
 import { textAlignmentConverter } from './index-common';
+export * from './index-common';
 
 let iOSUseDTCoreText = false;
 export function enableIOSDTCoreText() {
