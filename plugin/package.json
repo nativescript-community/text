@@ -1,10 +1,10 @@
 {
     "name": "@nativescript-community/text",
     "version": "1.3.1",
-    "description": "Nativescript ExtendedInfo plugin.",
-    "main": "./extendedinfo",
+    "description": "Nativescript Text plugin to be used by other plugins.",
+    "main": "./index",
     "sideEffects": false,
-    "typings": "./extendedinfo.d.ts",
+    "typings": "./index.d.ts",
     "nativescript": {
         "platforms": {
             "android": "3.0.0",
