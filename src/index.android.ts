@@ -11,7 +11,7 @@ Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!context) {
             context = Application.android.context;
         }
-        this._typeface = (com as any).nativescript.label.Font.createTypeface(context, fontPath, this.fontFamily, this.fontWeight, this.isBold, this.isItalic);
+        this._typeface = (com as any).nativescript.text.Font.createTypeface(context, fontPath, this.fontFamily, this.fontWeight, this.isBold, this.isItalic);
     }
     return this._typeface;
 });
@@ -123,7 +123,7 @@ export function createNativeAttributedString(
 ) {
     if (data instanceof FormattedString) {
         const nativeString = data.toNativeString();
-        return (com as any).nativescript.label.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
+        return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
     }
     // if (data.textAlignment && typeof data.textAlignment === 'string') {
     //     data.textAlignment = textAlignmentConverter(data.textAlignment);
