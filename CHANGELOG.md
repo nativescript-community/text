@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/nativescript-community/text/compare/v1.3.3...v1.3.4) (2020-10-23)
+
+
+### Features
+
+* allow to override N FormattedString and Span to be faster! (losing class support though) ([fe8a66b](https://github.com/nativescript-community/text/commit/fe8a66b85c444ada56bcbeb9f8cf89a39d268849))
+
+
+
+
+
 ## [1.3.3](https://github.com/nativescript-community/text/compare/v1.3.2...v1.3.3) (2020-10-11)
 
 
