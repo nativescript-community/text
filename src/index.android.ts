@@ -1,7 +1,7 @@
 import { Application, Color, FormattedString, Span, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
-import { computeBaseLineOffset, textAlignmentConverter } from './index-common';
+import { LightFormattedString, computeBaseLineOffset } from './index-common';
 export * from './index-common';
 let context;
 const fontPath = path.join(knownFolders.currentApp().path, 'fonts');
@@ -27,11 +27,14 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
-FormattedString.prototype.toNativeString = function () {
+
+FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
     let result = '';
-    const length = this._spans.length;
+    const length = this.spans.length;
+    let span: Span;
     for (let i = 0; i < length; i++) {
-        result += this._spans.getItem(i).toNativeString() + (i < length - 1 ? String.fromCharCode(0x1f) : '');
+        span = this.spans.getItem(i);
+        result += span.toNativeString() + (i < length - 1 ? String.fromCharCode(0x1f) : '');
     }
 
     return result;
@@ -47,10 +50,10 @@ Span.prototype.toNativeString = function () {
 
     let textDecoration;
     if (textDecorationProperty.isSet(spanStyle)) {
-        textDecoration = spanStyle.textDecorations;
-    } else if (textDecorationProperty.isSet(this.parent.style)) {
+        textDecoration = spanStyle.textDecoration;
+    } else if (this.parent.textDecoration) {
         // span.parent is FormattedString
-        textDecoration = this.parent.style.textDecorations;
+        textDecoration = this.parent.style.textDecoration;
     } else if (textDecorationProperty.isSet(this.parent.parent.style)) {
         // span.parent.parent is TextBase
         textDecoration = this.parent.parent.style.textDecorations;
@@ -66,6 +69,7 @@ Span.prototype.toNativeString = function () {
     }${delimiter}${textDecoration || 0}${delimiter}${this.color ? this.color.android : -1}${delimiter}${backgroundColor ? backgroundColor.android : -1}${delimiter}${this.text}`;
     return result;
 };
+
 
 function isBold(fontWeight: FontWeight): boolean {
     return fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900';
@@ -121,8 +125,8 @@ export function createNativeAttributedString(
     }
     | FormattedString
 ) {
-    if (data instanceof FormattedString) {
-        const nativeString = data.toNativeString();
+    if (typeof data['toNativeString'] === 'function') {
+        const nativeString = (data as any).toNativeString();
         return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
     }
     // if (data.textAlignment && typeof data.textAlignment === 'string') {
@@ -134,6 +138,6 @@ export function createNativeAttributedString(
     if (!context) {
         context = Application.android.context;
     }
-    const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, data.text);
+    const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text);
     return result;
 }
