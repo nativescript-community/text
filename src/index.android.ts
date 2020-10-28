@@ -27,7 +27,6 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
-
 FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
     let result = '';
     const length = this.spans.length;
@@ -69,7 +68,6 @@ Span.prototype.toNativeString = function () {
     }${delimiter}${textDecoration || 0}${delimiter}${this.color ? this.color.android : -1}${delimiter}${backgroundColor ? backgroundColor.android : -1}${delimiter}${this.text}`;
     return result;
 };
-
 
 function isBold(fontWeight: FontWeight): boolean {
     return fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900';
@@ -114,16 +112,16 @@ function initializeBaselineAdjustedSpan(): void {
 
 export function createNativeAttributedString(
     data:
-    | {
-        text: string;
-        color?: Color | string | number;
-        familyName?: string;
-        fontSize?: number;
-        letterSpacing?: number;
-        lineHeight?: number;
-        textAlignment?: number | TextAlignment;
-    }
-    | FormattedString
+        | {
+              text: string;
+              color?: Color | string | number;
+              familyName?: string;
+              fontSize?: number;
+              letterSpacing?: number;
+              lineHeight?: number;
+              textAlignment?: number | TextAlignment;
+          }
+        | FormattedString
 ) {
     if (typeof data['toNativeString'] === 'function') {
         const nativeString = (data as any).toNativeString();

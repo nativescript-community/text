@@ -30,8 +30,8 @@ function _createNativeAttributedString({
         htmlString =
             color || familyName || fontSize
                 ? `<span style=" ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:'${familyName.replace(/'/g, '')}';` : ''}${
-                    fontSize ? `font-size: ${fontSize}px;` : ''
-                }">${text}</span>`
+                      fontSize ? `font-size: ${fontSize}px;` : ''
+                  }">${text}</span>`
                 : text;
         // `<span style="font-family: ${fontFamily}; font-size:${fontSize};">${htmlString}</span>`;
     } else {
@@ -99,15 +99,19 @@ function _createNativeAttributedString({
     }
     return attrText;
 }
-export function createNativeAttributedString(data: {
-    text: string;
-    color?: Color | string | number;
-    familyName?: string;
-    fontSize?: number;
-    letterSpacing?: number;
-    lineHeight?: number;
-    textAlignment?: NSTextAlignment | TextAlignment;
-} | FormattedString) {
+export function createNativeAttributedString(
+    data:
+        | {
+              text: string;
+              color?: Color | string | number;
+              familyName?: string;
+              fontSize?: number;
+              letterSpacing?: number;
+              lineHeight?: number;
+              textAlignment?: NSTextAlignment | TextAlignment;
+          }
+        | FormattedString
+) {
     if (data instanceof FormattedString) {
         //todo not supported yet
         return null;

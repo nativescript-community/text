@@ -1,7 +1,21 @@
-import { ChangedData, Color, FormattedString, InheritedCssProperty, Observable, ObservableArray, PropertyChangeData, Span, Style, View, ViewBase, colorProperty, makeParser, makeValidator } from '@nativescript/core';
+import {
+    ChangedData,
+    Color,
+    FormattedString,
+    InheritedCssProperty,
+    Observable,
+    ObservableArray,
+    PropertyChangeData,
+    Span,
+    Style,
+    View,
+    ViewBase,
+    colorProperty,
+    makeParser,
+    makeValidator,
+} from '@nativescript/core';
 import { FontStyle, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, TextBase, TextDecoration } from '@nativescript/core/ui/text-base';
-
 
 const CHILD_SPAN = 'Span';
 const CHILD_FORMATTED_TEXT = 'formattedText';
@@ -74,8 +88,6 @@ export const verticalTextAlignmentProperty = new InheritedCssProperty<Style, Ver
 verticalTextAlignmentProperty.register(Style);
 
 export const textAlignmentConverter = makeParser<TextAlignment>(makeValidator<TextAlignment>('initial', 'left', 'right', 'center'));
-
-
 
 export class LightFormattedString extends Observable {
     private _spans: ObservableArray<Span>;
@@ -163,9 +175,7 @@ export class LightFormattedString extends Observable {
     private onPropertyChange(data: PropertyChangeData) {
         this.notifyPropertyChange(data.propertyName, this);
     }
-    toNativeString() {
-
-    }
+    toNativeString() {}
 }
 
 export let overrideSpanAndFormattedStringEnabled = false;
@@ -173,10 +183,10 @@ export function overrideSpanAndFormattedString() {
     if (!overrideSpanAndFormattedStringEnabled) {
         overrideSpanAndFormattedStringEnabled = true;
     }
-    TextBase.prototype._addChildFromBuilder = function (name: string, value: any){
+    TextBase.prototype._addChildFromBuilder = function (name: string, value: any) {
         if (name === CHILD_SPAN) {
             if (!this.formattedText) {
-                const formattedText = new LightFormattedString() as any as FormattedString;
+                const formattedText = (new LightFormattedString() as any) as FormattedString;
                 formattedText.spans.push(value);
                 this.formattedText = formattedText;
                 (formattedText as any).parent = this;
@@ -188,25 +198,25 @@ export function overrideSpanAndFormattedString() {
             value.parent = this;
         }
     };
-    TextBase.prototype._addView = function (view){
+    TextBase.prototype._addView = function (view) {
         if (view instanceof LightFormattedString) {
             return;
         }
         this._super._addView(view);
     };
-    TextBase.prototype._removeView = function (view){
+    TextBase.prototype._removeView = function (view) {
         if (view instanceof LightFormattedString) {
             return;
         }
         this._super._removeView(view);
     };
-    TextBase.prototype.eachChild = function(callback: (child: ViewBase) => boolean) {
+    TextBase.prototype.eachChild = function (callback: (child: ViewBase) => boolean) {
         const text = this.formattedText;
         if (text instanceof FormattedString) {
             callback(text);
         }
     };
-    TextBase.prototype[colorProperty.setNative] = function(value) {
+    TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {
             if (global.isIOS) {
                 this.nativeTextViewProtected.setTextColor(value.ios);
