@@ -1,6 +1,6 @@
 {
     "name": "@nativescript-community/text",
-    "version": "1.3.4",
+    "version": "1.3.5",
     "description": "Nativescript Text plugin to be used by other plugins.",
     "main": "./index",
     "sideEffects": false,

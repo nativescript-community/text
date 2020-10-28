@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.5](https://github.com/nativescript-community/text/compare/v1.3.4...v1.3.5) (2020-10-28)
+
+
+### Bug Fixes
+
+* ios fix for override ([cb843d3](https://github.com/nativescript-community/text/commit/cb843d3e6f9cb7c0b640a25620b2cd9fbb14ef2d))
+
+
+
+
+
 ## [1.3.4](https://github.com/nativescript-community/text/compare/v1.3.3...v1.3.4) (2020-10-23)
 
 
