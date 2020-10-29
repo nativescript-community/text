@@ -110,7 +110,7 @@ function initializeBaselineAdjustedSpan(): void {
     BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
 }
 
-export function createNativeAttributedString(
+export const createNativeAttributedString = profile('getAndroidTypeface', function createNativeAttributedString(
     data:
         | {
               text: string;
@@ -138,4 +138,4 @@ export function createNativeAttributedString(
     }
     const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text);
     return result;
-}
+});
