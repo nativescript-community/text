@@ -219,12 +219,15 @@ export function overrideSpanAndFormattedString() {
     TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {
             if (global.isIOS) {
-                this.nativeTextViewProtected.setTextColor(value.ios);
+                const color = value instanceof Color ? value.ios : value;
+                this._setColor(color);
             } else if (global.isAndroid) {
-                this.nativeTextViewProtected.setTextColor(value.android);
+                if (value instanceof Color) {
+                    this.nativeTextViewProtected.setTextColor(value.android);
+                } else {
+                    this.nativeTextViewProtected.setTextColor(value);
+                }
             }
-        } else {
-            this.nativeTextViewProtected.setTextColor(value);
         }
     };
 }
