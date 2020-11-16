@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.7](https://github.com/nativescript-community/text/compare/v1.3.6...v1.3.7) (2020-11-16)
+
+
+### Bug Fixes
+
+* android disable default click handling ([b235362](https://github.com/nativescript-community/text/commit/b2353628475afaa151fd658809062860bdba493b))
+
+
+
+
+
 ## [1.3.6](https://github.com/nativescript-community/text/compare/v1.3.5...v1.3.6) (2020-10-29)
 
 
