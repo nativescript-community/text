@@ -136,6 +136,6 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
     if (!context) {
         context = Application.android.context;
     }
-    const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text);
+    const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
     return result;
 });
