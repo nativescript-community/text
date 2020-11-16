@@ -17,4 +17,8 @@ public class URLSpanNoUnderline extends URLSpan {
 //            super.updateDrawState(ds);
 //            ds.setUnderlineText(false);
     }
+    @Override
+    public void onClick(android.view.View widget) {
+        // custom click handle
+    }
 }
