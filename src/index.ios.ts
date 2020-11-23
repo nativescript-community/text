@@ -84,7 +84,7 @@ function _createNativeAttributedString({
 
     if (lineHeight !== undefined) {
         const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-        paragraphStyle.lineSpacing = this.lineHeight;
+        paragraphStyle.lineSpacing = lineHeight;
         // make sure a possible previously set text alignment setting is not lost when line height is specified
         paragraphStyle.alignment = textAlignment;
         // if (this.nativeTextViewProtected instanceof UILabel) {
