@@ -123,6 +123,9 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
           }
         | FormattedString
 ) {
+    if (!context) {
+        context = Application.android.context;
+    }
     if (typeof data['toNativeString'] === 'function') {
         const nativeString = (data as any).toNativeString();
         return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
@@ -133,9 +136,6 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
     // if (data.color && !(data.color instanceof Color)) {
     //     data.color = new Color(data.color as any);
     // }
-    if (!context) {
-        context = Application.android.context;
-    }
     const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
     return result;
 });
