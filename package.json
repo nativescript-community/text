@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "setup": "ts-patch install",
+"prepare": "npm run setup",
         "tsc": "cp src/index.d.ts plugin && tsc -skipLibCheck -d",
         "build": "cp README.md plugin && rm -f .tsbuildinfo && npm run tsc",
         "publish": "npm run setup && npm run build && lerna publish --create-release=github",
