@@ -20,6 +20,7 @@ import { TextAlignment, TextBase, TextDecoration } from '@nativescript/core/ui/t
 const CHILD_SPAN = 'Span';
 const CHILD_FORMATTED_TEXT = 'formattedText';
 const CHILD_FORMATTED_STRING = 'FormattedString';
+const CHILD_LIGHT_FORMATTED_STRING = 'LightFormattedString';
 
 export function enableIOSDTCoreText() {}
 
@@ -117,6 +118,17 @@ export class LightFormattedString extends Observable {
 
         return this._spans;
     }
+    set spans(value: ObservableArray<Span>) {
+        if (value instanceof ObservableArray) {
+            this._spans.removeEventListener(ObservableArray.changeEvent, this.onSpansCollectionChanged, this);
+            this._spans = value;
+            this._spans.addEventListener(ObservableArray.changeEvent, this.onSpansCollectionChanged, this);
+        } else if (Array.isArray(value)) {
+            this._spans.push(...(value as any));
+        } else {
+            this._spans.push(value as any);
+        }
+    }
 
     public toString(): string {
         let result = '';
@@ -129,7 +141,7 @@ export class LightFormattedString extends Observable {
 
     public _addArrayFromBuilder(name: string, value: any[]) {
         if (name === 'spans') {
-            this.spans.push(value);
+            this.spans.push(...value);
         }
     }
 
@@ -193,7 +205,7 @@ export function overrideSpanAndFormattedString() {
             } else {
                 this.formattedText.spans.push(value);
             }
-        } else if (name === CHILD_FORMATTED_TEXT || name === CHILD_FORMATTED_STRING) {
+        } else if (name === CHILD_FORMATTED_TEXT || name === CHILD_FORMATTED_STRING || name === CHILD_LIGHT_FORMATTED_STRING) {
             this.formattedText = value;
             value.parent = this;
         }
