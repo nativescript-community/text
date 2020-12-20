@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.11](https://github.com/nativescript-community/text/compare/v1.3.10...v1.3.11) (2020-12-20)
+
+
+### Bug Fixes
+
+* fixed support for LightFormattedString ([e1a58ad](https://github.com/nativescript-community/text/commit/e1a58ad6ba3f688d7319cedd0dc3982c846c6d23))
+
+
+
+
+
 ## [1.3.10](https://github.com/nativescript-community/text/compare/v1.3.9...v1.3.10) (2020-11-26)
 
 
