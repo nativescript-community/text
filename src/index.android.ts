@@ -1,8 +1,11 @@
 import { Application, Color, FormattedString, Span, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
+import { maxMinuteProperty } from '@nativescript/core/ui/time-picker';
 import { LightFormattedString, computeBaseLineOffset } from './index-common';
+import { layout } from '@nativescript/core/utils/utils';
 export * from './index-common';
+
 let context;
 const fontPath = path.join(knownFolders.currentApp().path, 'fonts');
 
@@ -18,12 +21,12 @@ Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
 
 declare module '@nativescript/core/ui/text-base/formatted-string' {
     interface FormattedString {
-        toNativeString(): string;
+        toNativeString(maxFontSize?: number): string;
     }
 }
 declare module '@nativescript/core/ui/text-base/span' {
     interface Span {
-        toNativeString(): string;
+        toNativeString(maxFontSize?: number): string;
     }
 }
 
@@ -31,15 +34,23 @@ FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNati
     let result = '';
     const length = this.spans.length;
     let span: Span;
+    let maxFontSize = this.style?.fontSize || this.parent?.style.fontSize || 0;
+    for (let i = 0; i < length; i++) {
+        const s = this.spans.getItem(i);
+        if (s.style.fontSize) {
+            maxFontSize = Math.max(maxFontSize, s.style.fontSize);
+        }
+    }
     for (let i = 0; i < length; i++) {
         span = this.spans.getItem(i);
-        result += span.toNativeString() + (i < length - 1 ? String.fromCharCode(0x1f) : '');
+        result += span.toNativeString(maxFontSize) + (i < length - 1 ? String.fromCharCode(0x1f) : '');
     }
 
     return result;
 };
 
-Span.prototype.toNativeString = function () {
+const delimiter = String.fromCharCode(0x1e);
+Span.prototype.toNativeString = function (maxFontSize?: number) {
     const textTransform = this.parent.parent.textTransform;
     const spanStyle = this.style;
     let backgroundColor: Color;
@@ -57,15 +68,27 @@ Span.prototype.toNativeString = function () {
         // span.parent.parent is TextBase
         textDecoration = this.parent.parent.style.textDecorations;
     }
-
+    let verticalTextAlignment = this.verticalAlignment || this.parent.verticalAlignment ;
+    if (!verticalTextAlignment || verticalTextAlignment === 'stretch' ) {
+        verticalTextAlignment = this.parent.parent.verticalTextAlignment;
+    }
     let text = this.text;
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    const delimiter = String.fromCharCode(0x1e);
-    const result = `${this.fontFamily || 0}${delimiter}${this.fontSize !== undefined ? this.fontSize : -1}${delimiter}${this.fontWeight || ''}${delimiter}${
-        this.fontStyle === 'italic' ? 1 : 0
-    }${delimiter}${textDecoration || 0}${delimiter}${this.color ? this.color.android : -1}${delimiter}${backgroundColor ? backgroundColor.android : -1}${delimiter}${this.text}`;
+    const density = layout.getDisplayDensity();
+    const result = `${this.fontFamily || 0}${delimiter}\
+${this.fontSize !== undefined ? this.fontSize * density : -1}${delimiter}\
+${this.fontWeight || ''}${delimiter}\
+${this.fontStyle === 'italic' ? 1 : 0}${delimiter}\
+${textDecoration || 0}${delimiter}\
+${maxFontSize * density}${delimiter}\
+${verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
+${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
+${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
+${this.color ? this.color.android : -1}${delimiter}\
+${backgroundColor ? backgroundColor.android : -1}${delimiter}\
+${this.text}`;
     return result;
 };
 
@@ -73,42 +96,42 @@ function isBold(fontWeight: FontWeight): boolean {
     return fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900';
 }
 
-type BaselineAdjustedSpan = new (fontSize, align: string, maxFontSize) => android.text.style.MetricAffectingSpan;
+// type BaselineAdjustedSpan = new (fontSize, align: string, maxFontSize) => android.text.style.MetricAffectingSpan;
 
-// eslint-disable-next-line no-redeclare
-let BaselineAdjustedSpan: BaselineAdjustedSpan;
-function initializeBaselineAdjustedSpan(): void {
-    if (BaselineAdjustedSpan) {
-        return;
-    }
-    @NativeClass
-    class BaselineAdjustedSpanImpl extends android.text.style.CharacterStyle {
-        align: string = 'baseline';
-        maxFontSize: number;
+// // eslint-disable-next-line no-redeclare
+// let BaselineAdjustedSpan: BaselineAdjustedSpan;
+// function initializeBaselineAdjustedSpan(): void {
+//     if (BaselineAdjustedSpan) {
+//         return;
+//     }
+//     @NativeClass
+//     class BaselineAdjustedSpanImpl extends android.text.style.CharacterStyle {
+//         align: string = 'baseline';
+//         maxFontSize: number;
 
-        constructor(private fontSize, align: string, maxFontSize) {
-            super();
+//         constructor(private fontSize, align: string, maxFontSize) {
+//             super();
 
-            this.align = align;
-            this.maxFontSize = maxFontSize;
-        }
+//             this.align = align;
+//             this.maxFontSize = maxFontSize;
+//         }
 
-        updateDrawState(paint: android.text.TextPaint) {
-            this.updateState(paint);
-        }
+//         updateDrawState(paint: android.text.TextPaint) {
+//             this.updateState(paint);
+//         }
 
-        updateState(paint: android.text.TextPaint) {
-            const fontSize = this.fontSize;
-            paint.setTextSize(fontSize);
-            const metrics = paint.getFontMetrics();
-            let result = computeBaseLineOffset(this.align, metrics.ascent, metrics.descent, metrics.bottom, metrics.top, fontSize, this.maxFontSize);
-            result += metrics.bottom;
-            paint.baselineShift = result;
-        }
-    }
+//         updateState(paint: android.text.TextPaint) {
+//             const fontSize = this.fontSize;
+//             paint.setTextSize(fontSize);
+//             const metrics = paint.getFontMetrics();
+//             let result = computeBaseLineOffset(this.align, metrics.ascent, metrics.descent, metrics.bottom, metrics.top, fontSize, this.maxFontSize);
+//             result += metrics.bottom;
+//             paint.baselineShift = result;
+//         }
+//     }
 
-    BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
-}
+//     BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
+// }
 
 export const createNativeAttributedString = profile('getAndroidTypeface', function createNativeAttributedString(
     data:

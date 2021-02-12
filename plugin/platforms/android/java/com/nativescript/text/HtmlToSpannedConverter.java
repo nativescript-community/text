@@ -28,7 +28,6 @@ import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.TypefaceSpan;
-import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ import android.util.Log;
 class HtmlToSpannedConverter extends DefaultHandler {
     private final String TAG = "HtmlToSpannedConverter";
 
-//    private Attributes _currentAtts = null;
+    // private Attributes _currentAtts = null;
     public boolean disableLinkStyle = false;
     private SpannableStringBuilder mSpannableStringBuilder;
 
@@ -55,25 +54,25 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     public HtmlToSpannedConverter(Context context, String fontFolder, Html.ImageGetter imageGetter,
-                                  Html.TagHandler tagHandler, final boolean disableLinkStyle) {
+            Html.TagHandler tagHandler, final boolean disableLinkStyle) {
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
         this.fontFolder = fontFolder;
         this.context = context;
         this.disableLinkStyle = disableLinkStyle;
         density = context.getResources().getDisplayMetrics().density;
-//        if (mImageGetter == null) {
-//            mImageGetter = new Html.ImageGetter() {
-//
-//                @Override
-//                public Drawable getDrawable(String source) {
-//                    return null;
-//                }
-//            };
-//        }
+        // if (mImageGetter == null) {
+        // mImageGetter = new Html.ImageGetter() {
+        //
+        // @Override
+        // public Drawable getDrawable(String source) {
+        // return null;
+        // }
+        // };
+        // }
     }
 
-    private final float[] HEADER_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,};
+    private final float[] HEADER_SIZES = { 1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f, };
 
     private void handleP(SpannableStringBuilder text) {
         int len = text.length();
@@ -98,8 +97,8 @@ class HtmlToSpannedConverter extends DefaultHandler {
 
     private Object getLast(Spanned text, Class kind) {
         /*
-         * This knows that the last returned object from getSpans() will be the
-         * most recently added.
+         * This knows that the last returned object from getSpans() will be the most
+         * recently added.
          */
         Object[] objs = text.getSpans(0, text.length(), kind);
 
@@ -116,7 +115,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     private void end(SpannableStringBuilder text, Class kind, Object repl) {
-        
+
         int len = text.length();
         Object obj = getLast(text, kind);
         int where = text.getSpanStart(obj);
@@ -136,8 +135,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
         }
     }
 
-    private void startImg(SpannableStringBuilder text, Attributes attributes,
-                          Html.ImageGetter img) {
+    private void startImg(SpannableStringBuilder text, Attributes attributes, Html.ImageGetter img) {
         String src = attributes.getValue("src");
         Drawable d = null;
 
@@ -147,8 +145,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                 int len = text.length();
                 text.append("\uFFFC");
 
-                text.setSpan(new ImageSpan(d, src), len, text.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new ImageSpan(d, src), len, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
         }
@@ -186,22 +183,19 @@ class HtmlToSpannedConverter extends DefaultHandler {
                     int colorRes = res.getIdentifier(name, "color", "android");
                     if (colorRes != 0) {
                         ColorStateList colors = res.getColorStateList(colorRes);
-                        text.setSpan(new TextAppearanceSpan(null, 0, 0, colors,
-                                        null), where, len,
+                        text.setSpan(new TextAppearanceSpan(null, 0, 0, colors, null), where, len,
                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 } else {
                     int c = Color.parseColor(f.mColor);
                     if (c != -1) {
-                        text.setSpan(new ForegroundColorSpan(c),
-                                where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        text.setSpan(new ForegroundColorSpan(c), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             }
 
             if (f.mFace != null) {
-                text.setSpan(new TypefaceSpan(f.mFace), where, len,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new TypefaceSpan(f.mFace), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
@@ -225,7 +219,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
 
             if (h.mHref != null) {
                 text.setSpan(new URLSpanNoUnderline(h.mHref, !disableLinkStyle), where, len,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
@@ -246,10 +240,8 @@ class HtmlToSpannedConverter extends DefaultHandler {
         if (where != len) {
             Header h = (Header) obj;
 
-            text.setSpan(new RelativeSizeSpan(HEADER_SIZES[h.mLevel]), where,
-                    len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            text.setSpan(new StyleSpan(Typeface.BOLD), where, len,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new RelativeSizeSpan(HEADER_SIZES[h.mLevel]), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new StyleSpan(Typeface.BOLD), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
@@ -354,8 +346,9 @@ class HtmlToSpannedConverter extends DefaultHandler {
 
     // hit when the node is first seen
     private LinkedList<Object> _currentStyles = new LinkedList<Object>();
+
     public void handleStartTag(String tag, Attributes attributes) {
-//        _currentAtts = attributes;
+        // _currentAtts = attributes;
         final String lowTag = tag.toLowerCase();
         switch (lowTag) {
             case "br":
@@ -495,14 +488,14 @@ class HtmlToSpannedConverter extends DefaultHandler {
             if (needsBgdSpan || needsFontSpan) {
                 List<Object> result = new ArrayList<Object>();
                 if (needsBgdSpan) {
-                    result.add(new CustomBackgroundSpan(radius, fillColor, strokeColor,
-                            strokeWidth));
+                    result.add(new CustomBackgroundSpan(radius, fillColor, strokeColor, strokeWidth));
 
                 }
                 if (needsFontSpan) {
                     boolean isBold = fontWeight != null && (fontWeight.equals("bold") || fontWeight.equals("700"));
                     if (fontFamily != null) {
-                        result.add(new CustomTypefaceSpan(fontFamily, Font.createTypeface(this.context, this.fontFolder, fontFamily, fontWeight, isBold, false)));
+                        result.add(new CustomTypefaceSpan(fontFamily, Font.createTypeface(this.context, this.fontFolder,
+                                fontFamily, fontWeight, isBold, false)));
                     } else {
                         if (isBold) {
                             result.add(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD));
@@ -542,22 +535,19 @@ class HtmlToSpannedConverter extends DefaultHandler {
                 break;
             case "strong":
             case "b":
-                end(mSpannableStringBuilder, Bold.class, new StyleSpan(
-                        Typeface.BOLD));
+                end(mSpannableStringBuilder, Bold.class, new StyleSpan(Typeface.BOLD));
                 break;
             case "em":
             case "cite":
             case "dfn":
             case "i":
-                end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-                        Typeface.ITALIC));
+                end(mSpannableStringBuilder, Italic.class, new StyleSpan(Typeface.ITALIC));
                 break;
             case "big":
                 end(mSpannableStringBuilder, Big.class, new RelativeSizeSpan(1.25f));
                 break;
             case "small":
-                end(mSpannableStringBuilder, Small.class,
-                        new RelativeSizeSpan(0.8f));
+                end(mSpannableStringBuilder, Small.class, new RelativeSizeSpan(0.8f));
                 break;
             case "font":
                 endFont(mSpannableStringBuilder);
@@ -567,8 +557,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                 end(mSpannableStringBuilder, Blockquote.class, new QuoteSpan());
                 break;
             case "tt":
-                end(mSpannableStringBuilder, Monospace.class, new TypefaceSpan(
-                        "monospace"));
+                end(mSpannableStringBuilder, Monospace.class, new TypefaceSpan("monospace"));
                 break;
             case "a":
                 endA(mSpannableStringBuilder);
@@ -602,8 +591,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
 
     public Spanned spannable() {
         // Fix flags and range for paragraph-type markup.
-        Object[] obj = mSpannableStringBuilder.getSpans(0,
-                mSpannableStringBuilder.length(), ParagraphStyle.class);
+        Object[] obj = mSpannableStringBuilder.getSpans(0, mSpannableStringBuilder.length(), ParagraphStyle.class);
         for (int i = 0; i < obj.length; i++) {
             int start = mSpannableStringBuilder.getSpanStart(obj[i]);
             int end = mSpannableStringBuilder.getSpanEnd(obj[i]);
@@ -619,8 +607,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
             if (end == start) {
                 mSpannableStringBuilder.removeSpan(obj[i]);
             } else {
-                mSpannableStringBuilder.setSpan(obj[i], start, end,
-                        Spannable.SPAN_PARAGRAPH);
+                mSpannableStringBuilder.setSpan(obj[i], start, end, Spannable.SPAN_PARAGRAPH);
             }
         }
 
@@ -640,8 +627,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     @Override
-    public void startPrefixMapping(String prefix, String uri)
-            throws SAXException {
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
     }
 
     @Override
@@ -649,24 +635,21 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName,
-                             Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         handleStartTag(localName, attributes);
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         handleEndTag(localName);
     }
 
     @Override
-    public void characters(char ch[], int start, int length)
-            throws SAXException {
+    public void characters(char ch[], int start, int length) throws SAXException {
         StringBuilder sb = new StringBuilder();
         /*
-         * Ignore whitespace that immediately follows other whitespace; newlines
-         * count as spaces.
+         * Ignore whitespace that immediately follows other whitespace; newlines count
+         * as spaces.
          */
         for (int i = 0; i < length; i++) {
             char c = ch[i + start];
@@ -694,13 +677,11 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     @Override
-    public void ignorableWhitespace(char[] ch, int start, int length)
-            throws SAXException {
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
     }
 
     @Override
-    public void processingInstruction(String target, String data)
-            throws SAXException {
+    public void processingInstruction(String target, String data) throws SAXException {
     }
 
     @Override

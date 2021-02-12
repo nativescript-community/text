@@ -24,8 +24,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class Font {
     static AssetManager appAssets;
-    static HashMap<String, Typeface> typefaceCache = new HashMap();
-    static HashMap<String, Typeface> typefaceCreatedCache = new HashMap();
+    static HashMap<String, Typeface> typefaceCache = new HashMap<String, Typeface>();
+    static HashMap<String, Typeface> typefaceCreatedCache = new HashMap<String, Typeface>();
 
     static final String TAG = "Font";
 
@@ -147,7 +147,7 @@ public class Font {
     }
 
     public static ArrayList<String> parseFontFamily(String value) {
-        ArrayList<String> result = new ArrayList();
+        ArrayList<String> result = new ArrayList<String>();
         if (value == null) {
             return result;
         }
@@ -178,8 +178,9 @@ public class Font {
         }
         int fontWeightInt = getIntFontWeight(fontWeight);
         final String cacheKey = fontFamily + fontWeightInt + isItalic;
-        // Log.d("JS", "Font createTypeface: " + fontFamily + ",fontFolder " + fontFolder + ",fontWeight " + fontWeight
-                // + ",fontWeightInt " + fontWeightInt);
+        // Log.d("JS", "Font createTypeface: " + fontFamily + ",fontFolder " +
+        // fontFolder + ",fontWeight " + fontWeight
+        // + ",fontWeightInt " + fontWeightInt);
         if (typefaceCreatedCache.containsKey(cacheKey)) {
             return typefaceCreatedCache.get(cacheKey);
         }
@@ -209,7 +210,8 @@ public class Font {
                         if (Build.VERSION.SDK_INT >= 28) {
                             result = Typeface.create(result, fontWeightInt, isItalic);
                         } else {
-                            // Log.d("JS", "Font loading font style found: " + fonts.get(i) + ",fontStyle " + fontStyle + ",fontWeightInt " + fontWeightInt);
+                            // Log.d("JS", "Font loading font style found: " + fonts.get(i) + ",fontStyle "
+                            // + fontStyle + ",fontWeightInt " + fontWeightInt);
                             result = Typeface.create(result, fontStyle);
                         }
                     }
@@ -218,7 +220,8 @@ public class Font {
 
             if (result != null) {
                 // Found the font!
-                // Log.d("JS", "Font found: " + fonts.get(i) + ",fontStyle " + fontStyle + ",fontWeightInt " + fontWeightInt);
+                // Log.d("JS", "Font found: " + fonts.get(i) + ",fontStyle " + fontStyle +
+                // ",fontWeightInt " + fontWeightInt);
                 break;
             }
         }
@@ -274,11 +277,11 @@ public class Font {
     static char PropertySeparator = (char) 0x1E;
 
     static ArrayList<ArrayList<String>> parseFormattedString(String formattedString) {
-        ArrayList<ArrayList<String>> result = new ArrayList();
+        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
         final int len = formattedString.length();
         String buffer = "";
-        ArrayList<String> spanProps = new ArrayList();
+        ArrayList<String> spanProps = new ArrayList<String>();
         for (int i = 0; i < len; i++) {
             char c = formattedString.charAt(i);
             if (c == PropertySeparator) {
@@ -288,7 +291,7 @@ public class Font {
                 spanProps.add(buffer);
                 result.add(spanProps);
                 buffer = "";
-                spanProps = new ArrayList();
+                spanProps = new ArrayList<String>();
             } else {
                 buffer += c;
             }
@@ -304,44 +307,60 @@ public class Font {
         boolean bold = span.get(2).equals("bold") || span.get(2).equals("700");
         boolean italic = span.get(3).equals("1");
 
-        if (bold && italic) {
-            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
-                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (bold) {
-            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end,
-                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (italic) {
-            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
-                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                
+        if(android.os.Build.VERSION.SDK_INT < 28) {
+            if (bold && italic) {
+                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else if (bold) {
+                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end,
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else if (italic) {
+                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
+        
 
         String fontFamily = span.get(0);
         if (!fontFamily.equals("0")) {
             Typeface typeface = createTypeface(context, fontFolder, fontFamily, span.get(2), bold, italic);
-            // const font = new Font(fontFamily, 0, (italic) ? "italic" : "normal", (bold) ?
-            // "bold" : "normal");
-            // const typeface = font.getAndroidTypeface() ||
-            // android.graphics.Typeface.create(fontFamily, 0);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
             ssb.setSpan(typefaceSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
-        String fontSize = span.get(1);
-        if (!fontSize.equals("-1")) {
+        Float fontSize = Float.parseFloat(span.get(1));
+        Float maxFontSize = Float.parseFloat(span.get(5));
+        String verticalTextAlignment = span.get(6);
+        if (verticalTextAlignment.length() > 0 && !verticalTextAlignment.equals("initial")) {
+            Log.d("JS", "verticalTextAlignment " + maxFontSize + " " + verticalTextAlignment + " " + fontSize);
+            ssb.setSpan(new BaselineAdjustedSpan(fontSize, verticalTextAlignment, maxFontSize), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        if (fontSize != -1) {
+            Log.d("JS", "fontSize " + fontSize);
             ssb.setSpan(
-                    new AbsoluteSizeSpan(Math
-                            .round(Float.parseFloat(fontSize) * context.getResources().getDisplayMetrics().density)),
+                    new AbsoluteSizeSpan(fontSize.intValue()),
                     start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        String color = span.get(5);
+        Float letterSpacing = Float.parseFloat(span.get(8));
+        if (letterSpacing != 9) {
+            Log.d("JS", "letterSpacing " + letterSpacing);
+            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        Float lineHeight = Float.parseFloat(span.get(7));
+        if (lineHeight != -1) {
+            Log.d("JS", "lineHeight " + lineHeight);
+            ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        String color = span.get(9);
         if (!color.equals("-1")) {
             ssb.setSpan(new ForegroundColorSpan(Integer.parseInt(color)), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        String backgroundColor = span.get(6);
-
+        String backgroundColor = span.get(10);
         if (!backgroundColor.equals("-1")) {
             ssb.setSpan(new BackgroundColorSpan(Integer.parseInt(backgroundColor)), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -359,13 +378,6 @@ public class Font {
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
-        // long stopTime = System.nanoTime();
-        // TODO: Implement letterSpacing for Span here.
-        // const letterSpacing = formattedString.parent.style.letterSpacing;
-        // if (letterSpacing > 0) {
-        // ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10),
-        // start, end, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        // }
     }
 
     public static SpannableStringBuilder stringBuilderFromFormattedString(Context context, String fontFolder,
@@ -377,7 +389,7 @@ public class Font {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0, spanStart = 0, spanLength = 0, length = parsedFormattedString.size(); i < length; i++) {
             ArrayList<String> span = parsedFormattedString.get(i);
-            String text = span.get(7);
+            String text = span.get(11);
             spanLength = text.length();
             if (spanLength > 0) {
                 ssb.insert(spanStart, text);
