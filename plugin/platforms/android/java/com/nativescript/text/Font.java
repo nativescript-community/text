@@ -332,12 +332,10 @@ public class Font {
         Float maxFontSize = Float.parseFloat(span.get(5));
         String verticalTextAlignment = span.get(6);
         if (verticalTextAlignment.length() > 0 && !verticalTextAlignment.equals("initial")) {
-            Log.d("JS", "verticalTextAlignment " + maxFontSize + " " + verticalTextAlignment + " " + fontSize);
             ssb.setSpan(new BaselineAdjustedSpan(fontSize, verticalTextAlignment, maxFontSize), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (fontSize != -1) {
-            Log.d("JS", "fontSize " + fontSize);
             ssb.setSpan(
                     new AbsoluteSizeSpan(fontSize.intValue()),
                     start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -345,12 +343,10 @@ public class Font {
 
         Float letterSpacing = Float.parseFloat(span.get(8));
         if (letterSpacing != 9) {
-            Log.d("JS", "letterSpacing " + letterSpacing);
             ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         Float lineHeight = Float.parseFloat(span.get(7));
         if (lineHeight != -1) {
-            Log.d("JS", "lineHeight " + lineHeight);
             ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
