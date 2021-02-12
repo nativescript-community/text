@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1](https://github.com/nativescript-community/text/compare/v1.4.0...v1.4.1) (2021-02-12)
+
+
+### Bug Fixes
+
+* **android:** remove unwanted logs ([7003d13](https://github.com/nativescript-community/text/commit/7003d13df1654002aad363e1f9bbe54abdce4a58))
+
+
+
+
+
 # [1.4.0](https://github.com/nativescript-community/text/compare/v1.3.11...v1.4.0) (2021-02-12)
 
 
