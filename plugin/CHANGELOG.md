@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/nativescript-community/text/compare/v1.3.11...v1.4.0) (2021-02-12)
+
+
+### Features
+
+* **android:** support more span properties ([2d8b332](https://github.com/nativescript-community/text/commit/2d8b3324810529660358fd173d128efc580a6b52))
+
+
+
+
+
 ## [1.3.11](https://github.com/nativescript-community/text/compare/v1.3.10...v1.3.11) (2020-12-20)
 
 **Note:** Version bump only for package @nativescript-community/text
