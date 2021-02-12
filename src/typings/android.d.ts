@@ -8,7 +8,7 @@ declare namespace com {
                 constructor(radius: number, fillColor: number, strokeColor: number, strokeWidth: number);
             }
             export class BaselineAdjustedSpan extends globalAndroid.text.style.CharacterStyle {
-                constructor(fontSize: number, align: string, maxFontSize: NumberConstructor);
+                constructor(fontSize: number, align: string, maxFontSize: number);
             }
             export class HeightSpan extends globalAndroid.text.style.CharacterStyle {
                 constructor(size: number);
