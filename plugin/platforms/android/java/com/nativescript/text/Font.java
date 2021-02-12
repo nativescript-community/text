@@ -307,8 +307,7 @@ public class Font {
         boolean bold = span.get(2).equals("bold") || span.get(2).equals("700");
         boolean italic = span.get(3).equals("1");
 
-                
-        if(android.os.Build.VERSION.SDK_INT < 28) {
+        if (android.os.Build.VERSION.SDK_INT < 28) {
             if (bold && italic) {
                 ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -320,7 +319,6 @@ public class Font {
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
-        
 
         String fontFamily = span.get(0);
         if (!fontFamily.equals("0")) {
@@ -336,18 +334,19 @@ public class Font {
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if (fontSize != -1) {
-            ssb.setSpan(
-                    new AbsoluteSizeSpan(fontSize.intValue()),
-                    start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new AbsoluteSizeSpan(fontSize.intValue()), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         Float letterSpacing = Float.parseFloat(span.get(8));
         if (letterSpacing != 9) {
-            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         Float lineHeight = Float.parseFloat(span.get(7));
         if (lineHeight != -1) {
-            ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         String color = span.get(9);
