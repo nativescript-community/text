@@ -68,8 +68,8 @@ Span.prototype.toNativeString = function (maxFontSize?: number) {
         // span.parent.parent is TextBase
         textDecoration = this.parent.parent.style.textDecorations;
     }
-    let verticalTextAlignment = this.verticalAlignment || this.parent.verticalAlignment ;
-    if (!verticalTextAlignment || verticalTextAlignment === 'stretch' ) {
+    let verticalTextAlignment = this.verticalAlignment || this.parent.verticalAlignment;
+    if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
         verticalTextAlignment = this.parent.parent.verticalTextAlignment;
     }
     let text = this.text;
@@ -83,7 +83,7 @@ ${this.fontWeight || ''}${delimiter}\
 ${this.fontStyle === 'italic' ? 1 : 0}${delimiter}\
 ${textDecoration || 0}${delimiter}\
 ${maxFontSize * density}${delimiter}\
-${verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
+${verticalTextAlignment && verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
 ${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
 ${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
 ${this.color ? this.color.android : -1}${delimiter}\

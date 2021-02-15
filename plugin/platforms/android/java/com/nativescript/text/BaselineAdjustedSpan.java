@@ -7,11 +7,11 @@ import android.text.style.CharacterStyle;
 import android.util.Log;
 
 public class BaselineAdjustedSpan extends CharacterStyle {
-    private Float fontSize;
+    private float fontSize;
     private String align;
-    private Float maxFontSize;
+    private float maxFontSize;
 
-    public BaselineAdjustedSpan(Float fontSize, String align, Float maxFontSize) {
+    public BaselineAdjustedSpan(float fontSize, String align, float maxFontSize) {
         super();
         this.fontSize = fontSize;
         this.align = align;

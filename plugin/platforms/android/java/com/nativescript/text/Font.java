@@ -307,7 +307,7 @@ public class Font {
         boolean bold = span.get(2).equals("bold") || span.get(2).equals("700");
         boolean italic = span.get(3).equals("1");
 
-        if (android.os.Build.VERSION.SDK_INT < 28) {
+        // if (android.os.Build.VERSION.SDK_INT < 28) {
             if (bold && italic) {
                 ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -318,7 +318,7 @@ public class Font {
                 ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-        }
+        // }
 
         String fontFamily = span.get(0);
         if (!fontFamily.equals("0")) {
