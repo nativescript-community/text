@@ -25,3 +25,5 @@ plugin/**/*js
 /plugin/README.md
 pnpm-lock.yaml
 *.aar
+/.gradle
+/.settings
