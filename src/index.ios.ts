@@ -75,7 +75,6 @@ function _createNativeAttributedString({
             null
         );
     }
-    // console.log('attrText', attrText)
 
     // TODO: letterSpacing should be applied per Span.
     if (letterSpacing !== undefined) {
