@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.5](https://github.com/nativescript-community/text/compare/v1.4.4...v1.4.5) (2021-02-20)
+
+
+### Bug Fixes
+
+* **android:** cache fonts ([5fa8eaf](https://github.com/nativescript-community/text/commit/5fa8eaf74dadbae4827878613ce1584bbe289d13))
+
+
+
+
+
 ## [1.4.4](https://github.com/nativescript-community/text/compare/v1.4.3...v1.4.4) (2021-02-15)
 
 **Note:** Version bump only for package @nativescript-community/text
