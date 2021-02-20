@@ -16,6 +16,17 @@ declare namespace com {
             export class URLSpanNoUnderline extends globalAndroid.text.style.URLSpan {
                 constructor(url: string, showUnderline: boolean);
             }
+
+            export class Font {
+                static createTypeface(
+                    context: globalAndroid.content.Context,
+                    fontFolder: string,
+                    fontFamily: string,
+                    fontWeight: string,
+                    isBold: boolean,
+                    isItalic: boolean
+                ): globalAndroid.graphics.Typeface;
+            }
         }
     }
 }
