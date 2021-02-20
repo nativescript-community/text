@@ -1,20 +1,27 @@
 import { Application, Color, FormattedString, Span, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
-import { maxMinuteProperty } from '@nativescript/core/ui/time-picker';
-import { LightFormattedString, computeBaseLineOffset } from './index-common';
+import { LightFormattedString } from './index-common';
 import { layout } from '@nativescript/core/utils/utils';
 export * from './index-common';
 
-let context;
+let context: android.content.Context;
 const fontPath = path.join(knownFolders.currentApp().path, 'fonts');
 
+export const typefaceCache: { [k: string]: android.graphics.Typeface } = {};
 Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
     if (!this._typeface) {
-        if (!context) {
-            context = Application.android.context;
+        const fontCacheKey: string = this.fontFamily + this.fontWeight + this.fontStyle;
+
+        const typeface = typefaceCache[fontCacheKey];
+        if (!typeface) {
+            if (!context) {
+                context = Application.android.context;
+            }
+            this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, this.fontFamily, this.fontWeight, this.isBold, this.isItalic);
+        } else {
+            this._typeface = typeface;
         }
-        this._typeface = (com as any).nativescript.text.Font.createTypeface(context, fontPath, this.fontFamily, this.fontWeight, this.isBold, this.isItalic);
     }
     return this._typeface;
 });
