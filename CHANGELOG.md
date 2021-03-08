@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.6](https://github.com/nativescript-community/text/compare/v1.4.5...v1.4.6) (2021-03-08)
+
+
+### Bug Fixes
+
+* init function to ensure override are called ([2519261](https://github.com/nativescript-community/text/commit/2519261d3a2c68b33d97def5683b0084635a0151))
+
+
+
+
+
 ## [1.4.5](https://github.com/nativescript-community/text/compare/v1.4.4...v1.4.5) (2021-02-20)
 
 
