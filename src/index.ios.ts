@@ -7,6 +7,8 @@ let iOSUseDTCoreText = false;
 export function enableIOSDTCoreText() {
     iOSUseDTCoreText = true;
 }
+export function init() {
+}
 
 function _createNativeAttributedString({
     text,
