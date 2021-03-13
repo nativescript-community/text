@@ -19,7 +19,8 @@ export function init() {
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!this._typeface) {
-            const fontFamily = this.fontFamily?.replace('res,', 'res/') || '';
+            // css loader to json transform font-family: res/toto to font-family: res,toto
+            const fontFamily = this.fontFamily?.replace(/res,/g, 'res/') || '';
             const fontCacheKey: string = fontFamily + (this.fontWeight || '') + (this.fontStyle || '');
 
             const typeface = typefaceCache[fontCacheKey];
