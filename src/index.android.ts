@@ -19,14 +19,15 @@ export function init() {
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!this._typeface) {
-            const fontCacheKey: string = this.fontFamily + this.fontWeight + this.fontStyle;
+            const fontFamily = this.fontFamily.replace('res,', 'res/');
+            const fontCacheKey: string = fontFamily + this.fontWeight + this.fontStyle;
 
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
                 if (!context) {
                     context = Application.android.context;
                 }
-                this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, this.fontFamily, this.fontWeight, this.isBold, this.isItalic);
+                this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, fontFamily, this.fontWeight, this.isBold, this.isItalic);
             } else {
                 this._typeface = typeface;
             }
