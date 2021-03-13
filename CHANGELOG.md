@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.7](https://github.com/nativescript-community/text/compare/v1.4.6...v1.4.7) (2021-03-13)
+
+
+### Bug Fixes
+
+* **android:** fix for css transforming font names res/ with res, ([7852ccb](https://github.com/nativescript-community/text/commit/7852ccbad95eda6d30ba9cfe3b56cadde109d857))
+
+
+
+
+
 ## [1.4.6](https://github.com/nativescript-community/text/compare/v1.4.5...v1.4.6) (2021-03-08)
 
 
