@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.8](https://github.com/nativescript-community/text/compare/v1.4.7...v1.4.8) (2021-03-13)
+
+
+### Bug Fixes
+
+* **android:** prevent cras ([a0a87fd](https://github.com/nativescript-community/text/commit/a0a87fd8c887a5366ca03030c485d541c21a5451))
+
+
+
+
+
 ## [1.4.7](https://github.com/nativescript-community/text/compare/v1.4.6...v1.4.7) (2021-03-13)
 
 
