@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.9](https://github.com/nativescript-community/text/compare/v1.4.8...v1.4.9) (2021-03-16)
+
+
+### Bug Fixes
+
+* support fontWeight on html text ([842bdf5](https://github.com/nativescript-community/text/commit/842bdf566bd1f676ac082d3329f21c42775f549b))
+
+
+
+
+
 ## [1.4.8](https://github.com/nativescript-community/text/compare/v1.4.7...v1.4.8) (2021-03-13)
 
 
