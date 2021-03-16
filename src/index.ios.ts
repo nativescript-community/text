@@ -7,13 +7,13 @@ let iOSUseDTCoreText = false;
 export function enableIOSDTCoreText() {
     iOSUseDTCoreText = true;
 }
-export function init() {
-}
+export function init() {}
 
 function _createNativeAttributedString({
     text,
     familyName = '-apple-system',
     fontSize,
+    fontWeight,
     letterSpacing,
     lineHeight,
     color,
@@ -22,6 +22,7 @@ function _createNativeAttributedString({
     text: string;
     color: Color;
     familyName: string;
+    fontWeight: string;
     fontSize: number;
     letterSpacing?: number;
     lineHeight?: number;
@@ -31,15 +32,15 @@ function _createNativeAttributedString({
     if (iOSUseDTCoreText) {
         htmlString =
             color || familyName || fontSize
-                ? `<span style=" ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:'${familyName.replace(/'/g, '')}';` : ''}${
-                      fontSize ? `font-size: ${fontSize}px;` : ''
+                ? `<span style=" ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:'${familyName.replace(/'/g, '')}';` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
+                      fontWeight ? `font-weight: ${fontWeight};` : ''
                   }">${text}</span>`
                 : text;
         // `<span style="font-family: ${fontFamily}; font-size:${fontSize};">${htmlString}</span>`;
     } else {
         htmlString =
             color || familyName || fontSize
-                ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}}</style>${text}`
+                ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${fontWeight ? `font-weight: ${fontWeight};` : ''}}</style>${text}`
                 : text;
     }
     const nsString = NSString.stringWithString(htmlString);

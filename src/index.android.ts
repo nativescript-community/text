@@ -157,6 +157,7 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
               color?: Color | string | number;
               familyName?: string;
               fontSize?: number;
+              fontWeight?: string;
               letterSpacing?: number;
               lineHeight?: number;
               textAlignment?: number | TextAlignment;
