@@ -1,6 +1,6 @@
-import { Application, Color, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
+import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
-import { TextAlignment, getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
+import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
 import { layout } from '@nativescript/core/utils/utils';
 export * from './index-common';
@@ -185,37 +185,40 @@ function isBold(fontWeight: FontWeight): boolean {
 
 //     BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
 // }
-export const createNativeAttributedString = profile('getAndroidTypeface', function createNativeAttributedString(
-    data:
-        | {
-              text: string;
-              color?: Color | string | number;
-              familyName?: string;
-              fontSize?: number;
-              fontWeight?: string;
-              letterSpacing?: number;
-              lineHeight?: number;
-              textAlignment?: number | TextAlignment;
-          }
-        | FormattedString,
-    parent: ViewBase
-) {
-    if (!context) {
-        init();
+export const createNativeAttributedString = profile(
+    'getAndroidTypeface',
+    function createNativeAttributedString(
+        data:
+            | {
+                  text: string;
+                  color?: Color | string | number;
+                  familyName?: string;
+                  fontSize?: number;
+                  fontWeight?: string;
+                  letterSpacing?: number;
+                  lineHeight?: number;
+                  textAlignment?: number | CoreTypes.TextAlignmentType;
+              }
+            | FormattedString,
+        parent: ViewBase
+    ) {
+        if (!context) {
+            init();
+        }
+        if (typeof data['toNativeString'] === 'function') {
+            const nativeString = (data as any).toNativeString();
+            return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
+        }
+        // if (data.textAlignment && typeof data.textAlignment === 'string') {
+        //     data.textAlignment = textAlignmentConverter(data.textAlignment);
+        // }
+        // if (data.color && !(data.color instanceof Color)) {
+        //     data.color = new Color(data.color as any);
+        // }
+        const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
+        return result;
     }
-    if (typeof data['toNativeString'] === 'function') {
-        const nativeString = (data as any).toNativeString();
-        return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
-    }
-    // if (data.textAlignment && typeof data.textAlignment === 'string') {
-    //     data.textAlignment = textAlignmentConverter(data.textAlignment);
-    // }
-    // if (data.color && !(data.color instanceof Color)) {
-    //     data.color = new Color(data.color as any);
-    // }
-    const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
-    return result;
-});
+);
 
 let lineSeparator;
 let Style: typeof android.text.style;

@@ -1,6 +1,7 @@
 import {
     ChangedData,
     Color,
+    CoreTypes,
     FormattedString,
     InheritedCssProperty,
     Observable,
@@ -15,7 +16,7 @@ import {
     makeValidator,
 } from '@nativescript/core';
 import { FontStyle, FontWeight } from '@nativescript/core/ui/styling/font';
-import { TextAlignment, TextBase, TextDecoration } from '@nativescript/core/ui/text-base';
+import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
 
 declare module '@nativescript/core/ui/text-base' {
@@ -95,7 +96,7 @@ export const verticalTextAlignmentProperty = new InheritedCssProperty<Style, Ver
 });
 verticalTextAlignmentProperty.register(Style);
 
-export const textAlignmentConverter = makeParser<TextAlignment>(makeValidator<TextAlignment>('initial', 'left', 'right', 'center'));
+export const textAlignmentConverter = makeParser<CoreTypes.TextAlignmentType>(makeValidator<CoreTypes.TextAlignmentType>('initial', 'left', 'right', 'center'));
 
 export class LightFormattedString extends Observable {
     private _spans: ObservableArray<Span>;
@@ -109,7 +110,7 @@ export class LightFormattedString extends Observable {
     fontSize: number;
     fontStyle: FontStyle;
     fontWeight: FontWeight;
-    textDecoration: TextDecoration;
+    textDecoration: CoreTypes.TextDecorationType;
     color: Color;
     backgroundColor: Color;
     parent: View;

@@ -1,5 +1,5 @@
-import { Color, Font, FormattedString, ViewBase } from '@nativescript/core';
-import { TextAlignment, getTransformedText } from '@nativescript/core/ui/text-base';
+import { Color, CoreTypes, Font, FormattedString, ViewBase } from '@nativescript/core';
+import { getTransformedText } from '@nativescript/core/ui/text-base';
 import { computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
 export * from './index-common';
 
@@ -112,7 +112,7 @@ export function createNativeAttributedString(
               fontSize?: number;
               letterSpacing?: number;
               lineHeight?: number;
-              textAlignment?: NSTextAlignment | TextAlignment;
+              textAlignment?: NSTextAlignment | CoreTypes.TextAlignmentType;
           }
         | FormattedString,
     parent: ViewBase
