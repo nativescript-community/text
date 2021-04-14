@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.10](https://github.com/nativescript-community/text/compare/v1.4.9...v1.4.10) (2021-04-14)
+
+
+### Features
+
+* overrideSpanAndFormattedString now allows for better span rendering ([83eeaeb](https://github.com/nativescript-community/text/commit/83eeaebbd8f7e8b65f2361f30fe167c130e87681))
+
+
+
+
+
 ## [1.4.9](https://github.com/nativescript-community/text/compare/v1.4.8...v1.4.9) (2021-03-16)
 
 
