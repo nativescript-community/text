@@ -1,9 +1,44 @@
-import { Application, Color, FormattedString, Span, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
+import { Application, Color, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
 import { layout } from '@nativescript/core/utils/utils';
 export * from './index-common';
+
+type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
+
+// eslint-disable-next-line no-redeclare
+let ClickableSpan: ClickableSpan;
+
+function initializeClickableSpan(): void {
+    if (ClickableSpan) {
+        return;
+    }
+
+    @NativeClass
+    class ClickableSpanImpl extends android.text.style.ClickableSpan {
+        owner: WeakRef<Span>;
+
+        constructor(owner: Span) {
+            super();
+            this.owner = new WeakRef(owner);
+            return global.__native(this);
+        }
+        onClick(view: android.view.View): void {
+            const owner = this.owner.get();
+            if (owner) {
+                owner._emit(Span.linkTapEvent);
+            }
+            view.clearFocus();
+            view.invalidate();
+        }
+        updateDrawState(tp: android.text.TextPaint): void {
+            // don't style as link
+        }
+    }
+
+    ClickableSpan = ClickableSpanImpl;
+}
 
 export const typefaceCache: { [k: string]: android.graphics.Typeface } = {};
 let context: android.content.Context;
@@ -162,7 +197,8 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
               lineHeight?: number;
               textAlignment?: number | TextAlignment;
           }
-        | FormattedString
+        | FormattedString,
+    parent: ViewBase
 ) {
     if (!context) {
         init();
@@ -179,4 +215,133 @@ export const createNativeAttributedString = profile('getAndroidTypeface', functi
     // }
     const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
     return result;
+});
+
+let lineSeparator;
+let Style: typeof android.text.style;
+let Spanned: typeof android.text.Spanned;
+export const createSpannable = profile('createSpannable', function (span: any, parentView: any, parent?: any, maxFontSize?: number) {
+    let text = span.text;
+    if (!text || span.visibility !== 'visible') {
+        return null;
+    }
+    const fontSize = span.fontSize;
+    const fontWeight = span.fontWeight || 'normal';
+    const fontStyle = span.fontStyle || (parent && parent.fontStyle) || 'normal';
+    const fontFamily = span.fontFamily;
+
+    const color = span.color;
+    const textDecorations = span.textDecoration || (parent && parent.textDecoration);
+    const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
+    const verticalTextAlignment = span.verticalTextAlignment;
+    const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
+    const lineHeight = span.lineHeight || (parent && parent.lineHeight);
+    const realMaxFontSize = Math.max(maxFontSize, parentView.fontSize || 0);
+
+    if (typeof text === 'boolean' || typeof text === 'number') {
+        text = text.toString();
+    }
+    const textTransform = span.textTransform || (parent && parent.textTransform);
+    if (textTransform) {
+        text = getTransformedText(text, textTransform);
+    }
+    if (typeof text === 'string') {
+        if (text.indexOf('\n') !== -1) {
+            if (!lineSeparator) {
+                lineSeparator = java.lang.System.getProperty('line.separator');
+            }
+            text = text.replace(/\\n/g, lineSeparator);
+        }
+    }
+    const length = typeof text.length === 'function' ? text.length() : text.length;
+
+    let ssb = span._ssb;
+    if (!ssb) {
+        span._ssb = ssb = new android.text.SpannableStringBuilder(text);
+    } else {
+        ssb.clear();
+        ssb.clearSpans();
+        ssb.append(text);
+    }
+
+    if (!Style) {
+        Style = android.text.style;
+    }
+    if (!Spanned) {
+        Spanned = android.text.Spanned;
+    }
+    const bold = isBold(fontWeight);
+    const italic = fontStyle === 'italic';
+    // if (getSDK() < 28) {
+    if (bold && italic) {
+        ssb.setSpan(new Style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    } else if (bold) {
+        ssb.setSpan(new Style.StyleSpan(android.graphics.Typeface.BOLD), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    } else if (italic) {
+        ssb.setSpan(new Style.StyleSpan(android.graphics.Typeface.ITALIC), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    // }
+    if (fontFamily || (fontWeight !== 'normal' && !bold)) {
+        const fontCacheKey = fontFamily + fontWeight + fontStyle;
+
+        let typeface = typefaceCache[fontCacheKey];
+        if (!typeface) {
+            if (span.paint) {
+                // let paint: Paint = paintFontCache[fontCacheKey];
+                // if (!paint) {
+                //     paint = span.paint;
+                //     paint.setFontFamily(fontFamily);
+                //     paint.setFontWeight(fontWeight);
+                //     paint.setFontStyle(fontStyle);
+                //     paintFontCache[fontCacheKey] = paint;
+                // }
+                // typeface = typefaceCache[fontCacheKey] = paint.getFont().getAndroidTypeface();
+            } else {
+                const font = new Font(fontFamily, 10, fontStyle, fontWeight);
+                typeface = typefaceCache[fontCacheKey] = font.getAndroidTypeface();
+            }
+        }
+        const typefaceSpan = new com.nativescript.text.CustomTypefaceSpan(fontFamily, typeface);
+        ssb.setSpan(typefaceSpan, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    if (verticalTextAlignment && verticalTextAlignment !== 'initial') {
+        ssb.setSpan(new com.nativescript.text.BaselineAdjustedSpan(fontSize, verticalTextAlignment, realMaxFontSize as any), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    if (fontSize) {
+        ssb.setSpan(new Style.AbsoluteSizeSpan(fontSize), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (letterSpacing) {
+        ssb.setSpan(new Style.ScaleXSpan((letterSpacing + 1) / 10), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (lineHeight !== undefined) {
+        ssb.setSpan(new com.nativescript.text.HeightSpan(lineHeight), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (color) {
+        const ncolor = color instanceof Color ? color : new Color(color);
+        ssb.setSpan(new Style.ForegroundColorSpan(ncolor.android), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    if (backgroundcolor) {
+        const color = backgroundcolor instanceof Color ? backgroundcolor : new Color(backgroundcolor);
+        ssb.setSpan(new Style.BackgroundColorSpan(color.android), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (textDecorations) {
+        const underline = textDecorations.indexOf('underline') !== -1;
+        if (underline) {
+            ssb.setSpan(new Style.UnderlineSpan(), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        const strikethrough = textDecorations.indexOf('line-through') !== -1;
+        if (strikethrough) {
+            ssb.setSpan(new Style.StrikethroughSpan(), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+    }
+    if (span.tappable) {
+        initializeClickableSpan();
+        ssb.setSpan(new ClickableSpan(span), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    return ssb;
 });

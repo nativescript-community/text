@@ -16,6 +16,13 @@ import {
 } from '@nativescript/core';
 import { FontStyle, FontWeight } from '@nativescript/core/ui/styling/font';
 import { TextAlignment, TextBase, TextDecoration } from '@nativescript/core/ui/text-base';
+import { createNativeAttributedString } from './index';
+
+declare module '@nativescript/core/ui/text-base' {
+    interface TextBase {
+        createFormattedTextNative(value: LightFormattedString | FormattedString): any;
+    }
+}
 
 const CHILD_SPAN = 'Span';
 const CHILD_FORMATTED_TEXT = 'formattedText';
@@ -190,6 +197,17 @@ export class LightFormattedString extends Observable {
     toNativeString() {}
 }
 
+export function getMaxFontSize(value: FormattedString) {
+    let max = value.fontSize || 0;
+    value.spans &&
+        value.spans.forEach((s) => {
+            if (s.fontSize) {
+                max = Math.max(max, s.fontSize);
+            }
+        });
+    return max;
+}
+
 export let overrideSpanAndFormattedStringEnabled = false;
 export function overrideSpanAndFormattedString() {
     if (!overrideSpanAndFormattedStringEnabled) {
@@ -227,6 +245,9 @@ export function overrideSpanAndFormattedString() {
         if (text instanceof FormattedString) {
             callback(text);
         }
+    };
+    TextBase.prototype.createFormattedTextNative = function (value: LightFormattedString | FormattedString) {
+        return createNativeAttributedString(value as any, this);
     };
     TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {

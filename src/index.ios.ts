@@ -1,6 +1,6 @@
-import { Color, FormattedString } from '@nativescript/core';
-import { TextAlignment } from '@nativescript/core/ui/text-base';
-import { textAlignmentConverter } from './index-common';
+import { Color, Font, FormattedString, ViewBase } from '@nativescript/core';
+import { TextAlignment, getTransformedText } from '@nativescript/core/ui/text-base';
+import { computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
 export * from './index-common';
 
 let iOSUseDTCoreText = false;
@@ -40,7 +40,9 @@ function _createNativeAttributedString({
     } else {
         htmlString =
             color || familyName || fontSize
-                ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${fontWeight ? `font-weight: ${fontWeight};` : ''}}</style>${text}`
+                ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
+                      fontWeight ? `font-weight: ${fontWeight};` : ''
+                  }}</style>${text}`
                 : text;
     }
     const nsString = NSString.stringWithString(htmlString);
@@ -112,11 +114,16 @@ export function createNativeAttributedString(
               lineHeight?: number;
               textAlignment?: NSTextAlignment | TextAlignment;
           }
-        | FormattedString
+        | FormattedString,
+    parent: ViewBase
 ) {
     if (data instanceof FormattedString) {
-        //todo not supported yet
-        return null;
+        const ssb = NSMutableAttributedString.new();
+        const maxFontSize = getMaxFontSize(data);
+        data.spans.forEach((s) => {
+            ssb.appendAttributedString(createSpannable(s, parent, undefined, maxFontSize));
+        });
+        return ssb;
     }
     if (data.textAlignment && typeof data.textAlignment === 'string') {
         data.textAlignment = textAlignmentConverter(data.textAlignment);
@@ -125,4 +132,102 @@ export function createNativeAttributedString(
         data.color = new Color(data.color as any);
     }
     return _createNativeAttributedString(data as any);
+}
+
+export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?): NSMutableAttributedString {
+    let text = span.text;
+    if (!text || span.visibility !== 'visible') {
+        return null;
+    }
+    const attrDict = {} as { key: string; value: any };
+    const fontFamily = span.fontFamily;
+    const fontSize = span.fontSize;
+    const realMaxFontSize = Math.max(maxFontSize, parentView.fontSize || 0);
+    const fontweight = span.fontWeight || 'normal';
+    const fontstyle = span.fontStyle || (parent && parent.fontStyle) || 'normal';
+    const textcolor = span.color;
+    const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
+    const textDecorations = span.textDecoration || (parent && parent.textDecoration);
+    const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
+    const lineHeight = span.lineHeight || (parent && parent.lineHeight);
+    const textAlignment = span.textAlignment || (parent && parent.textAlignment);
+    const verticaltextalignment = span.verticalTextAlignment;
+    let iosFont: UIFont;
+    if (fontweight || fontstyle || fontFamily || fontSize) {
+        const font = new Font(fontFamily, fontSize, fontstyle, typeof span.fontWeight === 'string' ? fontweight : ((fontweight + '') as any));
+        iosFont = font.getUIFont(UIFont.systemFontOfSize(fontSize));
+        attrDict[NSFontAttributeName] = iosFont;
+    }
+    if (verticaltextalignment && verticaltextalignment !== 'initial' && iosFont) {
+        const ascent = CTFontGetAscent(iosFont);
+        const descent = CTFontGetDescent(iosFont);
+        attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticaltextalignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
+    }
+    // if (span._tappable) {
+    //     attrDict[NSLinkAttributeName] = text;
+    // }
+    if (textcolor) {
+        const color = textcolor instanceof Color ? textcolor : new Color(textcolor);
+        attrDict[NSForegroundColorAttributeName] = color.ios;
+    }
+
+    if (backgroundcolor) {
+        const color = backgroundcolor instanceof Color ? backgroundcolor : new Color(backgroundcolor);
+        attrDict[NSBackgroundColorAttributeName] = color.ios;
+    }
+    if (letterSpacing) {
+        attrDict[NSKernAttributeName] = letterSpacing * iosFont.pointSize;
+    }
+
+    let paragraphStyle;
+    if (lineHeight !== undefined) {
+        paragraphStyle = NSMutableParagraphStyle.alloc().init();
+        switch (textAlignment) {
+            case 'middle':
+            case 'center':
+                paragraphStyle.alignment = NSTextAlignment.Center;
+                break;
+            case 'right':
+                paragraphStyle.alignment = NSTextAlignment.Right;
+                break;
+            default:
+                paragraphStyle.alignment = NSTextAlignment.Left;
+                break;
+        }
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
+    }
+    if (paragraphStyle) {
+        attrDict[NSParagraphStyleAttributeName] = paragraphStyle;
+    }
+
+    if (textDecorations) {
+        const underline = textDecorations.indexOf('underline') !== -1;
+        if (underline) {
+            attrDict[NSUnderlineStyleAttributeName] = underline;
+        }
+
+        const strikethrough = textDecorations.indexOf('line-through') !== -1;
+        if (strikethrough) {
+            attrDict[NSStrikethroughStyleAttributeName] = strikethrough;
+        }
+    }
+
+    if (!(text instanceof NSAttributedString)) {
+        if (!(typeof text === 'string')) {
+            text = text.toString();
+        }
+        if (text.indexOf('\n') !== -1) {
+            text = text.replace(/\\n/g, '\u{2029}');
+        }
+        const textTransform = span.textTransform || (parent && parent.textTransform);
+        if (textTransform) {
+            text = getTransformedText(text, textTransform);
+        }
+        return NSMutableAttributedString.alloc().initWithStringAttributes(text, attrDict as any);
+    } else {
+        const result = NSMutableAttributedString.alloc().initWithAttributedString(text);
+        result.setAttributesRange(attrDict as any, { location: 0, length: text.length });
+        return result;
+    }
 }
