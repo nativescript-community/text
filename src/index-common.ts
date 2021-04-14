@@ -20,7 +20,7 @@ import { createNativeAttributedString } from './index';
 
 declare module '@nativescript/core/ui/text-base' {
     interface TextBase {
-        createFormattedTextNative(value: LightFormattedString | FormattedString): any;
+        createFormattedTextNative?(value: LightFormattedString | FormattedString): any;
     }
 }
 
