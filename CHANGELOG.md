@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.12](https://github.com/nativescript-community/text/compare/v1.4.11...v1.4.12) (2021-07-01)
+
+
+### Bug Fixes
+
+* fixe for LightFormattedString ([b81660d](https://github.com/nativescript-community/text/commit/b81660d20e602d6b18c1ae98e2e6a478288e98d2))
+* **ios:** fixes for overrideSpanAndFormattedString ([dcb26ab](https://github.com/nativescript-community/text/commit/dcb26ab9ba2a4e8af941e96759cc04862e36de71))
+
+
+
+
+
 ## [1.4.11](https://github.com/nativescript-community/text/compare/v1.4.10...v1.4.11) (2021-04-14)
 
 **Note:** Version bump only for package @nativescript-community/text
