@@ -1,6 +1,7 @@
 import { Color, CoreTypes, Font, FormattedString, ViewBase } from '@nativescript/core';
 import { getTransformedText } from '@nativescript/core/ui/text-base';
 import { computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
+import { LightFormattedString } from './index.android';
 export * from './index-common';
 
 let iOSUseDTCoreText = false;
@@ -31,7 +32,7 @@ function _createNativeAttributedString({
     let htmlString;
     if (iOSUseDTCoreText) {
         htmlString =
-            color || familyName || fontSize
+            color || familyName || fontSize || fontWeight
                 ? `<span style=" ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:'${familyName.replace(/'/g, '')}';` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
                       fontWeight ? `font-weight: ${fontWeight};` : ''
                   }">${text}</span>`
@@ -39,7 +40,7 @@ function _createNativeAttributedString({
         // `<span style="font-family: ${fontFamily}; font-size:${fontSize};">${htmlString}</span>`;
     } else {
         htmlString =
-            color || familyName || fontSize
+            color || familyName || fontSize || fontWeight
                 ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
                       fontWeight ? `font-weight: ${fontWeight};` : ''
                   }}</style>${text}`
@@ -82,7 +83,7 @@ function _createNativeAttributedString({
     }
 
     // TODO: letterSpacing should be applied per Span.
-    if (letterSpacing !== undefined) {
+    if (letterSpacing !== undefined && letterSpacing !== 0) {
         attrText.addAttributeValueRange(NSKernAttributeName, letterSpacing * fontSize, { location: 0, length: attrText.length });
     }
 
@@ -117,11 +118,14 @@ export function createNativeAttributedString(
         | FormattedString,
     parent: ViewBase
 ) {
-    if (data instanceof FormattedString) {
+    if (data instanceof FormattedString || data instanceof LightFormattedString) {
         const ssb = NSMutableAttributedString.new();
         const maxFontSize = getMaxFontSize(data);
         data.spans.forEach((s) => {
-            ssb.appendAttributedString(createSpannable(s, parent, undefined, maxFontSize));
+            const res = createSpannable(s, parent, undefined, maxFontSize);
+            if (res) {
+                ssb.appendAttributedString(res);
+            }
         });
         return ssb;
     }
@@ -136,12 +140,12 @@ export function createNativeAttributedString(
 
 export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?): NSMutableAttributedString {
     let text = span.text;
-    if (!text || span.visibility !== 'visible') {
+    if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
     const attrDict = {} as { key: string; value: any };
     const fontFamily = span.fontFamily;
-    const fontSize = span.fontSize;
+    const fontSize = span.fontSize || (parent && parent.fontSize) || 16;
     const realMaxFontSize = Math.max(maxFontSize, parentView.fontSize || 0);
     const fontweight = span.fontWeight || 'normal';
     const fontstyle = span.fontStyle || (parent && parent.fontStyle) || 'normal';
