@@ -198,7 +198,7 @@ export class LightFormattedString extends Observable {
     toNativeString() {}
 }
 
-export function getMaxFontSize(value: FormattedString) {
+export function getMaxFontSize(value: FormattedString | LightFormattedString) {
     let max = value.fontSize || 0;
     value.spans &&
         value.spans.forEach((s) => {
