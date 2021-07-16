@@ -92,7 +92,9 @@ export function init() {
 
     const delimiter = String.fromCharCode(0x1e);
     Span.prototype.toNativeString = function (maxFontSize?: number) {
-        const textTransform = this.parent.parent.textTransform;
+        const parent = this.parent;
+        const grandParent = parent?.parent;
+        const textTransform = grandParent?.textTransform;
         const spanStyle = this.style;
         let backgroundColor: Color;
         if (backgroundColorProperty.isSet(spanStyle)) {
@@ -102,16 +104,16 @@ export function init() {
         let textDecoration;
         if (textDecorationProperty.isSet(spanStyle)) {
             textDecoration = spanStyle.textDecoration;
-        } else if (this.parent.textDecoration) {
+        } else if (parent?.textDecoration) {
             // span.parent is FormattedString
-            textDecoration = this.parent.style.textDecoration;
-        } else if (textDecorationProperty.isSet(this.parent.parent.style)) {
+            textDecoration = parent?.style.textDecoration;
+        } else if (textDecorationProperty.isSet(grandParent?.style)) {
             // span.parent.parent is TextBase
-            textDecoration = this.parent.parent.style.textDecorations;
+            textDecoration = grandParent?.style.textDecorations;
         }
-        let verticalTextAlignment = this.verticalAlignment || this.parent.verticalAlignment;
+        let verticalTextAlignment = this.verticalAlignment || parent?.verticalAlignment;
         if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-            verticalTextAlignment = this.parent.parent.verticalTextAlignment;
+            verticalTextAlignment = grandParent?.verticalTextAlignment;
         }
         let text = this.text;
         if (text && textTransform != null && textTransform !== 'none') {
