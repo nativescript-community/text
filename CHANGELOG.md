@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.13](https://github.com/nativescript-community/text/compare/v1.4.12...v1.4.13) (2021-07-16)
+
+
+### Bug Fixes
+
+* ensure we check for object existence ([1207f92](https://github.com/nativescript-community/text/commit/1207f929ec545cc2ec5018a66ef3ef09e7245175))
+
+
+
+
+
 ## [1.4.12](https://github.com/nativescript-community/text/compare/v1.4.11...v1.4.12) (2021-07-01)
 
 
