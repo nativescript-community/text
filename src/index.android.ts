@@ -55,7 +55,7 @@ export function init() {
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!this._typeface) {
             // css loader to json transform font-family: res/toto to font-family: res,toto
-            const fontFamily = this.fontFamily?.replace(/res,/g, 'res/') || '';
+            const fontFamily = this.fontFamily?.replace(/res,/g, 'res/');
             const fontCacheKey: string = fontFamily + (this.fontWeight || '') + (this.fontStyle || '');
 
             const typeface = typefaceCache[fontCacheKey];
@@ -188,7 +188,7 @@ function isBold(fontWeight: FontWeight): boolean {
 //     BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
 // }
 export const createNativeAttributedString = profile(
-    'getAndroidTypeface',
+    'createNativeAttributedString',
     function createNativeAttributedString(
         data:
             | {
