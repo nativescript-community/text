@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.14](https://github.com/nativescript-community/text/compare/v1.4.13...v1.4.14) (2021-08-03)
+
+**Note:** Version bump only for package @nativescript-community/text
+
+
+
+
+
 ## [1.4.13](https://github.com/nativescript-community/text/compare/v1.4.12...v1.4.13) (2021-07-16)
 
 **Note:** Version bump only for package @nativescript-community/text

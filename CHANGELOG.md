@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.14](https://github.com/nativescript-community/text/compare/v1.4.13...v1.4.14) (2021-08-03)
+
+
+### Bug Fixes
+
+* **android:** default font with “undefined” font family ([44dbd97](https://github.com/nativescript-community/text/commit/44dbd972b38e6965f1cb5e151772096886d5a658))
+* **android:** textTransform fix ([b81ed10](https://github.com/nativescript-community/text/commit/b81ed10542903f75d4d66e194f123af012ed18e0))
+
+
+
+
+
 ## [1.4.13](https://github.com/nativescript-community/text/compare/v1.4.12...v1.4.13) (2021-07-16)
 
 
