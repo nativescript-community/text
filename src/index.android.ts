@@ -94,8 +94,8 @@ export function init() {
     Span.prototype.toNativeString = function (maxFontSize?: number) {
         const parent = this.parent;
         const grandParent = parent?.parent;
-        const textTransform = grandParent?.textTransform;
         const spanStyle = this.style;
+        const textTransform = this.textTransform || grandParent?.textTransform;
         let backgroundColor: Color;
         if (backgroundColorProperty.isSet(spanStyle)) {
             backgroundColor = spanStyle.backgroundColor;
@@ -131,7 +131,7 @@ ${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
 ${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
 ${this.color ? this.color.android : -1}${delimiter}\
 ${backgroundColor ? backgroundColor.android : -1}${delimiter}\
-${this.text}`;
+${text}`;
         return result;
     };
 }
