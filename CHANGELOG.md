@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.16](https://github.com/nativescript-community/text/compare/v1.4.15...v1.4.16) (2021-08-04)
+
+
+### Bug Fixes
+
+* **ios:** correctly handle parent font parameters ([97d1766](https://github.com/nativescript-community/text/commit/97d176686ecc2f44937b212356ceb375b11ab507))
+* html conversion better parameters ([a23f47b](https://github.com/nativescript-community/text/commit/a23f47b7d0486ca8d7a6739e66fe8815f132730b))
+
+
+
+
+
 ## [1.4.15](https://github.com/nativescript-community/text/compare/v1.4.14...v1.4.15) (2021-08-04)
 
 
