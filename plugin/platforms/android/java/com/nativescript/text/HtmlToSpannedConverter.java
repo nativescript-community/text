@@ -47,17 +47,19 @@ class HtmlToSpannedConverter extends DefaultHandler {
     private Html.ImageGetter mImageGetter;
     private float density;
     private String fontFolder;
+    private String parentFontFamily;
     private Context context;
 
     public void reset() {
         mSpannableStringBuilder = new SpannableStringBuilder();
     }
 
-    public HtmlToSpannedConverter(Context context, String fontFolder, Html.ImageGetter imageGetter,
+    public HtmlToSpannedConverter(Context context, String fontFolder, String parentFontFamily, Html.ImageGetter imageGetter,
             Html.TagHandler tagHandler, final boolean disableLinkStyle) {
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
         this.fontFolder = fontFolder;
+        this.parentFontFamily = parentFontFamily;
         this.context = context;
         this.disableLinkStyle = disableLinkStyle;
         density = context.getResources().getDisplayMetrics().density;
@@ -436,7 +438,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
             int strokeWidth = 1;
             int radius = 0;
             String fontWeight = null;
-            String fontFamily = null;
+            String fontFamily = this.parentFontFamily;
             String fontStyle = null;
             float fontSize = 0;
             boolean needsBgdSpan = false;

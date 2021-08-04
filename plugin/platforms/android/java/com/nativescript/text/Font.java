@@ -233,7 +233,7 @@ public class Font {
         return result;
     }
 
-    public static SpannableStringBuilder stringBuilderFromHtmlString(Context context, String fontFolder,
+    public static SpannableStringBuilder stringBuilderFromHtmlString(Context context, String fontFolder, String parentFontFamily,
             String htmlString) {
         if (htmlString == null) {
             return null;
@@ -241,7 +241,7 @@ public class Font {
         // Spanned spannedString = HtmlCompat.fromHtml(htmlString,
         // HtmlCompat.FROM_HTML_MODE_COMPACT);
 
-        CharSequence spannedString = fromHtml(htmlString, context, fontFolder, false);
+        CharSequence spannedString = fromHtml(htmlString, context, fontFolder, parentFontFamily, false);
         SpannableStringBuilder builder = new SpannableStringBuilder(spannedString);
 
         // TypefaceSpan[] spans = builder.getSpans(0, builder.length(),
@@ -302,7 +302,7 @@ public class Font {
         return result;
     }
 
-    public static void setSpanModifiers(Context context, String fontFolder, SpannableStringBuilder ssb,
+    public static void setSpanModifiers(Context context, String fontFolder, String parentFontFamily, SpannableStringBuilder ssb,
             ArrayList<String> span, int start, int end) {
         boolean bold = span.get(2).equals("bold") || span.get(2).equals("700");
         boolean italic = span.get(3).equals("1");
@@ -321,6 +321,9 @@ public class Font {
         // }
 
         String fontFamily = span.get(0);
+        if (fontFamily.equals("0") && parentFontFamily != null) {
+            fontFamily = parentFontFamily;
+        }
         if (!fontFamily.equals("0")) {
             Typeface typeface = createTypeface(context, fontFolder, fontFamily, span.get(2), bold, italic);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
@@ -375,7 +378,7 @@ public class Font {
         }
     }
 
-    public static SpannableStringBuilder stringBuilderFromFormattedString(Context context, String fontFolder,
+    public static SpannableStringBuilder stringBuilderFromFormattedString(Context context, String fontFolder, String parentFontFamily,
             String formattedString) {
         if (formattedString == null) {
             return null;
@@ -388,7 +391,7 @@ public class Font {
             spanLength = text.length();
             if (spanLength > 0) {
                 ssb.insert(spanStart, text);
-                setSpanModifiers(context, fontFolder, ssb, span, spanStart, spanStart + spanLength);
+                setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
                 spanStart += spanLength;
             }
         }
@@ -399,7 +402,7 @@ public class Font {
     static SAXParser saxParser = null;
     static HtmlToSpannedConverter converter = null;
 
-    public static CharSequence fromHtml(CharSequence html, Context context, String fontFolder,
+    public static CharSequence fromHtml(CharSequence html, Context context, String fontFolder, String parentFontFamily,
             final boolean disableLinkStyle) {
         // long startTime = System.nanoTime();
         // XMLReader xmlReader;
@@ -409,7 +412,7 @@ public class Font {
                 saxParser = factory.newSAXParser();
             }
             if (converter == null) {
-                converter = new HtmlToSpannedConverter(context, fontFolder, null, null, disableLinkStyle);
+                converter = new HtmlToSpannedConverter(context, fontFolder, parentFontFamily, null, null, disableLinkStyle);
             } else {
                 converter.reset();
                 converter.disableLinkStyle = disableLinkStyle;
@@ -425,7 +428,7 @@ public class Font {
         return html;
     }
 
-    public static CharSequence fromHtml(Context context, String fontFolder, CharSequence html) {
-        return fromHtml(html, context, fontFolder, false);
+    public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html) {
+        return fromHtml(html, context, fontFolder, parentFontFamily, false);
     }
 }

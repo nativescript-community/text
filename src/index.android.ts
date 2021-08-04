@@ -96,6 +96,14 @@ export function init() {
         const grandParent = parent?.parent;
         const spanStyle = this.style;
         const textTransform = this.textTransform || grandParent?.textTransform;
+        let fontWeight = this.fontWeight;
+        let fontStyle = this.fontStyle;
+        let fontFamily = this.fontFamily;
+        if (fontFamily || fontWeight || fontStyle) {
+            fontFamily = fontFamily || (parent && parent.fontFamily) || (grandParent && grandParent.fontFamily);
+            fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
+            fontStyle = fontWeight || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
+        }
         let backgroundColor: Color;
         if (backgroundColorProperty.isSet(spanStyle)) {
             backgroundColor = spanStyle.backgroundColor;
@@ -120,10 +128,10 @@ export function init() {
             text = getTransformedText(text, textTransform);
         }
         const density = layout.getDisplayDensity();
-        const result = `${this.fontFamily || 0}${delimiter}\
+        const result = `${fontFamily || 0}${delimiter}\
 ${this.fontSize !== undefined ? this.fontSize * density : -1}${delimiter}\
-${this.fontWeight || ''}${delimiter}\
-${this.fontStyle === 'italic' ? 1 : 0}${delimiter}\
+${fontWeight || ''}${delimiter}\
+${fontStyle === 'italic' ? 1 : 0}${delimiter}\
 ${textDecoration || 0}${delimiter}\
 ${maxFontSize * density}${delimiter}\
 ${verticalTextAlignment && verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
@@ -209,7 +217,7 @@ export const createNativeAttributedString = profile(
         }
         if (typeof data['toNativeString'] === 'function') {
             const nativeString = (data as any).toNativeString();
-            return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, nativeString);
+            return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'], nativeString);
         }
         // if (data.textAlignment && typeof data.textAlignment === 'string') {
         //     data.textAlignment = textAlignmentConverter(data.textAlignment);
@@ -217,7 +225,7 @@ export const createNativeAttributedString = profile(
         // if (data.color && !(data.color instanceof Color)) {
         //     data.color = new Color(data.color as any);
         // }
-        const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, (data as any).text) as android.text.SpannableStringBuilder;
+        const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'], (data as any).text) as android.text.SpannableStringBuilder;
         return result;
     }
 );
@@ -231,9 +239,9 @@ export const createSpannable = profile('createSpannable', function (span: any, p
         return null;
     }
     const fontSize = span.fontSize;
-    const fontWeight = span.fontWeight || 'normal';
-    const fontStyle = span.fontStyle || (parent && parent.fontStyle) || 'normal';
-    const fontFamily = span.fontFamily;
+    let fontWeight = span.fontWeight;
+    let fontStyle = span.fontStyle;
+    let fontFamily = span.fontFamily;
 
     const color = span.color;
     const textDecorations = span.textDecoration || (parent && parent.textDecoration);
@@ -286,7 +294,10 @@ export const createSpannable = profile('createSpannable', function (span: any, p
         ssb.setSpan(new Style.StyleSpan(android.graphics.Typeface.ITALIC), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
     // }
-    if (fontFamily || (fontWeight !== 'normal' && !bold)) {
+    if (fontFamily || fontWeight || fontStyle) {
+        fontFamily = fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily);
+        fontWeight = fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight);
+        fontStyle = fontWeight || (parent && parent.fontStyle) || (parentView && parentView.fontStyle);
         const fontCacheKey = fontFamily + fontWeight + fontStyle;
 
         let typeface = typefaceCache[fontCacheKey];
