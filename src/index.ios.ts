@@ -127,15 +127,15 @@ export function createNativeAttributedString(
         let hasLink = false;
         data.spans.forEach((s) => {
             const res = createSpannable(s, parent, undefined, maxFontSize);
-            if ((s as any)._tappable) {
-                hasLink = true;
-            }
-            _spanRanges.push({
-                location: spanStart,
-                length: res.length,
-            });
-            spanStart += res.length;
             if (res) {
+                if ((s as any)._tappable) {
+                    hasLink = true;
+                }
+                _spanRanges.push({
+                    location: spanStart,
+                    length: res.length,
+                });
+                spanStart += res.length;
                 ssb.appendAttributedString(res);
             }
         });
