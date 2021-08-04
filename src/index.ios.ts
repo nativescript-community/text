@@ -162,10 +162,10 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     }
     const attrDict = {} as { key: string; value: any };
     const fontFamily = span.fontFamily;
-    const fontSize = span.fontSize || (parent && parent.fontSize) || 16;
+    const fontSize = span.fontSize;
     const realMaxFontSize = Math.max(maxFontSize, parentView.fontSize || 0);
-    const fontweight = span.fontWeight || 'normal';
-    const fontstyle = span.fontStyle || (parent && parent.fontStyle) || 'normal';
+    const fontweight = span.fontWeight;
+    const fontstyle = span.fontStyle;
     const textcolor = span.color;
     const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
     const textDecorations = span.textDecoration || (parent && parent.textDecoration);
@@ -175,7 +175,12 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const verticaltextalignment = span.verticalTextAlignment;
     let iosFont: UIFont;
     if (fontweight || fontstyle || fontFamily || fontSize) {
-        const font = new Font(fontFamily, fontSize, fontstyle, typeof span.fontWeight === 'string' ? fontweight : ((fontweight + '') as any));
+        const font = new Font(
+            fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily),
+            fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize),
+            fontstyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle),
+            fontweight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
+        );
         iosFont = font.getUIFont(UIFont.systemFontOfSize(fontSize));
         attrDict[NSFontAttributeName] = iosFont;
     }
@@ -188,13 +193,17 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     //     attrDict[NSLinkAttributeName] = text;
     // }
     if (textcolor) {
-        const color = textcolor instanceof Color ? textcolor : new Color(textcolor);
-        attrDict[NSForegroundColorAttributeName] = color.ios;
+        const color = !textcolor || textcolor instanceof Color ? textcolor : new Color(textcolor);
+        if (color) {
+            attrDict[NSForegroundColorAttributeName] = color.ios;
+        }
     }
 
     if (backgroundcolor) {
-        const color = backgroundcolor instanceof Color ? backgroundcolor : new Color(backgroundcolor);
-        attrDict[NSBackgroundColorAttributeName] = color.ios;
+        const color = !backgroundcolor || backgroundcolor instanceof Color ? backgroundcolor : new Color(backgroundcolor);
+        if (color) {
+            attrDict[NSBackgroundColorAttributeName] = color.ios;
+        }
     }
     if (letterSpacing) {
         attrDict[NSKernAttributeName] = letterSpacing * iosFont.pointSize;
