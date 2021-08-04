@@ -121,12 +121,28 @@ export function createNativeAttributedString(
     if (data instanceof FormattedString || data instanceof LightFormattedString) {
         const ssb = NSMutableAttributedString.new();
         const maxFontSize = getMaxFontSize(data);
+        const _spanRanges = [];
+        let spanStart = 0;
+        let hasLink = false;
         data.spans.forEach((s) => {
             const res = createSpannable(s, parent, undefined, maxFontSize);
+            if ((s as any)._tappable) {
+                hasLink = true;
+            }
+            _spanRanges.push({
+                location: spanStart,
+                length: res.length,
+            });
+            spanStart += res.length;
             if (res) {
                 ssb.appendAttributedString(res);
             }
         });
+        parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
+        if ((parent as any)._setTappableState) {
+            (parent as any)._setTappableState(hasLink);
+        }
+        parent['_spanRanges'] = _spanRanges;
         return ssb;
     }
     if (data.textAlignment && typeof data.textAlignment === 'string') {
