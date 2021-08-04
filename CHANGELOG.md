@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.18](https://github.com/nativescript-community/text/compare/v1.4.17...v1.4.18) (2021-08-04)
+
+
+### Bug Fixes
+
+* **ios:** fix error if null ([4769b04](https://github.com/nativescript-community/text/commit/4769b0488e79e81626d7b014c839205414626387))
+
+
+
+
+
 ## [1.4.17](https://github.com/nativescript-community/text/compare/v1.4.16...v1.4.17) (2021-08-04)
 
 
