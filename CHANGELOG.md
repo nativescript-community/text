@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15](https://github.com/nativescript-community/text/compare/v1.4.14...v1.4.15) (2021-08-04)
+
+
+### Bug Fixes
+
+* **ios:** overrideSpanAndFormattedString supports linkTap ([4babed3](https://github.com/nativescript-community/text/commit/4babed34d20fb3080c233a062065dffd8667e9de))
+
+
+
+
+
 ## [1.4.14](https://github.com/nativescript-community/text/compare/v1.4.13...v1.4.14) (2021-08-03)
 
 
