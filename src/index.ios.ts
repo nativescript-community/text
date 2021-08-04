@@ -47,7 +47,7 @@ function _createNativeAttributedString({
                 : text;
     }
     const nsString = NSString.stringWithString(htmlString);
-    const nsData = nsString.dataUsingEncoding(NSUTF16StringEncoding);
+    const nsData = nsString.dataUsingEncodingAllowLossyConversion(NSUnicodeStringEncoding, true);
     let attrText;
     if (iOSUseDTCoreText) {
         // on iOS 13.3 there is bug with the system font
@@ -77,6 +77,7 @@ function _createNativeAttributedString({
             nsData,
             {
                 [NSDocumentTypeDocumentAttribute]: NSHTMLTextDocumentType,
+                [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding,
             } as any,
             null
         );
