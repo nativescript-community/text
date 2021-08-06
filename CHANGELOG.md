@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.19](https://github.com/nativescript-community/text/compare/v1.4.18...v1.4.19) (2021-08-06)
+
+
+### Bug Fixes
+
+* usingiOSUseDTCoreText method ([6f3e1b2](https://github.com/nativescript-community/text/commit/6f3e1b207689752f80c98f65403bdd15e31b96c2))
+
+
+
+
+
 ## [1.4.18](https://github.com/nativescript-community/text/compare/v1.4.17...v1.4.18) (2021-08-04)
 
 
