@@ -31,6 +31,9 @@ const CHILD_FORMATTED_STRING = 'FormattedString';
 const CHILD_LIGHT_FORMATTED_STRING = 'LightFormattedString';
 
 export function enableIOSDTCoreText() {}
+export function usingIOSDTCoreText() {
+    return false;
+}
 
 export function computeBaseLineOffset(align, fontAscent, fontDescent, fontBottom, fontTop, fontSize, maxFontSize) {
     let result = 0;
