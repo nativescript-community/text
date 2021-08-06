@@ -217,7 +217,7 @@ export const createNativeAttributedString = profile(
         }
         if (typeof data['toNativeString'] === 'function') {
             const nativeString = (data as any).toNativeString();
-            return (com as any).nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'], nativeString);
+            return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, nativeString);
         }
         // if (data.textAlignment && typeof data.textAlignment === 'string') {
         //     data.textAlignment = textAlignmentConverter(data.textAlignment);
@@ -225,7 +225,7 @@ export const createNativeAttributedString = profile(
         // if (data.color && !(data.color instanceof Color)) {
         //     data.color = new Color(data.color as any);
         // }
-        const result = (com as any).nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'], (data as any).text) as android.text.SpannableStringBuilder;
+        const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'] || null, (data as any).text);
         return result;
     }
 );

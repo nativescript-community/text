@@ -18,6 +18,8 @@ declare namespace com {
             }
 
             export class Font {
+                static stringBuilderFromHtmlString(context: globalAndroid.content.Context, fontPath: string, parentFontFamily: string, text: string): globalAndroid.text.SpannableStringBuilder;
+                static stringBuilderFromFormattedString(context: globalAndroid.content.Context, fontPath: string, parentFontFamily: string, nativeString: string): any;
                 static createTypeface(
                     context: globalAndroid.content.Context,
                     fontFolder: string,
