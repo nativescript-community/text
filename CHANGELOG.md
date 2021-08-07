@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.20](https://github.com/nativescript-community/text/compare/v1.4.19...v1.4.20) (2021-08-07)
+
+
+### Bug Fixes
+
+* **ios:** autoFontSize and color fixes ([d3d4a6a](https://github.com/nativescript-community/text/commit/d3d4a6aed304c294fea2ca9c69f6b1a3f78342b0))
+
+
+
+
+
 ## [1.4.19](https://github.com/nativescript-community/text/compare/v1.4.18...v1.4.19) (2021-08-06)
 
 
