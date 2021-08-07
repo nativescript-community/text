@@ -99,7 +99,7 @@ export function init() {
         let fontWeight = this.fontWeight;
         let fontStyle = this.fontStyle;
         let fontFamily = this.fontFamily;
-        if (fontFamily || fontWeight || fontStyle) {
+        if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
             fontFamily = fontFamily || (parent && parent.fontFamily) || (grandParent && grandParent.fontFamily);
             fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
             fontStyle = fontWeight || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
@@ -195,40 +195,39 @@ function isBold(fontWeight: FontWeight): boolean {
 
 //     BaselineAdjustedSpan = BaselineAdjustedSpanImpl as any;
 // }
-export const createNativeAttributedString = profile(
-    'createNativeAttributedString',
-    function createNativeAttributedString(
-        data:
-            | {
-                  text: string;
-                  color?: Color | string | number;
-                  familyName?: string;
-                  fontSize?: number;
-                  fontWeight?: string;
-                  letterSpacing?: number;
-                  lineHeight?: number;
-                  textAlignment?: number | CoreTypes.TextAlignmentType;
-              }
-            | FormattedString,
-        parent: ViewBase
-    ) {
-        if (!context) {
-            init();
-        }
-        if (typeof data['toNativeString'] === 'function') {
-            const nativeString = (data as any).toNativeString();
-            return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, nativeString);
-        }
-        // if (data.textAlignment && typeof data.textAlignment === 'string') {
-        //     data.textAlignment = textAlignmentConverter(data.textAlignment);
-        // }
-        // if (data.color && !(data.color instanceof Color)) {
-        //     data.color = new Color(data.color as any);
-        // }
-        const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'] || null, (data as any).text);
-        return result;
+export function createNativeAttributedString(
+    data:
+        | {
+              text: string;
+              color?: Color | string | number;
+              familyName?: string;
+              fontSize?: number;
+              fontWeight?: string;
+              letterSpacing?: number;
+              lineHeight?: number;
+              textAlignment?: number | CoreTypes.TextAlignmentType;
+          }
+        | FormattedString,
+    parent: ViewBase,
+    autoFontSizeEnabled = false,
+    fontSizeRatio = 1 // used only on iOS
+) {
+    if (!context) {
+        init();
     }
-);
+    if (typeof data['toNativeString'] === 'function') {
+        const nativeString = (data as any).toNativeString();
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, nativeString);
+    }
+    // if (data.textAlignment && typeof data.textAlignment === 'string') {
+    //     data.textAlignment = textAlignmentConverter(data.textAlignment);
+    // }
+    // if (data.color && !(data.color instanceof Color)) {
+    //     data.color = new Color(data.color as any);
+    // }
+    const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'] || null, (data as any).text);
+    return result;
+}
 
 let lineSeparator;
 let Style: typeof android.text.style;

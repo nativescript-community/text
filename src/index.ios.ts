@@ -22,6 +22,8 @@ function _createNativeAttributedString({
     lineHeight,
     color,
     textAlignment,
+    autoFontSizeEnabled = false,
+    fontSizeRatio = 1,
 }: {
     text: string;
     color: Color;
@@ -31,50 +33,43 @@ function _createNativeAttributedString({
     letterSpacing?: number;
     lineHeight?: number;
     textAlignment: NSTextAlignment;
+    autoFontSizeEnabled: boolean;
+    fontSizeRatio: number;
 }) {
-    let htmlString;
-    if (iOSUseDTCoreText) {
-        htmlString =
-            color || familyName || fontSize || fontWeight
-                ? `<span style=" ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:'${familyName.replace(/'/g, '')}';` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
-                      fontWeight ? `font-weight: ${fontWeight};` : ''
-                  }">${text}</span>`
-                : text;
-        // `<span style="font-family: ${fontFamily}; font-size:${fontSize};">${htmlString}</span>`;
-    } else {
-        htmlString =
-            color || familyName || fontSize || fontWeight
-                ? `<style>body{ ${color ? `color: ${color};` : ''}  ${familyName ? `font-family:"${familyName.replace(/'/g, '')}";` : ''}${fontSize ? `font-size: ${fontSize}px;` : ''}${
-                      fontWeight ? `font-weight: ${fontWeight};` : ''
-                  }}</style>${text}`
-                : text;
-    }
+    const trueFontFamily = familyName
+        ? familyName
+              .replace(/'/g, '')
+              .split(',')
+              .map((s) => `'${s}'`)
+              .join(',')
+        : null;
+    // if (iOSUseDTCoreText) {
+    const htmlString =
+        color || familyName || fontSize || fontWeight
+            ? `<span style=" ${color ? `color: ${color};` : ''}  ${trueFontFamily ? `font-family:${trueFontFamily};` : ''}${fontSize ? `font-size: ${fontSize * fontSizeRatio}px;` : ''}${
+                  fontWeight ? `font-weight: ${fontWeight};` : ''
+              }">${text}</span>`
+            : text;
+    // } else {
+    //     htmlString =
+    //         color || familyName || fontSize || fontWeight
+    //             ? `<style>body{ ${color ? `color: ${color};` : ''}  ${trueFontFamily ? `font-family:${trueFontFamily};` : ''}${fontSize ? `font-size: ${fontSize * fontSizeRatio}px;` : ''}${
+    //                   fontWeight ? `font-weight: ${fontWeight};` : ''
+    //               }}</style>${text}`
+    //             : text;
+    // }
     const nsString = NSString.stringWithString(htmlString);
     const nsData = nsString.dataUsingEncodingAllowLossyConversion(NSUnicodeStringEncoding, true);
-    let attrText;
+    let attrText: NSMutableAttributedString;
     if (iOSUseDTCoreText) {
         // on iOS 13.3 there is bug with the system font
         // https://github.com/Cocoanetics/DTCoreText/issues/1168
         const options = {
             [DTDefaultTextAlignment]: kCTLeftTextAlignment,
-            // [NSTextSizeMultiplierDocumentOption]: 1,
-            // [DTIgnoreLinkStyleOption]: false,
-            // [DTDefaultFontFamily]: familyName,
-            // [NSFontAttributeName]: familyName,
-            // [NSTextSizeMultiplierDocumentOption]: 17 / 12.0,
             [DTUseiOS6Attributes]: true,
             [DTDocumentPreserveTrailingSpaces]: true,
-            // [DTDefaultLineBreakMode]: kCTLineBreakByWordWrapping
         } as any;
         attrText = NSMutableAttributedString.alloc().initWithHTMLDataOptionsDocumentAttributes(nsData, options, null);
-        attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, NSAttributedStringEnumerationReverse, (attributes: NSDictionary<any, any>, range, stop) => {
-            if (!!attributes.valueForKey('DTGUID')) {
-                // We need to remove this attribute or links are not colored right
-                //
-                // @see https://github.com/Cocoanetics/DTCoreText/issues/792
-                attrText.removeAttributeRange('CTForegroundColorFromContext', range);
-            }
-        });
     } else {
         attrText = NSMutableAttributedString.alloc().initWithDataOptionsDocumentAttributesError(
             nsData,
@@ -84,6 +79,20 @@ function _createNativeAttributedString({
             } as any,
             null
         );
+    }
+    if (autoFontSizeEnabled || iOSUseDTCoreText) {
+        attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, 0, (attributes: NSDictionary<any, any>, range, stop) => {
+            if (!!attributes.valueForKey('DTGUID')) {
+                // We need to remove this attribute or links are not colored right
+                //
+                // @see https://github.com/Cocoanetics/DTCoreText/issues/792
+                attrText.removeAttributeRange('CTForegroundColorFromContext', range);
+            }
+            const font: UIFont = attributes.valueForKey(NSFontAttributeName);
+            if (!!font) {
+                attrText.addAttributeValueRange('OriginalFontSize', font.pointSize, range);
+            }
+        });
     }
 
     // TODO: letterSpacing should be applied per Span.
@@ -120,7 +129,9 @@ export function createNativeAttributedString(
               textAlignment?: NSTextAlignment | CoreTypes.TextAlignmentType;
           }
         | FormattedString,
-    parent: ViewBase
+    parent: ViewBase,
+    autoFontSizeEnabled = false,
+    fontSizeRatio = 1
 ) {
     if (data instanceof FormattedString || data instanceof LightFormattedString) {
         const ssb = NSMutableAttributedString.new();
@@ -129,7 +140,7 @@ export function createNativeAttributedString(
         let spanStart = 0;
         let hasLink = false;
         data.spans.forEach((s) => {
-            const res = createSpannable(s, parent, undefined, maxFontSize);
+            const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
             if (res) {
                 if ((s as any)._tappable) {
                     hasLink = true;
@@ -155,10 +166,12 @@ export function createNativeAttributedString(
     if (data.color && !(data.color instanceof Color)) {
         data.color = new Color(data.color as any);
     }
+    data['autoFontSizeEnabled'] = autoFontSizeEnabled;
+    data['fontSizeRatio'] = fontSizeRatio;
     return _createNativeAttributedString(data as any);
 }
 
-export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?): NSMutableAttributedString {
+export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1): NSMutableAttributedString {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
@@ -166,10 +179,11 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const attrDict = {} as { key: string; value: any };
     const fontFamily = span.fontFamily;
     const fontSize = span.fontSize;
-    const realMaxFontSize = Math.max(maxFontSize, parentView.fontSize || 0);
-    const fontweight = span.fontWeight;
+    const realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
+    const realMaxFontSize = Math.max(maxFontSize, realFontSize);
+    const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;
-    const textcolor = span.color;
+    const textcolor = span.color || (parent && parent.color) || (parentView && parentView.color);
     const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
     const textDecorations = span.textDecoration || (parent && parent.textDecoration);
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
@@ -177,15 +191,18 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const textAlignment = span.textAlignment || (parent && parent.textAlignment);
     const verticaltextalignment = span.verticalTextAlignment;
     let iosFont: UIFont;
-    if (fontweight || fontstyle || fontFamily || fontSize) {
+    if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
         const font = new Font(
             fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily),
-            fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize),
+            realFontSize * fontSizeRatio,
             fontstyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle),
-            fontweight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
+            fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
         );
-        iosFont = font.getUIFont(UIFont.systemFontOfSize(fontSize));
+        iosFont = font.getUIFont(UIFont.systemFontOfSize(realFontSize));
         attrDict[NSFontAttributeName] = iosFont;
+        if (autoFontSizeEnabled) {
+            attrDict['OriginalFontSize'] = realFontSize;
+        }
     }
     if (verticaltextalignment && verticaltextalignment !== 'initial' && iosFont) {
         const ascent = CTFontGetAscent(iosFont);
