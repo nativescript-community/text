@@ -179,7 +179,10 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const attrDict = {} as { key: string; value: any };
     const fontFamily = span.fontFamily;
     const fontSize = span.fontSize;
-    const realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
+    let realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
+    if (span.relativeSize) {
+        realFontSize = ((parent && parent.fontSize) || (parentView && parentView.fontSize)) * span.relativeSize;
+    }
     const realMaxFontSize = Math.max(maxFontSize, realFontSize);
     const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;

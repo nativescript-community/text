@@ -3,6 +3,7 @@ import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
 import { layout } from '@nativescript/core/utils/utils';
+import { getMaxFontSize } from '.';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
@@ -269,9 +270,9 @@ export function createNativeAttributedString(
 let lineSeparator;
 let Style: typeof android.text.style;
 let Spanned: typeof android.text.Spanned;
-export const createSpannable = profile('createSpannable', function (span: any, parentView: any, parent?: any, maxFontSize?: number) {
+export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?: number) {
     let text = span.text;
-    if (!text || span.visibility !== 'visible') {
+    if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
     const fontSize = span.fontSize;
@@ -362,6 +363,9 @@ export const createSpannable = profile('createSpannable', function (span: any, p
     if (fontSize) {
         ssb.setSpan(new Style.AbsoluteSizeSpan(fontSize), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+    if (span.relativeSize) {
+        ssb.setSpan(new Style.RelativeSizeSpan(span.relativeSize), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
 
     if (letterSpacing) {
         ssb.setSpan(new Style.ScaleXSpan((letterSpacing + 1) / 10), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -396,4 +400,4 @@ export const createSpannable = profile('createSpannable', function (span: any, p
         ssb.setSpan(new ClickableSpan(span), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
     return ssb;
-});
+}
