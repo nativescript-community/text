@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.21](https://github.com/nativescript-community/text/compare/v1.4.20...v1.4.21) (2021-08-09)
+
+
+### Features
+
+* span relativeSize support ([3618fc7](https://github.com/nativescript-community/text/commit/3618fc77a3033017c13b4755212563c3b7f174d3))
+
+
+
+
+
 ## [1.4.20](https://github.com/nativescript-community/text/compare/v1.4.19...v1.4.20) (2021-08-07)
 
 
