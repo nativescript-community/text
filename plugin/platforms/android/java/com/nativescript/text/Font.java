@@ -6,10 +6,15 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import org.xml.sax.InputSource;
 
@@ -238,74 +243,18 @@ public class Font {
         if (htmlString == null) {
             return null;
         }
-        // Spanned spannedString = HtmlCompat.fromHtml(htmlString,
-        // HtmlCompat.FROM_HTML_MODE_COMPACT);
-
         CharSequence spannedString = fromHtml(htmlString, context, fontFolder, parentFontFamily, false);
         SpannableStringBuilder builder = new SpannableStringBuilder(spannedString);
-
-        // TypefaceSpan[] spans = builder.getSpans(0, builder.length(),
-        // android.text.style.TypefaceSpan.class);
-        // for (int index = 0; index < spans.length; index++) {
-        // TypefaceSpan span = spans[index];
-        // int start = builder.getSpanStart(span);
-        // int end = builder.getSpanEnd(span);
-        // String fontFamily = span.getFamily();
-        // String[] split = fontFamily.split("-");
-        // String style = null;
-        // if (split.length > 1) {
-        // style = split[1];
-        // }
-        // Typeface typeface = createTypeface(context, fontFolder, fontFamily,
-        // (style != null) && style.equals("bold") ? "bold" : "normal", (style != null)
-        // && style.equals("bold"), (style != null) && style.equals("italic"));
-
-        // if (typeface == null) {
-        // typeface = Typeface.create(fontFamily, Typeface.NORMAL);
-        // }
-        // if (typeface != null) {
-        // TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
-        // builder.setSpan(typefaceSpan, start, end,
-        // android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        // }
-        // }
 
         return builder;
     }
 
-    static char SpanSeparator = (char) 0x1F;
-    static char PropertySeparator = (char) 0x1E;
-
-    static ArrayList<ArrayList<String>> parseFormattedString(String formattedString) {
-        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-
-        final int len = formattedString.length();
-        String buffer = "";
-        ArrayList<String> spanProps = new ArrayList<String>();
-        for (int i = 0; i < len; i++) {
-            char c = formattedString.charAt(i);
-            if (c == PropertySeparator) {
-                spanProps.add(buffer);
-                buffer = "";
-            } else if (c == SpanSeparator) {
-                spanProps.add(buffer);
-                result.add(spanProps);
-                buffer = "";
-                spanProps = new ArrayList<String>();
-            } else {
-                buffer += c;
-            }
-        }
-        spanProps.add(buffer);
-        result.add(spanProps);
-
-        return result;
-    }
-
     public static void setSpanModifiers(Context context, String fontFolder, String parentFontFamily, SpannableStringBuilder ssb,
-            ArrayList<String> span, int start, int end) {
-        boolean bold = span.get(2).equals("bold") || span.get(2).equals("700");
-        boolean italic = span.get(3).equals("1");
+            JSONObject span, int start, int end) {
+        String fontWeight = span.optString("fontWeight", null);
+        String fontStyle = span.optString("fontStyle", null);
+        boolean bold = fontWeight.equals("bold") || fontWeight.equals("700");
+        boolean italic = fontStyle.equals("italic");
 
         // if (android.os.Build.VERSION.SDK_INT < 28) {
             if (bold && italic) {
@@ -320,52 +269,57 @@ public class Font {
             }
         // }
 
-        String fontFamily = span.get(0);
-        if (fontFamily.equals("0") && parentFontFamily != null) {
+        String fontFamily = span.optString("fontFamily", null);
+        if (fontFamily == null && parentFontFamily != null) {
             fontFamily = parentFontFamily;
         }
-        if (!fontFamily.equals("0")) {
-            Typeface typeface = createTypeface(context, fontFolder, fontFamily, span.get(2), bold, italic);
+        if (fontFamily != null) {
+            Typeface typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
             ssb.setSpan(typefaceSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        Float fontSize = Float.parseFloat(span.get(1));
-        Float maxFontSize = Float.parseFloat(span.get(5));
-        String verticalTextAlignment = span.get(6);
-        if (verticalTextAlignment.length() > 0 && !verticalTextAlignment.equals("initial")) {
-            ssb.setSpan(new BaselineAdjustedSpan(fontSize, verticalTextAlignment, maxFontSize), start, end,
+        Double fontSize = span.optDouble("fontSize");
+        Double maxFontSize =  span.optDouble("maxFontSize");
+        String verticalTextAlignment = span.optString("verticalTextAlignment", null);
+        if (verticalTextAlignment != null && !verticalTextAlignment.equals("initial") && !verticalTextAlignment.equals("stretch")) {
+            ssb.setSpan(new BaselineAdjustedSpan(fontSize.intValue(), verticalTextAlignment, maxFontSize.intValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if (fontSize != -1) {
+        if (!Double.isNaN(fontSize)) {
             ssb.setSpan(new AbsoluteSizeSpan(fontSize.intValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
-        Float letterSpacing = Float.parseFloat(span.get(8));
-        if (letterSpacing != 9) {
-            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing + 1) / 10), start, end,
+        Double relativeSize = span.optDouble("relativeSize");
+        if (!Double.isNaN(relativeSize)) {
+            ssb.setSpan(new RelativeSizeSpan(relativeSize.floatValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        Float lineHeight = Float.parseFloat(span.get(7));
-        if (lineHeight != -1) {
+
+        Double letterSpacing = span.optDouble("letterSpacing");
+        if (!Double.isNaN(letterSpacing)) {
+            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing.floatValue() + 1) / 10), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        Double lineHeight =  span.optDouble("lineHeight");
+        if (!Double.isNaN(lineHeight)) {
             ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        String color = span.get(9);
-        if (!color.equals("-1")) {
-            ssb.setSpan(new ForegroundColorSpan(Integer.parseInt(color)), start, end,
+        int color = span.optInt("color", -1);
+        if (color != -1) {
+            ssb.setSpan(new ForegroundColorSpan(color), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        String backgroundColor = span.get(10);
-        if (!backgroundColor.equals("-1")) {
-            ssb.setSpan(new BackgroundColorSpan(Integer.parseInt(backgroundColor)), start, end,
+        int backgroundColor = span.optInt("backgroundColor", -1);
+        if (backgroundColor != -1) {
+            ssb.setSpan(new BackgroundColorSpan(backgroundColor), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        String textDecoration = span.get(4);
-        if (!textDecoration.equals("0")) {
+        String textDecoration = span.optString("textDecoration", null);
+        if (textDecoration != null) {
             if (textDecoration.contains("underline")) {
                 ssb.setSpan(new android.text.style.UnderlineSpan(), start, end,
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -379,24 +333,42 @@ public class Font {
     }
 
     public static SpannableStringBuilder stringBuilderFromFormattedString(Context context, String fontFolder, String parentFontFamily,
-            String formattedString) {
-        if (formattedString == null) {
+            String options) {
+        if (options == null) {
             return null;
         }
-        ArrayList<ArrayList<String>> parsedFormattedString = parseFormattedString(formattedString);
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        for (int i = 0, spanStart = 0, spanLength = 0, length = parsedFormattedString.size(); i < length; i++) {
-            ArrayList<String> span = parsedFormattedString.get(i);
-            String text = span.get(11);
-            spanLength = text.length();
-            if (spanLength > 0) {
-                ssb.insert(spanStart, text);
-                setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
-                spanStart += spanLength;
+        try {
+            JSONArray arrayOptions = new JSONArray(options);
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            for (int i = 0, spanStart = 0, spanLength = 0, length = arrayOptions.length(); i < length; i++) {
+                JSONObject span = (JSONObject)arrayOptions.get(i);
+                String text = span.optString("text", "");
+                spanLength = text.length();
+                if (spanLength > 0) {
+                    ssb.insert(spanStart, text);
+                    setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
+                    spanStart += spanLength;
+                }
             }
-        }
+            return ssb;
 
-        return ssb;
+        } catch (JSONException e) {
+            Log.e("TEXT", "parse error", e);
+            return null;
+        }
+        // ArrayList<ArrayList<String>> parsedFormattedString = parseFormattedString(formattedString);
+        // SpannableStringBuilder ssb = new SpannableStringBuilder();
+        // for (int i = 0, spanStart = 0, spanLength = 0, length = parsedFormattedString.size(); i < length; i++) {
+        //     ArrayList<String> span = parsedFormattedString.get(i);
+        //     String text = span.get(11);
+        //     spanLength = text.length();
+        //     if (spanLength > 0) {
+        //         ssb.insert(spanStart, text);
+        //         setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
+        //         spanStart += spanLength;
+        //     }
+        // }
+
     }
 
     static SAXParser saxParser = null;

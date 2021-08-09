@@ -72,7 +72,7 @@ export function init() {
     });
 
     FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
-        let result = '';
+        // let result = '';
         const length = this.spans.length;
         let span: Span;
         let maxFontSize = this.style?.fontSize || this.parent?.style.fontSize || 0;
@@ -82,15 +82,25 @@ export function init() {
                 maxFontSize = Math.max(maxFontSize, s.style.fontSize);
             }
         }
+        const options = [];
         for (let i = 0; i < length; i++) {
             span = this.spans.getItem(i);
-            result += span.toNativeString(maxFontSize) + (i < length - 1 ? String.fromCharCode(0x1f) : '');
+            options.push(span.toNativeString(maxFontSize));
+            // result += span.toNativeString(maxFontSize) + (i < length - 1 ? String.fromCharCode(0x1f) : '');
         }
-
-        return result;
+        return `[${options.join(',')}]`;
     };
 
-    const delimiter = String.fromCharCode(0x1e);
+    // const delimiter = String.fromCharCode(0x1e);
+    Object.defineProperty(Span.prototype, 'relativeSize', {
+        set(value) {
+            this._relativeSize = value;
+            this.notifyPropertyChange('relativeSize', value);
+        },
+        get() {
+            return this._relativeSize;
+        },
+    });
     Span.prototype.toNativeString = function (maxFontSize?: number) {
         const parent = this.parent;
         const grandParent = parent?.parent;
@@ -128,19 +138,34 @@ export function init() {
             text = getTransformedText(text, textTransform);
         }
         const density = layout.getDisplayDensity();
-        const result = `${fontFamily || 0}${delimiter}\
-${this.fontSize !== undefined ? this.fontSize * density : -1}${delimiter}\
-${fontWeight || ''}${delimiter}\
-${fontStyle === 'italic' ? 1 : 0}${delimiter}\
-${textDecoration || 0}${delimiter}\
-${maxFontSize * density}${delimiter}\
-${verticalTextAlignment && verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
-${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
-${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
-${this.color ? this.color.android : -1}${delimiter}\
-${backgroundColor ? backgroundColor.android : -1}${delimiter}\
-${text}`;
-        return result;
+        return JSON.stringify({
+            text,
+            fontFamily,
+            fontSize: this.fontSize ? this.fontSize * density : undefined,
+            fontWeight,
+            fontStyle,
+            textDecoration,
+            maxFontSize: maxFontSize ? maxFontSize * density : undefined,
+            relativeSize: this.relativeSize,
+            verticalTextAlignment,
+            lineHeight: this.lineHeight ? this.lineHeight * density : undefined,
+            letterSpacing: this.letterSpacing,
+            color: this.color ? this.color.android : undefined,
+            backgroundColor: this.backgroundColor ? this.backgroundColor.android : undefined,
+        });
+        //         const result = `${fontFamily || 0}${delimiter}\
+        // ${this.fontSize !== undefined ? this.fontSize * density : -1}${delimiter}\
+        // ${fontWeight || ''}${delimiter}\
+        // ${fontStyle === 'italic' ? 1 : 0}${delimiter}\
+        // ${textDecoration || 0}${delimiter}\
+        // ${maxFontSize * density}${delimiter}\
+        // ${verticalTextAlignment && verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
+        // ${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
+        // ${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
+        // ${this.color ? this.color.android : -1}${delimiter}\
+        // ${backgroundColor ? backgroundColor.android : -1}${delimiter}\
+        // ${text}`;
+        //         return result;
     };
 }
 
@@ -205,6 +230,7 @@ export function createNativeAttributedString(
               fontWeight?: string;
               letterSpacing?: number;
               lineHeight?: number;
+              relativeSize?: number;
               textAlignment?: number | CoreTypes.TextAlignmentType;
           }
         | FormattedString,
@@ -215,9 +241,20 @@ export function createNativeAttributedString(
     if (!context) {
         init();
     }
+    // if (data instanceof FormattedString || data instanceof LightFormattedString) {
+    //     const ssb = new android.text.SpannableStringBuilder();
+    //     const maxFontSize = getMaxFontSize(data);
+    //     const _spanRanges = [];
+    //     data.spans.forEach((s) => {
+    //         const res = createSpannable(s, parent, undefined, maxFontSize);
+    //         if (res) {
+    //             ssb.append(res);
+    //         }
+    //     });
+    //     return ssb;
+    // }
     if (typeof data['toNativeString'] === 'function') {
-        const nativeString = (data as any).toNativeString();
-        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, nativeString);
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, (data as any).toNativeString());
     }
     // if (data.textAlignment && typeof data.textAlignment === 'string') {
     //     data.textAlignment = textAlignmentConverter(data.textAlignment);
