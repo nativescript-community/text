@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.22](https://github.com/nativescript-community/text/compare/v1.4.21...v1.4.22) (2021-08-10)
+
+
+### Bug Fixes
+
+* **android:** fixes to span computation ([ac28660](https://github.com/nativescript-community/text/commit/ac28660582a4974ee214b8e5ed4c5a9876a09864))
+
+
+
+
+
 ## [1.4.21](https://github.com/nativescript-community/text/compare/v1.4.20...v1.4.21) (2021-08-09)
 
 
