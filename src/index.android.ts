@@ -113,7 +113,7 @@ export function init() {
         if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
             fontFamily = fontFamily || (parent && parent.fontFamily) || (grandParent && grandParent.fontFamily);
             fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
-            fontStyle = fontWeight || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
+            fontStyle = fontStyle || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
         }
         let backgroundColor: Color;
         if (backgroundColorProperty.isSet(spanStyle)) {
@@ -143,8 +143,8 @@ export function init() {
             text,
             fontFamily,
             fontSize: this.fontSize ? this.fontSize * density : undefined,
-            fontWeight,
-            fontStyle,
+            fontWeight: fontWeight ? fontWeight + '' : undefined,
+            fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
             textDecoration,
             maxFontSize: maxFontSize ? maxFontSize * density : undefined,
             relativeSize: this.relativeSize,

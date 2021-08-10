@@ -253,8 +253,8 @@ public class Font {
             JSONObject span, int start, int end) {
         String fontWeight = span.optString("fontWeight", null);
         String fontStyle = span.optString("fontStyle", null);
-        boolean bold = fontWeight.equals("bold") || fontWeight.equals("700");
-        boolean italic = fontStyle.equals("italic");
+        boolean bold = fontWeight != null &&  (fontWeight.equals("bold") || fontWeight.equals("700"));
+        boolean italic = fontStyle != null &&  fontStyle.equals("italic");
 
         // if (android.os.Build.VERSION.SDK_INT < 28) {
             if (bold && italic) {
