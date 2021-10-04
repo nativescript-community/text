@@ -1,0 +1,4 @@
+dependencies {
+    def androidxVersion =  project.hasProperty("androidxVersion") ? project.androidxVersion : "1.2.0"
+	implementation "androidx.core:core:$androidxVersion"
+}
