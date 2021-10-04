@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.23](https://github.com/nativescript-community/text/compare/v1.4.22...v1.4.23) (2021-10-04)
+
+
+### Bug Fixes
+
+* **android:** ensure we have androidx.core ([f1d52fc](https://github.com/nativescript-community/text/commit/f1d52fc7abf2859b0d475bee8bbe87cd3e69db17))
+* **android:** fix for when using LightFormattedString ([63d74e8](https://github.com/nativescript-community/text/commit/63d74e86f126db58859fb8d03f66091f10cda9fb))
+
+
+
+
+
 ## [1.4.22](https://github.com/nativescript-community/text/compare/v1.4.21...v1.4.22) (2021-08-10)
 
 
