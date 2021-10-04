@@ -126,7 +126,7 @@ export function init() {
         } else if (parent?.textDecoration) {
             // span.parent is FormattedString
             textDecoration = parent?.style.textDecoration;
-        } else if (textDecorationProperty.isSet(grandParent?.style)) {
+        } else if (!!grandParent && textDecorationProperty.isSet(grandParent?.style)) {
             // span.parent.parent is TextBase
             textDecoration = grandParent?.style.textDecorations;
         }
