@@ -127,6 +127,29 @@ public class Font {
                 return Integer.parseInt(fontWeight, 10);
         }
     }
+    public static String getCustomFontWeightSuffix(int fontWeight) {
+        switch (fontWeight) {
+            case 100:
+                return "_thin";
+            case 200:
+                return "_extralight";
+            case 300:
+                return "_light";
+            case 400:
+                return "_regular";
+            case 500:
+            case 600:
+                return "_medium";
+            case 700:
+                return "_semibold";
+            case 800:
+                return "_bold";
+            case 900:
+                return "_black";
+            default:
+                throw new Error("Invalid font weight:" + fontWeight);
+        }
+    }
 
     public static String getFontWeightSuffix(int fontWeight) {
 
@@ -184,7 +207,7 @@ public class Font {
         int fontWeightInt = getIntFontWeight(fontWeight);
         final String cacheKey = fontFamily + fontWeightInt + isItalic;
         // Log.d("JS", "Font createTypeface: " + fontFamily + ",fontFolder " +
-        // fontFolder + ",fontWeight " + fontWeight
+        // fontFolder + ",isItalic " + isItalic + ",fontWeight " + fontWeight
         // + ",fontWeightInt " + fontWeightInt);
         if (typefaceCreatedCache.containsKey(cacheKey)) {
             return typefaceCreatedCache.get(cacheKey);
@@ -209,12 +232,53 @@ public class Font {
                     break;
 
                 default:
-                    result = loadFontFromFile(context, fontFolder, fonts.get(i));
+                    String currentFontFamily =  fonts.get(i);
+                    if(Build.VERSION.SDK_INT < 28 && fontWeightInt != 400) {
+                        String newFontFamily = currentFontFamily;
+                        // on pre 28 Typeface.create does not support passing the fontWeight
+                        // so we need to try and load the font directly hoping the file is named correctly
+                        if(fontWeightInt == 400) {
+                            if (isItalic) {
+                                result = loadFontFromFile(context, fontFolder, newFontFamily + "_italic"); 
+                                if (result != null) {
+                                    fontStyle = 0;
+                                } else {
+                                    result = loadFontFromFile(context, fontFolder, newFontFamily); 
+                                }
+                            } else {
+                                result = loadFontFromFile(context, fontFolder, newFontFamily); 
+                                if (result != null) {
+                                    fontStyle = 0;
+                                }
+                            }
+                        } else {
+                            newFontFamily += getCustomFontWeightSuffix(fontWeightInt);
+                            if (isItalic) {
+                                result = loadFontFromFile(context, fontFolder, newFontFamily + "italic"); 
+                                if (result != null) {
+                                    // Log.d("JS", "Font loading font style found: " + newFontFamily + ",fontStyle "
+                                    // + fontStyle + ",fontWeightInt " + fontWeightInt);
+                                    fontStyle = 0;
+                                } else {
+                                    result = loadFontFromFile(context, fontFolder, newFontFamily); 
+                                }
+                            } else {
+                                result = loadFontFromFile(context, fontFolder, newFontFamily); 
+                                if (result != null) {
+                                    fontStyle = 0;
+                                }
+                            }
+                            
+                        }
+                    }
+                    if(result == null) {
+                        result = loadFontFromFile(context, fontFolder, currentFontFamily); 
+                    }
 
-                    if (result != null && (fontStyle != 0 || isItalic || fontWeightInt != 400)) {
+                    if (result != null && (fontStyle != 0 || fontWeightInt != 400)) {
                         if (Build.VERSION.SDK_INT >= 28) {
                             result = Typeface.create(result, fontWeightInt, isItalic);
-                        } else {
+                        } else if(fontStyle != 0) {
                             // Log.d("JS", "Font loading font style found: " + fonts.get(i) + ",fontStyle "
                             // + fontStyle + ",fontWeightInt " + fontWeightInt);
                             result = Typeface.create(result, fontStyle);
@@ -257,26 +321,29 @@ public class Font {
         boolean italic = fontStyle != null &&  fontStyle.equals("italic");
 
         // if (android.os.Build.VERSION.SDK_INT < 28) {
-            if (bold && italic) {
-                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
-                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else if (bold) {
-                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end,
-                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else if (italic) {
-                ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
-                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            
         // }
 
         String fontFamily = span.optString("fontFamily", null);
         if (fontFamily == null && parentFontFamily != null) {
             fontFamily = parentFontFamily;
         }
+        Typeface typeface = null;
         if (fontFamily != null) {
-            Typeface typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic);
+            typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
             ssb.setSpan(typefaceSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (bold && italic && (typeface == null && !typeface.isItalic() && !typeface.isBold())) {
+            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else if (bold && (typeface == null && !typeface.isBold())) {
+            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else if (italic && (typeface == null && !typeface.isItalic())) {
+            ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         Double fontSize = span.optDouble("fontSize");
         Double maxFontSize =  span.optDouble("maxFontSize");
