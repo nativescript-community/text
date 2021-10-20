@@ -349,8 +349,9 @@ public class Font {
         Double maxFontSize =  span.optDouble("maxFontSize");
         String verticalTextAlignment = span.optString("verticalTextAlignment", null);
         if (verticalTextAlignment != null && !verticalTextAlignment.equals("initial") && !verticalTextAlignment.equals("stretch")) {
-            ssb.setSpan(new BaselineAdjustedSpan(fontSize.intValue(), verticalTextAlignment, maxFontSize.intValue()), start, end,
+            ssb.setSpan(new BaselineAdjustedSpan(Double.isNaN(fontSize)?-1:fontSize.floatValue(), verticalTextAlignment, maxFontSize.floatValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    
         }
         if (!Double.isNaN(fontSize)) {
             ssb.setSpan(new AbsoluteSizeSpan(fontSize.intValue()), start, end,
