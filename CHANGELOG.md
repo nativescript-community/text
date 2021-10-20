@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.25](https://github.com/nativescript-community/text/compare/v1.4.24...v1.4.25) (2021-10-20)
+
+
+### Bug Fixes
+
+* verticalAlignment fix ([95f3b48](https://github.com/nativescript-community/text/commit/95f3b484c30fc7b1e2bcea72e292fe516e5ae49e))
+
+
+
+
+
 ## [1.4.24](https://github.com/nativescript-community/text/compare/v1.4.23...v1.4.24) (2021-10-13)
 
 
