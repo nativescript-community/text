@@ -138,12 +138,13 @@ public class Font {
             case 400:
                 return "_regular";
             case 500:
-            case 600:
                 return "_medium";
-            case 700:
+            case 600:
                 return "_semibold";
-            case 800:
+            case 700:
                 return "_bold";
+            case 800:
+                return "_extrabold";
             case 900:
                 return "_black";
             default:
