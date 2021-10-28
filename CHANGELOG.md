@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.26](https://github.com/nativescript-community/text/compare/v1.4.25...v1.4.26) (2021-10-28)
+
+
+### Bug Fixes
+
+* **android:** font weight fix on older phones ([82f9cad](https://github.com/nativescript-community/text/commit/82f9cad2be102fbdd98a4b33c34843b1edeb30d6))
+
+
+
+
+
 ## [1.4.25](https://github.com/nativescript-community/text/compare/v1.4.24...v1.4.25) (2021-10-20)
 
 
