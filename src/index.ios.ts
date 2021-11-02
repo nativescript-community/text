@@ -192,7 +192,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
     const lineHeight = span.lineHeight || (parent && parent.lineHeight);
     const textAlignment = span.textAlignment || (parent && parent.textAlignment);
-    const verticaltextalignment = span.verticalTextAlignment;
+    const verticaltextalignment = span.verticalTextAlignment || (parent && parent.verticalTextAlignment);
     let iosFont: UIFont;
     if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
         const font = new Font(
