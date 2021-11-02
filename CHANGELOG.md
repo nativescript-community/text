@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.27](https://github.com/nativescript-community/text/compare/v1.4.26...v1.4.27) (2021-11-02)
+
+
+### Bug Fixes
+
+* **ios:** allow to get verticalTextAlignment from parent ([832dd0b](https://github.com/nativescript-community/text/commit/832dd0b24bd1f9603cdbca2bf971deda6f9fc9a0))
+* **ios:** fix span verticalTextAlignment in some cases ([3b9af40](https://github.com/nativescript-community/text/commit/3b9af406920cf99b53ccbfeeed3c4a509e26243f))
+
+
+
+
+
 ## [1.4.26](https://github.com/nativescript-community/text/compare/v1.4.25...v1.4.26) (2021-10-28)
 
 
