@@ -192,7 +192,10 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
     const lineHeight = span.lineHeight || (parent && parent.lineHeight);
     const textAlignment = span.textAlignment || (parent && parent.textAlignment);
-    const verticaltextalignment = span.verticalTextAlignment || (parent && parent.verticalTextAlignment);
+    let verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+        verticalTextAlignment = parentView?.verticalTextAlignment;
+    }
     let iosFont: UIFont;
     if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
         const font = new Font(
@@ -207,14 +210,14 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
             attrDict['OriginalFontSize'] = realFontSize;
         }
     }
-    if (verticaltextalignment && verticaltextalignment !== 'initial' && iosFont) {
+    if (verticalTextAlignment && verticalTextAlignment !== 'initial' && verticalTextAlignment !== 'stretch' && iosFont) {
         if (!iosFont) {
             iosFont = parentView[fontInternalProperty.getDefault]();
             fontSize = iosFont.pointSize;
         }
         const ascent = CTFontGetAscent(iosFont);
         const descent = CTFontGetDescent(iosFont);
-        attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticaltextalignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
+        attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticalTextAlignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
     }
     // if (span._tappable) {
     //     attrDict[NSLinkAttributeName] = text;
