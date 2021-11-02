@@ -1,4 +1,4 @@
-import { Color, CoreTypes, Font, FormattedString, ViewBase } from '@nativescript/core';
+import { Color, CoreTypes, Font, FormattedString, ViewBase, fontInternalProperty } from '@nativescript/core';
 import { getTransformedText } from '@nativescript/core/ui/text-base';
 import { computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
 import { LightFormattedString } from './index.android';
@@ -178,12 +178,12 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     }
     const attrDict = {} as { key: string; value: any };
     const fontFamily = span.fontFamily;
-    const fontSize = span.fontSize;
+    let fontSize = span.fontSize;
     let realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
     if (span.relativeSize) {
         realFontSize = ((parent && parent.fontSize) || (parentView && parentView.fontSize)) * span.relativeSize;
     }
-    const realMaxFontSize = Math.max(maxFontSize, realFontSize);
+    const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
     const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;
     const textcolor = span.color || (parent && parent.color) || (parentView && parentView.color);
@@ -208,6 +208,10 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
         }
     }
     if (verticaltextalignment && verticaltextalignment !== 'initial' && iosFont) {
+        if (!iosFont) {
+            iosFont = parentView[fontInternalProperty.getDefault]();
+            fontSize = iosFont.pointSize;
+        }
         const ascent = CTFontGetAscent(iosFont);
         const descent = CTFontGetDescent(iosFont);
         attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticaltextalignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
