@@ -101,8 +101,12 @@ function _createNativeAttributedString({
     }
 
     if (lineHeight !== undefined) {
+        if (lineHeight === 0) {
+            lineHeight = 0.00001;
+        }
         const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-        paragraphStyle.lineSpacing = lineHeight;
+        paragraphStyle.minimumLineHeight = lineHeight;
+        paragraphStyle.maximumLineHeight = lineHeight;
         // make sure a possible previously set text alignment setting is not lost when line height is specified
         paragraphStyle.alignment = textAlignment;
         // if (this.nativeTextViewProtected instanceof UILabel) {

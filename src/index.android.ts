@@ -149,7 +149,7 @@ export function init() {
             maxFontSize: maxFontSize ? maxFontSize * density : undefined,
             relativeSize: this.relativeSize,
             verticalTextAlignment,
-            lineHeight: this.lineHeight ? this.lineHeight * density : undefined,
+            lineHeight: this.lineHeight !== undefined ? this.lineHeight * density : undefined,
             letterSpacing: this.letterSpacing,
             color: this.color ? this.color.android : undefined,
             backgroundColor: this.backgroundColor ? this.backgroundColor.android : undefined,
