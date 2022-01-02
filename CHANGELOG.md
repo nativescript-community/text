@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.29](https://github.com/nativescript-community/text/compare/v1.4.28...v1.4.29) (2022-01-02)
+
+
+### Bug Fixes
+
+* lineHeight fix and support 0 ([bb5f92b](https://github.com/nativescript-community/text/commit/bb5f92b6e027a49135f407313b7628963cfc92b6))
+* **ios:** correctly set paragraphStyle if need be ([8f89dee](https://github.com/nativescript-community/text/commit/8f89deeb98a8dcde8917cf5227e90ad2546169cc))
+* dont force verticalTextAlignment from parentView ([f89fcf6](https://github.com/nativescript-community/text/commit/f89fcf6bf47b01122590a664ec56b9f01187ed17))
+* **android:** correct letterSpacing on android >= 21 ([5e8b458](https://github.com/nativescript-community/text/commit/5e8b458cdc630d5c0d80e5897d7fca4c2f11a07e))
+
+
+
+
+
 ## [1.4.28](https://github.com/nativescript-community/text/compare/v1.4.27...v1.4.28) (2021-11-02)
 
 

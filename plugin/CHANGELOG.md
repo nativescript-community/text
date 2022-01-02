@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.29](https://github.com/nativescript-community/text/compare/v1.4.28...v1.4.29) (2022-01-02)
+
+
+### Bug Fixes
+
+* **android:** correct letterSpacing on android >= 21 ([5e8b458](https://github.com/nativescript-community/text/commit/5e8b458cdc630d5c0d80e5897d7fca4c2f11a07e))
+
+
+
+
+
 ## [1.4.28](https://github.com/nativescript-community/text/compare/v1.4.27...v1.4.28) (2021-11-02)
 
 **Note:** Version bump only for package @nativescript-community/text
