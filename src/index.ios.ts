@@ -240,7 +240,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     }
 
     let paragraphStyle;
-    if (lineHeight !== undefined) {
+    if (lineHeight !== undefined || textAlignment) {
         paragraphStyle = NSMutableParagraphStyle.alloc().init();
         switch (textAlignment) {
             case 'middle':
@@ -254,8 +254,13 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
                 paragraphStyle.alignment = NSTextAlignment.Left;
                 break;
         }
-        paragraphStyle.minimumLineHeight = lineHeight;
-        paragraphStyle.maximumLineHeight = lineHeight;
+        if (lineHeight !== undefined) {
+            if (lineHeight === 0) {
+                lineHeight = 0.00001;
+            }
+            paragraphStyle.minimumLineHeight = lineHeight;
+            paragraphStyle.maximumLineHeight = lineHeight;
+        }
     }
     if (paragraphStyle) {
         attrDict[NSParagraphStyleAttributeName] = paragraphStyle;
