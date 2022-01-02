@@ -336,13 +336,13 @@ public class Font {
             ssb.setSpan(typefaceSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if (bold && italic && (typeface == null && !typeface.isItalic() && !typeface.isBold())) {
+        if (bold && italic && (typeface == null || (!typeface.isItalic() && !typeface.isBold()))) {
             ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (bold && (typeface == null && !typeface.isBold())) {
+        } else if (bold && (typeface == null || !typeface.isBold())) {
             ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (italic && (typeface == null && !typeface.isItalic())) {
+        } else if (italic && (typeface == null || !typeface.isItalic())) {
             ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.ITALIC), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -366,8 +366,14 @@ public class Font {
 
         Double letterSpacing = span.optDouble("letterSpacing");
         if (!Double.isNaN(letterSpacing)) {
-            ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing.floatValue() + 1) / 10), start, end,
+            if (Build.VERSION.SDK_INT >= 21) {
+                ssb.setSpan(new com.nativescript.text.LetterSpacingSpan(letterSpacing.floatValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                ssb.setSpan(new android.text.style.ScaleXSpan((letterSpacing.floatValue() + 1) / 10), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            
         }
         Double lineHeight =  span.optDouble("lineHeight");
         if (!Double.isNaN(lineHeight)) {
