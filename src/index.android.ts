@@ -130,10 +130,10 @@ export function init() {
             // span.parent.parent is TextBase
             textDecoration = grandParent?.style.textDecorations;
         }
-        let verticalTextAlignment = this.verticalAlignment || parent?.verticalAlignment;
-        if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-            verticalTextAlignment = grandParent?.verticalTextAlignment;
-        }
+        const verticalTextAlignment = this.verticalAlignment || parent?.verticalAlignment;
+        // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+        //     verticalTextAlignment = grandParent?.verticalTextAlignment;
+        // }
         let text = this.text;
         if (text && textTransform != null && textTransform !== 'none') {
             text = getTransformedText(text, textTransform);

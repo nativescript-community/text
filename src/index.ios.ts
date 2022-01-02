@@ -190,12 +190,12 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
     const textDecorations = span.textDecoration || (parent && parent.textDecoration);
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
-    const lineHeight = span.lineHeight || (parent && parent.lineHeight);
-    const textAlignment = span.textAlignment || (parent && parent.textAlignment);
-    let verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
-    if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-        verticalTextAlignment = parentView?.verticalTextAlignment;
-    }
+    let lineHeight = span.lineHeight || (parent && parent.lineHeight);
+    const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
+    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+    //     verticalTextAlignment = parentView?.verticalTextAlignment;
+    // }
     let iosFont: UIFont;
     if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
         const font = new Font(
