@@ -12,7 +12,7 @@ public class DensityLineHeightSpan implements LineHeightSpan.WithDensity {
     private int mSize;
     private static float sProportion = 0;
 
-    public HeightSpan(int size) {
+    public DensityLineHeightSpan(int size) {
         mSize = size;
     }
 
