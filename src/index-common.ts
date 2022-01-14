@@ -25,10 +25,7 @@ declare module '@nativescript/core/ui/text-base' {
     }
 }
 
-const CHILD_SPAN = 'Span';
 const CHILD_FORMATTED_TEXT = 'formattedText';
-const CHILD_FORMATTED_STRING = 'FormattedString';
-const CHILD_LIGHT_FORMATTED_STRING = 'LightFormattedString';
 
 export function enableIOSDTCoreText() {}
 export function usingIOSDTCoreText() {
@@ -218,7 +215,7 @@ export function overrideSpanAndFormattedString() {
         overrideSpanAndFormattedStringEnabled = true;
     }
     TextBase.prototype._addChildFromBuilder = function (name: string, value: any) {
-        if (name === CHILD_SPAN) {
+        if (name === Span.name) {
             if (!this.formattedText) {
                 const formattedText = (new LightFormattedString() as any) as FormattedString;
                 formattedText.spans.push(value);
@@ -227,7 +224,7 @@ export function overrideSpanAndFormattedString() {
             } else {
                 this.formattedText.spans.push(value);
             }
-        } else if (name === CHILD_FORMATTED_TEXT || name === CHILD_FORMATTED_STRING || name === CHILD_LIGHT_FORMATTED_STRING) {
+        } else if (name === CHILD_FORMATTED_TEXT || name === FormattedString.name || name === LightFormattedString.name) {
             this.formattedText = value;
             value.parent = this;
         }
