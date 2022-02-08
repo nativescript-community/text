@@ -3,10 +3,75 @@ import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
 import { layout } from '@nativescript/core/utils/utils';
-import { getMaxFontSize } from '.';
+import { ObjectSpans, getMaxFontSize } from '.';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
+
+function formattedStringToNativeString(formattedString) {
+    let maxFontSize = formattedString.style?.fontSize || formattedString.parent?.style.fontSize || 0;
+    formattedString.spans.forEach((s) => {
+        if (s.style.fontSize) {
+            maxFontSize = Math.max(maxFontSize, s.style.fontSize);
+        }
+    });
+    const options = [];
+    formattedString.spans.forEach((s) => options.push(spanToNativeString(s, maxFontSize)));
+    return `[${options.join(',')}]`;
+}
+function spanToNativeString(span, maxFontSize?) {
+    const parent = span.parent;
+    const grandParent = parent?.parent;
+    const spanStyle = span.style;
+    const textTransform = span.textTransform || grandParent?.textTransform;
+    let fontWeight = span.fontWeight;
+    let fontStyle = span.fontStyle;
+    let fontFamily = span.fontFamily;
+    if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
+        fontFamily = fontFamily || (parent && parent.fontFamily) || (grandParent && grandParent.fontFamily);
+        fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
+        fontStyle = fontStyle || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
+    }
+    let backgroundColor: Color;
+    if (backgroundColorProperty.isSet(spanStyle)) {
+        backgroundColor = spanStyle.backgroundColor;
+    }
+
+    let textDecoration;
+    if (textDecorationProperty.isSet(spanStyle)) {
+        textDecoration = spanStyle.textDecoration;
+    } else if (parent?.textDecoration) {
+        // span.parent is FormattedString
+        textDecoration = parent?.style.textDecoration;
+    } else if (!!grandParent && textDecorationProperty.isSet(grandParent?.style)) {
+        // span.parent.parent is TextBase
+        textDecoration = grandParent?.style.textDecorations;
+    }
+    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+    //     verticalTextAlignment = grandParent?.verticalTextAlignment;
+    // }
+    let text = span.text;
+    if (text && textTransform != null && textTransform !== 'none') {
+        text = getTransformedText(text, textTransform);
+    }
+    const density = layout.getDisplayDensity();
+    return JSON.stringify({
+        text,
+        fontFamily,
+        fontSize: span.fontSize ? span.fontSize * density : undefined,
+        fontWeight: fontWeight ? fontWeight + '' : undefined,
+        fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
+        textDecoration,
+        maxFontSize: maxFontSize ? maxFontSize * density : undefined,
+        relativeSize: span.relativeSize,
+        verticalTextAlignment,
+        lineHeight: span.lineHeight !== undefined ? span.lineHeight * density : undefined,
+        letterSpacing: span.letterSpacing,
+        color: span.color ? span.color.android : undefined,
+        backgroundColor: span.backgroundColor ? span.backgroundColor.android : undefined,
+    });
+}
 
 // eslint-disable-next-line no-redeclare
 let ClickableSpan: ClickableSpan;
@@ -73,23 +138,7 @@ export function init() {
     });
 
     FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
-        // let result = '';
-        const length = this.spans.length;
-        let span: Span;
-        let maxFontSize = this.style?.fontSize || this.parent?.style.fontSize || 0;
-        for (let i = 0; i < length; i++) {
-            const s = this.spans.getItem(i);
-            if (s.style.fontSize) {
-                maxFontSize = Math.max(maxFontSize, s.style.fontSize);
-            }
-        }
-        const options = [];
-        for (let i = 0; i < length; i++) {
-            span = this.spans.getItem(i);
-            options.push(span.toNativeString(maxFontSize));
-            // result += span.toNativeString(maxFontSize) + (i < length - 1 ? String.fromCharCode(0x1f) : '');
-        }
-        return `[${options.join(',')}]`;
+        return formattedStringToNativeString(this);
     };
 
     // const delimiter = String.fromCharCode(0x1e);
@@ -103,70 +152,7 @@ export function init() {
         },
     });
     Span.prototype.toNativeString = function (maxFontSize?: number) {
-        const parent = this.parent;
-        const grandParent = parent?.parent;
-        const spanStyle = this.style;
-        const textTransform = this.textTransform || grandParent?.textTransform;
-        let fontWeight = this.fontWeight;
-        let fontStyle = this.fontStyle;
-        let fontFamily = this.fontFamily;
-        if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
-            fontFamily = fontFamily || (parent && parent.fontFamily) || (grandParent && grandParent.fontFamily);
-            fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
-            fontStyle = fontStyle || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
-        }
-        let backgroundColor: Color;
-        if (backgroundColorProperty.isSet(spanStyle)) {
-            backgroundColor = spanStyle.backgroundColor;
-        }
-
-        let textDecoration;
-        if (textDecorationProperty.isSet(spanStyle)) {
-            textDecoration = spanStyle.textDecoration;
-        } else if (parent?.textDecoration) {
-            // span.parent is FormattedString
-            textDecoration = parent?.style.textDecoration;
-        } else if (!!grandParent && textDecorationProperty.isSet(grandParent?.style)) {
-            // span.parent.parent is TextBase
-            textDecoration = grandParent?.style.textDecorations;
-        }
-        const verticalTextAlignment = this.verticalAlignment || parent?.verticalAlignment;
-        // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-        //     verticalTextAlignment = grandParent?.verticalTextAlignment;
-        // }
-        let text = this.text;
-        if (text && textTransform != null && textTransform !== 'none') {
-            text = getTransformedText(text, textTransform);
-        }
-        const density = layout.getDisplayDensity();
-        return JSON.stringify({
-            text,
-            fontFamily,
-            fontSize: this.fontSize ? this.fontSize * density : undefined,
-            fontWeight: fontWeight ? fontWeight + '' : undefined,
-            fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
-            textDecoration,
-            maxFontSize: maxFontSize ? maxFontSize * density : undefined,
-            relativeSize: this.relativeSize,
-            verticalTextAlignment,
-            lineHeight: this.lineHeight !== undefined ? this.lineHeight * density : undefined,
-            letterSpacing: this.letterSpacing,
-            color: this.color ? this.color.android : undefined,
-            backgroundColor: this.backgroundColor ? this.backgroundColor.android : undefined,
-        });
-        //         const result = `${fontFamily || 0}${delimiter}\
-        // ${this.fontSize !== undefined ? this.fontSize * density : -1}${delimiter}\
-        // ${fontWeight || ''}${delimiter}\
-        // ${fontStyle === 'italic' ? 1 : 0}${delimiter}\
-        // ${textDecoration || 0}${delimiter}\
-        // ${maxFontSize * density}${delimiter}\
-        // ${verticalTextAlignment && verticalTextAlignment !== 'stretch' ? verticalTextAlignment : ''}${delimiter}\
-        // ${this.lineHeight !== undefined ? this.lineHeight * density : -1}${delimiter}\
-        // ${this.letterSpacing !== undefined ? this.lineHeight * density : 9}${delimiter}\
-        // ${this.color ? this.color.android : -1}${delimiter}\
-        // ${backgroundColor ? backgroundColor.android : -1}${delimiter}\
-        // ${text}`;
-        //         return result;
+        return spanToNativeString(this, maxFontSize);
     };
 }
 
@@ -234,7 +220,8 @@ export function createNativeAttributedString(
               relativeSize?: number;
               textAlignment?: number | CoreTypes.TextAlignmentType;
           }
-        | FormattedString,
+        | FormattedString
+        | ObjectSpans,
     parent: ViewBase,
     autoFontSizeEnabled = false,
     fontSizeRatio = 1 // used only on iOS
@@ -242,27 +229,9 @@ export function createNativeAttributedString(
     if (!context) {
         init();
     }
-    // if (data instanceof FormattedString || data instanceof LightFormattedString) {
-    //     const ssb = new android.text.SpannableStringBuilder();
-    //     const maxFontSize = getMaxFontSize(data);
-    //     const _spanRanges = [];
-    //     data.spans.forEach((s) => {
-    //         const res = createSpannable(s, parent, undefined, maxFontSize);
-    //         if (res) {
-    //             ssb.append(res);
-    //         }
-    //     });
-    //     return ssb;
-    // }
-    if (typeof data['toNativeString'] === 'function') {
-        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, (data as any).toNativeString());
+    if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, formattedStringToNativeString(data));
     }
-    // if (data.textAlignment && typeof data.textAlignment === 'string') {
-    //     data.textAlignment = textAlignmentConverter(data.textAlignment);
-    // }
-    // if (data.color && !(data.color instanceof Color)) {
-    //     data.color = new Color(data.color as any);
-    // }
     const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'] || null, (data as any).text);
     return result;
 }

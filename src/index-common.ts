@@ -25,6 +25,10 @@ declare module '@nativescript/core/ui/text-base' {
     }
 }
 
+export interface ObjectSpans extends Pick<LightFormattedString, keyof LightFormattedString> {
+    spans: any;
+}
+
 const CHILD_FORMATTED_TEXT = 'formattedText';
 
 export function enableIOSDTCoreText() {}
@@ -110,6 +114,8 @@ export class LightFormattedString extends Observable {
     fontSize: number;
     fontStyle: FontStyle;
     fontWeight: FontWeight;
+    textAlignment: CoreTypes.TextAlignmentType;
+    verticalTextAlignment: CoreTypes.VerticalAlignmentTextType;
     textDecoration: CoreTypes.TextDecorationType;
     color: Color;
     backgroundColor: Color;
@@ -198,7 +204,7 @@ export class LightFormattedString extends Observable {
     toNativeString() {}
 }
 
-export function getMaxFontSize(value: FormattedString | LightFormattedString) {
+export function getMaxFontSize(value: FormattedString | LightFormattedString | ObjectSpans) {
     let max = value.fontSize || 0;
     value.spans &&
         value.spans.forEach((s) => {

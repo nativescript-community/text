@@ -1,6 +1,6 @@
 import { Color, CoreTypes, Font, FormattedString, ViewBase, fontInternalProperty } from '@nativescript/core';
 import { getTransformedText } from '@nativescript/core/ui/text-base';
-import { computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
+import { ObjectSpans, computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
 import { LightFormattedString } from './index.android';
 export * from './index-common';
 
@@ -132,21 +132,22 @@ export function createNativeAttributedString(
               lineHeight?: number;
               textAlignment?: NSTextAlignment | CoreTypes.TextAlignmentType;
           }
-        | FormattedString,
+        | FormattedString
+        | ObjectSpans,
     parent: ViewBase,
     autoFontSizeEnabled = false,
     fontSizeRatio = 1
 ) {
-    if (data instanceof FormattedString || data instanceof LightFormattedString) {
+    if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
         const ssb = NSMutableAttributedString.new();
-        const maxFontSize = getMaxFontSize(data);
+        const maxFontSize = getMaxFontSize(data as any);
         const _spanRanges = [];
         let spanStart = 0;
         let hasLink = false;
-        data.spans.forEach((s) => {
+        data['spans'].forEach((s) => {
             const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
             if (res) {
-                if ((s as any)._tappable) {
+                if (s._tappable) {
                     hasLink = true;
                 }
                 _spanRanges.push({
@@ -157,11 +158,13 @@ export function createNativeAttributedString(
                 ssb.appendAttributedString(res);
             }
         });
-        parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
-        if ((parent as any)._setTappableState) {
-            (parent as any)._setTappableState(hasLink);
+        if (parent) {
+            parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
+            if ((parent as any)._setTappableState) {
+                (parent as any)._setTappableState(hasLink);
+            }
+            parent['_spanRanges'] = _spanRanges;
         }
-        parent['_spanRanges'] = _spanRanges;
         return ssb;
     }
     if (data.textAlignment && typeof data.textAlignment === 'string') {
