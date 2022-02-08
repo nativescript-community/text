@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.34](https://github.com/nativescript-community/text/compare/v1.4.33...v1.4.34) (2022-02-08)
+
+
+### Bug Fixes
+
+* **android:** fixes for `createNativeAttributedString` from object conforming to `FormattedString` ([275abb0](https://github.com/nativescript-community/text/commit/275abb0a50557462266432ad65b3547a2321da3f))
+
+
+
+
+
 ## [1.4.33](https://github.com/nativescript-community/text/compare/v1.4.32...v1.4.33) (2022-02-08)
 
 
