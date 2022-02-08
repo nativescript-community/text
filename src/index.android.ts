@@ -9,10 +9,10 @@ export * from './index-common';
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 
 function formattedStringToNativeString(formattedString) {
-    let maxFontSize = formattedString.style?.fontSize || formattedString.parent?.style.fontSize || 0;
+    let maxFontSize = formattedString?.fontSize || formattedString.parent?.fontSize || 0;
     formattedString.spans.forEach((s) => {
-        if (s.style.fontSize) {
-            maxFontSize = Math.max(maxFontSize, s.style.fontSize);
+        if (s.fontSize) {
+            maxFontSize = Math.max(maxFontSize, s.fontSize);
         }
     });
     const options = [];
@@ -32,20 +32,17 @@ function spanToNativeString(span, maxFontSize?) {
         fontWeight = fontWeight || (parent && parent.fontWeight) || (grandParent && grandParent.fontWeight);
         fontStyle = fontStyle || (parent && parent.fontStyle) || (grandParent && grandParent.fontStyle);
     }
-    let backgroundColor: Color;
-    if (backgroundColorProperty.isSet(spanStyle)) {
-        backgroundColor = spanStyle.backgroundColor;
-    }
-
     let textDecoration;
-    if (textDecorationProperty.isSet(spanStyle)) {
+    if (spanStyle && textDecorationProperty.isSet(spanStyle)) {
+        textDecoration = spanStyle.textDecoration;
+    } else if (span.textDecoration) {
         textDecoration = spanStyle.textDecoration;
     } else if (parent?.textDecoration) {
         // span.parent is FormattedString
-        textDecoration = parent?.style.textDecoration;
+        textDecoration = parent?.textDecoration;
     } else if (!!grandParent && textDecorationProperty.isSet(grandParent?.style)) {
         // span.parent.parent is TextBase
-        textDecoration = grandParent?.style.textDecorations;
+        textDecoration = grandParent?.style.textDecoration;
     }
     const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
@@ -55,7 +52,15 @@ function spanToNativeString(span, maxFontSize?) {
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    const density = layout.getDisplayDensity();
+    const density = spanStyle ? layout.getDisplayDensity() : 1;
+    let backgroundColor = span.backgroundColor;
+    if (backgroundColor && !(backgroundColor instanceof Color)) {
+        backgroundColor = new Color(backgroundColor);
+    }
+    let color = span.color;
+    if (color && !(color instanceof Color)) {
+        color = new Color(color);
+    }
     return JSON.stringify({
         text,
         fontFamily,
@@ -68,8 +73,8 @@ function spanToNativeString(span, maxFontSize?) {
         verticalTextAlignment,
         lineHeight: span.lineHeight !== undefined ? span.lineHeight * density : undefined,
         letterSpacing: span.letterSpacing,
-        color: span.color ? span.color.android : undefined,
-        backgroundColor: span.backgroundColor ? span.backgroundColor.android : undefined,
+        color: color ? color.android : undefined,
+        backgroundColor: backgroundColor ? backgroundColor.android : undefined,
     });
 }
 
@@ -230,9 +235,9 @@ export function createNativeAttributedString(
         init();
     }
     if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
-        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent['fontFamily'] || null, formattedStringToNativeString(data));
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parent?.['fontFamily'] || null, formattedStringToNativeString(data));
     }
-    const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent['fontFamily'] || null, (data as any).text);
+    const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parent?.['fontFamily'] || null, (data as any).text);
     return result;
 }
 
