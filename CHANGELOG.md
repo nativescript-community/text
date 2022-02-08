@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.33](https://github.com/nativescript-community/text/compare/v1.4.32...v1.4.33) (2022-02-08)
+
+
+### Features
+
+* allow to create native strings with `createNativeAttributedString` from an object conforming to `FormattedString` ([a404cae](https://github.com/nativescript-community/text/commit/a404caeaf960264834b52d635792c3da26a1dac6))
+
+
+
+
+
 ## [1.4.32](https://github.com/nativescript-community/text/compare/v1.4.31...v1.4.32) (2022-01-14)
 
 
