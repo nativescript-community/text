@@ -191,7 +191,15 @@ export class LightFormattedString extends Observable {
     }
 
     private addPropertyChangeHandler(span: Span) {
+        const style = span.style;
         span.on(Observable.propertyChangeEvent, this.onPropertyChange, this);
+        style.on('fontFamilyChange', this.onPropertyChange, this);
+        style.on('fontSizeChange', this.onPropertyChange, this);
+        style.on('fontStyleChange', this.onPropertyChange, this);
+        style.on('fontWeightChange', this.onPropertyChange, this);
+        style.on('textDecorationChange', this.onPropertyChange, this);
+        style.on('colorChange', this.onPropertyChange, this);
+        style.on('backgroundColorChange', this.onPropertyChange, this);
     }
 
     private removePropertyChangeHandler(span: Span) {
