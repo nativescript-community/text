@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.35](https://github.com/nativescript-community/text/compare/v1.4.34...v1.4.35) (2022-02-09)
+
+
+### Bug Fixes
+
+* **ios:** dont get color from parentView. breaks changing parentView color ([a969b56](https://github.com/nativescript-community/text/commit/a969b565519bdf7d5787549ea27995aca0726682))
+
+
+
+
+
 ## [1.4.34](https://github.com/nativescript-community/text/compare/v1.4.33...v1.4.34) (2022-02-08)
 
 
