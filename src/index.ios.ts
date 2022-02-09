@@ -193,7 +193,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
     const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;
-    const textcolor = span.color || (parent && parent.color) ;
+    const textcolor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
     const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
     const textDecorations = span.textDecoration || (parent && parent.textDecoration);
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
