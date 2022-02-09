@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.36](https://github.com/nativescript-community/text/compare/v1.4.35...v1.4.36) (2022-02-09)
+
+
+### Bug Fixes
+
+* **ios:** UIButton behaves differently ([f2a3452](https://github.com/nativescript-community/text/commit/f2a3452ed57c4713410c0d617e931b97e4fac15c))
+
+
+
+
+
 ## [1.4.35](https://github.com/nativescript-community/text/compare/v1.4.34...v1.4.35) (2022-02-09)
 
 
