@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.37](https://github.com/nativescript-community/text/compare/v1.4.36...v1.4.37) (2022-02-09)
+
+
+### Bug Fixes
+
+* bring back span property changes listeners ([9cdf5f5](https://github.com/nativescript-community/text/commit/9cdf5f5040411e70c011a760412532380486378a))
+
+
+
+
+
 ## [1.4.36](https://github.com/nativescript-community/text/compare/v1.4.35...v1.4.36) (2022-02-09)
 
 
