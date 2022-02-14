@@ -313,20 +313,9 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
 
         let typeface = typefaceCache[fontCacheKey];
         if (!typeface) {
-            if (span.paint) {
-                // let paint: Paint = paintFontCache[fontCacheKey];
-                // if (!paint) {
-                //     paint = span.paint;
-                //     paint.setFontFamily(fontFamily);
-                //     paint.setFontWeight(fontWeight);
-                //     paint.setFontStyle(fontStyle);
-                //     paintFontCache[fontCacheKey] = paint;
-                // }
-                // typeface = typefaceCache[fontCacheKey] = paint.getFont().getAndroidTypeface();
-            } else {
-                const font = new Font(fontFamily, 10, fontStyle, fontWeight);
-                typeface = typefaceCache[fontCacheKey] = font.getAndroidTypeface();
-            }
+            // for now we dont handle CSpan (from @nativescript-community/ui-canvaslabel)
+            const font = new Font(fontFamily, 10, fontStyle, fontWeight);
+            typeface = typefaceCache[fontCacheKey] = font.getAndroidTypeface();
         }
         const typefaceSpan = new com.nativescript.text.CustomTypefaceSpan(fontFamily, typeface);
         ssb.setSpan(typefaceSpan, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
