@@ -377,9 +377,7 @@ public class Font {
         }
         Double lineHeight =  span.optDouble("lineHeight");
         if (!Double.isNaN(lineHeight)) {
-            // we use standard for now though it does not take density into account
-            // is this what we want?
-            ssb.setSpan(new android.text.style.LineHeightSpan.Standard(lineHeight.intValue()), start, end,
+            ssb.setSpan(new HeightSpan(lineHeight.intValue()), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
