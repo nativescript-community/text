@@ -227,7 +227,7 @@ export function createNativeAttributedString(
           }
         | FormattedString
         | ObjectSpans,
-    parent: ViewBase,
+    parent?: ViewBase,
     autoFontSizeEnabled = false,
     fontSizeRatio = 1 // used only on iOS
 ) {

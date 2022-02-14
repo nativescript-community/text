@@ -25,7 +25,7 @@ declare module '@nativescript/core/ui/text-base' {
     }
 }
 
-export interface ObjectSpans extends Pick<LightFormattedString, keyof LightFormattedString> {
+export interface ObjectSpans extends Partial<Pick<LightFormattedString, keyof LightFormattedString>> {
     spans: any;
 }
 
