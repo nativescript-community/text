@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.38](https://github.com/nativescript-community/text/compare/v1.4.37...v1.4.38) (2022-02-14)
+
+
+### Bug Fixes
+
+* **android:** fix missing class for createSpannable from JS ([a871967](https://github.com/nativescript-community/text/commit/a8719673ca84530724cd370db07edf1b21924d59))
+
+
+
+
+
 ## [1.4.37](https://github.com/nativescript-community/text/compare/v1.4.36...v1.4.37) (2022-02-09)
 
 **Note:** Version bump only for package @nativescript-community/text
