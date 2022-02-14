@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/nativescript-community/text/compare/v1.4.39...v1.5.0) (2022-02-14)
+
+
+### Features
+
+* **android:** native-api-usage ([8fa8ab9](https://github.com/nativescript-community/text/commit/8fa8ab99da9911f52c11872246bd602078881c70))
+
+
+
+
+
 ## [1.4.39](https://github.com/nativescript-community/text/compare/v1.4.38...v1.4.39) (2022-02-14)
 
 
