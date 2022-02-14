@@ -199,7 +199,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
     let lineHeight = span.lineHeight || (parent && parent.lineHeight);
     const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
-    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    const verticalTextAlignment = span.verticalAlignment || parentView?.verticalAlignment;
     // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
     //     verticalTextAlignment = parentView?.verticalTextAlignment;
     // }
@@ -265,8 +265,8 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
             if (lineHeight === 0) {
                 lineHeight = 0.00001;
             }
-            paragraphStyle.minimumLineHeight = lineHeight;
             paragraphStyle.maximumLineHeight = lineHeight;
+            paragraphStyle.minimumLineHeight = lineHeight;
         }
     }
     if (paragraphStyle) {
