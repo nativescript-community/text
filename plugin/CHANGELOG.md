@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.39](https://github.com/nativescript-community/text/compare/v1.4.38...v1.4.39) (2022-02-14)
+
+
+### Bug Fixes
+
+* **android:** another try at lineHeight fix ([88cf5ba](https://github.com/nativescript-community/text/commit/88cf5bac727596c6746da27ebc3c0cae35023611))
+
+
+
+
+
 ## [1.4.38](https://github.com/nativescript-community/text/compare/v1.4.37...v1.4.38) (2022-02-14)
 
 

@@ -1,6 +1,6 @@
 {
     "name": "@nativescript-community/text",
-    "version": "1.4.38",
+    "version": "1.4.39",
     "description": "Expands the capabilities of NativeScript's text property.",
     "main": "./index",
     "sideEffects": false,
