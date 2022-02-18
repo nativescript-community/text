@@ -199,10 +199,10 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
     let lineHeight = span.lineHeight || (parent && parent.lineHeight);
     const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
-    const verticalTextAlignment = span.verticalAlignment || parentView?.verticalAlignment;
-    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-    //     verticalTextAlignment = parentView?.verticalTextAlignment;
-    // }
+    let verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+        verticalTextAlignment = parentView?.verticalTextAlignment;
+    }
     let iosFont: UIFont;
     if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
         const font = new Font(
