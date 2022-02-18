@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/nativescript-community/text/compare/v1.5.0...v1.5.1) (2022-02-18)
+
+
+### Bug Fixes
+
+* rollback on change spans and parentView style ([87d47e1](https://github.com/nativescript-community/text/commit/87d47e185ba8cd8c86902427f88918fb874dec90))
+
+
+
+
+
 # [1.5.0](https://github.com/nativescript-community/text/compare/v1.4.39...v1.5.0) (2022-02-14)
 
 
