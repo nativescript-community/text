@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/nativescript-community/text/compare/v1.5.1...v1.5.2) (2022-02-25)
+
+
+### Bug Fixes
+
+* allow canvaslabel Span to be used in Button/Label … ([58c9af8](https://github.com/nativescript-community/text/commit/58c9af86b36d03ae9b88d527d16351fce033b456))
+
+
+
+
+
 ## [1.5.1](https://github.com/nativescript-community/text/compare/v1.5.0...v1.5.1) (2022-02-18)
 
 
