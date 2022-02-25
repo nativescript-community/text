@@ -229,7 +229,7 @@ export function overrideSpanAndFormattedString() {
         overrideSpanAndFormattedStringEnabled = true;
     }
     TextBase.prototype._addChildFromBuilder = function (name: string, value: any) {
-        if (name === Span.name) {
+        if (name === Span.name || value.constructor.isSpan) {
             if (!this.formattedText) {
                 const formattedText = (new LightFormattedString() as any) as FormattedString;
                 formattedText.spans.push(value);
@@ -238,7 +238,7 @@ export function overrideSpanAndFormattedString() {
             } else {
                 this.formattedText.spans.push(value);
             }
-        } else if (name === CHILD_FORMATTED_TEXT || name === FormattedString.name || name === LightFormattedString.name) {
+        } else if (name === CHILD_FORMATTED_TEXT || name === FormattedString.name || name === LightFormattedString.name || value.constructor.isFormattedString) {
             this.formattedText = value;
             value.parent = this;
         }
