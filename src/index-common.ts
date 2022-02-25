@@ -103,6 +103,9 @@ verticalTextAlignmentProperty.register(Style);
 export const textAlignmentConverter = makeParser<CoreTypes.TextAlignmentType>(makeValidator<CoreTypes.TextAlignmentType>('initial', 'left', 'right', 'center'));
 
 export class LightFormattedString extends Observable {
+    static get isFormattedString() {
+        return true;
+    }
     private _spans: ObservableArray<Span>;
 
     constructor() {
