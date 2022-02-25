@@ -69,6 +69,7 @@ function spanToNativeString(span, maxFontSize?) {
         fontWeight: fontWeight ? fontWeight + '' : undefined,
         fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
         textDecoration,
+        textAlignment,
         maxFontSize: maxFontSize ? maxFontSize * density : undefined,
         relativeSize: span.relativeSize,
         verticalTextAlignment,
