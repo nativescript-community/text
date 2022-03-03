@@ -45,10 +45,13 @@ function spanToNativeString(span, maxFontSize?) {
         textDecoration = grandParent?.style.textDecoration;
     }
     const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (grandParent && grandParent.textAlignment);
-    let verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
-    if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-        verticalTextAlignment = grandParent?.verticalTextAlignment;
-    }
+    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+
+    // We CANT use parent verticalTextAlignment. Else it would break line height
+    // for multiple line text you want centered in the View
+    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+    //     verticalTextAlignment = grandParent?.verticalTextAlignment;
+    // }
     let text = span.text;
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
