@@ -1,4 +1,4 @@
-import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile } from '@nativescript/core';
+import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile, Utils } from '@nativescript/core';
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
@@ -126,7 +126,7 @@ export function init() {
         return;
     }
     initialized = true;
-    context = Application.android.context;
+    context = Utils.ad.getApplicationContext();
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!this._typeface) {
@@ -137,7 +137,7 @@ export function init() {
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
                 if (!context) {
-                    context = Application.android.context;
+                    context = Utils.ad.getApplicationContext();
                 }
                 this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, fontFamily, this.fontWeight, this.isBold, this.isItalic);
             } else {
