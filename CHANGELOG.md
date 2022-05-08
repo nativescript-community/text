@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4](https://github.com/nativescript-community/text/compare/v1.5.3...v1.5.4) (2022-05-08)
+
+
+### Bug Fixes
+
+* **android:** catch natige getFont error ([d68d43d](https://github.com/nativescript-community/text/commit/d68d43d77783ebcc6144d35ccbd418b71a94a8fb))
+* **android:** get context fix ([1f61007](https://github.com/nativescript-community/text/commit/1f6100742e2330404ee54887970a1ca0c8b773a6))
+
+
+
+
+
 ## [1.5.3](https://github.com/nativescript-community/text/compare/v1.5.2...v1.5.3) (2022-03-03)
 
 
