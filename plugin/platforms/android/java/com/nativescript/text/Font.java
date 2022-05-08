@@ -38,14 +38,19 @@ public class Font {
         if (typefaceCache.containsKey(fontFamily)) {
             return typefaceCache.get(fontFamily);
         }
+        Typeface result = null;
         if (fontFamily.startsWith("res/")) {
             int fontID = context.getResources().getIdentifier(fontFamily.substring(4), "font",
                     context.getPackageName());
-            Typeface result = androidx.core.content.res.ResourcesCompat.getFont(context, fontID);
+            try {
+                result = androidx.core.content.res.ResourcesCompat.getFont(context, fontID);
+            } catch (Exception e) {
+                Log.w(TAG, "\"Error loading font res: " + fontFamily + "," + e.getLocalizedMessage());
+            }
             if (result != null) {
                 typefaceCache.put(fontFamily, result);
+                return result;
             }
-            return result;
         }
 
         if (appAssets == null) {
