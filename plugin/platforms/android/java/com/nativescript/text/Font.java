@@ -60,7 +60,7 @@ public class Font {
             return null;
         }
 
-        Typeface result = typefaceCache.get(fontFamily);
+        result = typefaceCache.get(fontFamily);
         // Check for undefined explicitly as null mean we tried to load the font, but
         // failed.
         File file = new File(fontFolder, fontFamily + ".ttf");
