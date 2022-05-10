@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.6](https://github.com/nativescript-community/text/compare/v1.5.5...v1.5.6) (2022-05-10)
+
+
+### Bug Fixes
+
+* **ios:** span verticalAlignment fix ([c2d7821](https://github.com/nativescript-community/text/commit/c2d78211d8c1bd72f2a12fb912a702854353f56f))
+
+
+
+
+
 ## [1.5.5](https://github.com/nativescript-community/text/compare/v1.5.4...v1.5.5) (2022-05-09)
 
 
