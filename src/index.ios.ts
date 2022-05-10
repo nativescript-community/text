@@ -219,7 +219,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
             attrDict['OriginalFontSize'] = realFontSize;
         }
     }
-    if (verticalTextAlignment && verticalTextAlignment !== 'initial' && verticalTextAlignment !== 'stretch' && iosFont) {
+    if (verticalTextAlignment && verticalTextAlignment !== 'initial' && verticalTextAlignment !== 'stretch') {
         if (!iosFont) {
             iosFont = parentView[fontInternalProperty.getDefault]();
             fontSize = iosFont.pointSize;
