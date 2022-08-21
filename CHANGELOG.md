@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.7](https://github.com/nativescript-community/text/compare/v1.5.6...v1.5.7) (2022-08-21)
+
+
+### Bug Fixes
+
+* **android:** dont render spans with `visibility:hidden|collapsed` ([39dfeba](https://github.com/nativescript-community/text/commit/39dfeba51139b4404d9d88b44b156111d0d1e7ad))
+
+
+
+
+
 ## [1.5.6](https://github.com/nativescript-community/text/compare/v1.5.5...v1.5.6) (2022-05-10)
 
 
