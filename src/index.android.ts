@@ -16,7 +16,11 @@ function formattedStringToNativeString(formattedString) {
         }
     });
     const options = [];
-    formattedString.spans.forEach((s) => options.push(spanToNativeString(s, maxFontSize)));
+    formattedString.spans.forEach((s) => {
+        if (!s.visibility || s.visibility === 'visible') {
+            options.push(spanToNativeString(s, maxFontSize))
+        }
+    });
     return `[${options.join(',')}]`;
 }
 function spanToNativeString(span, maxFontSize?) {
