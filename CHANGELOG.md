@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.9](https://github.com/nativescript-community/text/compare/v1.5.8...v1.5.9) (2022-09-16)
+
+
+### Bug Fixes
+
+* **ios:** bring back NSLinkAttributeName ([ee12352](https://github.com/nativescript-community/text/commit/ee12352c045571b83b4baf8b344cf249a19fac80))
+
+
+
+
+
 ## [1.5.8](https://github.com/nativescript-community/text/compare/v1.5.7...v1.5.8) (2022-09-14)
 
 **Note:** Version bump only for package @nativescript-community/text
