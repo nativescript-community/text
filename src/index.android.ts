@@ -1,9 +1,9 @@
-import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile, Utils } from '@nativescript/core';
-import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
+import { Color, CoreTypes, FormattedString, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
+import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
+import { layout } from '@nativescript/core/utils/layout-helper';
+import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
-import { layout } from '@nativescript/core/utils/utils';
-import { ObjectSpans, getMaxFontSize } from '.';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
@@ -18,7 +18,7 @@ function formattedStringToNativeString(formattedString) {
     const options = [];
     formattedString.spans.forEach((s) => {
         if (!s.visibility || s.visibility === 'visible') {
-            options.push(spanToNativeString(s, maxFontSize))
+            options.push(spanToNativeString(s, maxFontSize));
         }
     });
     return `[${options.join(',')}]`;
@@ -105,7 +105,7 @@ function initializeClickableSpan(): void {
             return global.__native(this);
         }
         onClick(view: android.view.View): void {
-            const owner = this.owner.get();
+            const owner = this.owner?.deref();
             if (owner) {
                 owner._emit(Span.linkTapEvent);
             }
@@ -181,7 +181,7 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
-function isBold(fontWeight: FontWeight): boolean {
+function isBold(fontWeight: FontWeightType): boolean {
     return fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900';
 }
 

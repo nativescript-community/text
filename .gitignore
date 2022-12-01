@@ -27,3 +27,5 @@ pnpm-lock.yaml
 *.aar
 /.gradle
 /.settings
+yarn.lock
+.yarn

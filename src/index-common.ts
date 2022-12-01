@@ -15,7 +15,7 @@ import {
     makeParser,
     makeValidator,
 } from '@nativescript/core';
-import { FontStyle, FontWeight } from '@nativescript/core/ui/styling/font';
+import { FontStyle, FontStyleType, FontWeight, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
 
@@ -115,8 +115,8 @@ export class LightFormattedString extends Observable {
     }
     fontFamily: string;
     fontSize: number;
-    fontStyle: FontStyle;
-    fontWeight: FontWeight;
+    fontStyle: FontStyleType;
+    fontWeight: FontWeightType;
     textAlignment: CoreTypes.TextAlignmentType;
     verticalTextAlignment: CoreTypes.VerticalAlignmentTextType;
     textDecoration: CoreTypes.TextDecorationType;
