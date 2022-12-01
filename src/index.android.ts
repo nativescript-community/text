@@ -2,7 +2,7 @@ import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgro
 import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { LightFormattedString } from './index-common';
-import { layout } from '@nativescript/core/utils/utils';
+import { layout } from '@nativescript/core/utils/layout-helper';
 import { ObjectSpans, getMaxFontSize } from '.';
 export * from './index-common';
 
