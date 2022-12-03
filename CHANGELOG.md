@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.11](https://github.com/nativescript-community/text/compare/v1.5.10...v1.5.11) (2022-12-03)
+
+### Bug Fixes
+
+-   **android:** dont use deref ([a7ef8f9](https://github.com/nativescript-community/text/commit/a7ef8f947ce19ae34cbd404bed556284f8ef501c))
+
 ## [1.5.10](https://github.com/nativescript-community/text/compare/v1.5.9...v1.5.10) (2022-12-01)
 
 **Note:** Version bump only for package @nativescript-community/text
