@@ -1,7 +1,6 @@
 import { Color, CoreTypes, FormattedString, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
-import { layout } from '@nativescript/core/utils/layout-helper';
 import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
 export * from './index-common';
@@ -60,7 +59,7 @@ function spanToNativeString(span, maxFontSize?) {
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    const density = spanStyle ? layout.getDisplayDensity() : 1;
+    const density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
     let backgroundColor = span.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
         backgroundColor = new Color(backgroundColor);
