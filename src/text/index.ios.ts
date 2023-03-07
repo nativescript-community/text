@@ -228,9 +228,9 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
         const descent = CTFontGetDescent(iosFont);
         attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticalTextAlignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
     }
-    // if (span._tappable) {
-    //     attrDict[NSLinkAttributeName] = text;
-    // }
+    if (span._tappable) {
+        attrDict[NSLinkAttributeName] = text;
+    }
     if (textcolor) {
         const color = !textcolor || textcolor instanceof Color ? textcolor : new Color(textcolor);
         if (color) {
