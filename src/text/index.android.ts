@@ -82,7 +82,7 @@ function spanToNativeString(span, maxFontSize?) {
         lineHeight: span.lineHeight !== undefined ? span.lineHeight * density : undefined,
         letterSpacing: span.letterSpacing,
         color: color ? color.android : undefined,
-        backgroundColor: backgroundColor ? backgroundColor.android : undefined,
+        backgroundColor: backgroundColor ? backgroundColor.android : undefined
     });
 }
 
@@ -162,7 +162,7 @@ export function init() {
         },
         get() {
             return this._relativeSize;
-        },
+        }
     });
     Span.prototype.toNativeString = function (maxFontSize?: number) {
         return spanToNativeString(this, maxFontSize);

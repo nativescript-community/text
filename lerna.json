@@ -1,9 +1,43 @@
 {
-    "packages": ["plugin"],
     "version": "1.5.11",
+    "packages": [
+        "packages/*"
+    ],
+    "npmClient": "yarn",
+    "useWorkspaces": true,
     "command": {
         "publish": {
-            "conventionalCommits": true
+            "conventionalCommits": true,
+            "conventionalBlacklist": [
+                "chore"
+            ],
+            "changelogPreset": "angular",
+            "createRelease": "github",
+            "commitHooks": false,
+            "private": false,
+            "ignoreChanges": [
+                "*.md",
+                "docs/**"
+            ]
+        },
+        "version": {
+            "conventionalCommits": true,
+            "conventionalBlacklist": [
+                "chore"
+            ],
+            "changelogPreset": "angular",
+            "createRelease": "github",
+            "commitHooks": false,
+            "private": false,
+            "ignoreChanges": [
+                "*.md",
+                "docs/**"
+            ]
+        },
+        "bootstrap": {
+            "npmClientArgs": [
+                "--no-package-lock"
+            ]
         }
     }
 }
