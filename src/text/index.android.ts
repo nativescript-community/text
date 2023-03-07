@@ -1,9 +1,8 @@
-import { Application, Color, CoreTypes, FormattedString, Span, ViewBase, backgroundColorProperty, knownFolders, path, profile, Utils } from '@nativescript/core';
-import { Font, FontWeight } from '@nativescript/core/ui/styling/font';
+import { Color, CoreTypes, FormattedString, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
+import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
+import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
-import { layout } from '@nativescript/core/utils/utils';
-import { ObjectSpans, getMaxFontSize } from '.';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
@@ -18,7 +17,7 @@ function formattedStringToNativeString(formattedString) {
     const options = [];
     formattedString.spans.forEach((s) => {
         if (!s.visibility || s.visibility === 'visible') {
-            options.push(spanToNativeString(s, maxFontSize))
+            options.push(spanToNativeString(s, maxFontSize));
         }
     });
     return `[${options.join(',')}]`;
@@ -60,7 +59,7 @@ function spanToNativeString(span, maxFontSize?) {
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    const density = spanStyle ? layout.getDisplayDensity() : 1;
+    const density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
     let backgroundColor = span.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
         backgroundColor = new Color(backgroundColor);
@@ -83,7 +82,7 @@ function spanToNativeString(span, maxFontSize?) {
         lineHeight: span.lineHeight !== undefined ? span.lineHeight * density : undefined,
         letterSpacing: span.letterSpacing,
         color: color ? color.android : undefined,
-        backgroundColor: backgroundColor ? backgroundColor.android : undefined,
+        backgroundColor: backgroundColor ? backgroundColor.android : undefined
     });
 }
 
@@ -163,7 +162,7 @@ export function init() {
         },
         get() {
             return this._relativeSize;
-        },
+        }
     });
     Span.prototype.toNativeString = function (maxFontSize?: number) {
         return spanToNativeString(this, maxFontSize);
@@ -181,7 +180,7 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
-function isBold(fontWeight: FontWeight): boolean {
+function isBold(fontWeight: FontWeightType): boolean {
     return fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900';
 }
 

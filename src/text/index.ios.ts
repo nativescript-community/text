@@ -23,7 +23,7 @@ function _createNativeAttributedString({
     color,
     textAlignment,
     autoFontSizeEnabled = false,
-    fontSizeRatio = 1,
+    fontSizeRatio = 1
 }: {
     text: string;
     color: Color;
@@ -67,7 +67,7 @@ function _createNativeAttributedString({
         const options = {
             [DTDefaultTextAlignment]: kCTLeftTextAlignment,
             [DTUseiOS6Attributes]: true,
-            [DTDocumentPreserveTrailingSpaces]: true,
+            [DTDocumentPreserveTrailingSpaces]: true
         } as any;
         attrText = NSMutableAttributedString.alloc().initWithHTMLDataOptionsDocumentAttributes(nsData, options, null);
     } else {
@@ -75,7 +75,7 @@ function _createNativeAttributedString({
             nsData,
             {
                 [NSDocumentTypeDocumentAttribute]: NSHTMLTextDocumentType,
-                [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding,
+                [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding
             } as any,
             null
         );
@@ -152,7 +152,7 @@ export function createNativeAttributedString(
                 }
                 _spanRanges.push({
                     location: spanStart,
-                    length: res.length,
+                    length: res.length
                 });
                 spanStart += res.length;
                 ssb.appendAttributedString(res);

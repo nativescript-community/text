@@ -13,9 +13,9 @@ import {
     ViewBase,
     colorProperty,
     makeParser,
-    makeValidator,
+    makeValidator
 } from '@nativescript/core';
-import { FontStyle, FontWeight } from '@nativescript/core/ui/styling/font';
+import { FontStyleType, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
 
@@ -86,7 +86,7 @@ export const cssProperty = (target: Object, key: string | symbol) => {
         get: getter,
         set: setter,
         enumerable: true,
-        configurable: true,
+        configurable: true
     });
 };
 
@@ -96,7 +96,7 @@ export const verticalTextAlignmentConverter = makeParser<VerticalTextAlignment>(
 export const verticalTextAlignmentProperty = new InheritedCssProperty<Style, VerticalTextAlignment>({
     name: 'verticalTextAlignment',
     cssName: 'vertical-text-align',
-    valueConverter: verticalTextAlignmentConverter,
+    valueConverter: verticalTextAlignmentConverter
 });
 verticalTextAlignmentProperty.register(Style);
 
@@ -115,8 +115,8 @@ export class LightFormattedString extends Observable {
     }
     fontFamily: string;
     fontSize: number;
-    fontStyle: FontStyle;
-    fontWeight: FontWeight;
+    fontStyle: FontStyleType;
+    fontWeight: FontWeightType;
     textAlignment: CoreTypes.TextAlignmentType;
     verticalTextAlignment: CoreTypes.VerticalAlignmentTextType;
     textDecoration: CoreTypes.TextDecorationType;
@@ -234,7 +234,7 @@ export function overrideSpanAndFormattedString() {
     TextBase.prototype._addChildFromBuilder = function (name: string, value: any) {
         if (name === Span.name || value.constructor.isSpan) {
             if (!this.formattedText) {
-                const formattedText = (new LightFormattedString() as any) as FormattedString;
+                const formattedText = new LightFormattedString() as any as FormattedString;
                 formattedText.spans.push(value);
                 this.formattedText = formattedText;
                 (formattedText as any).parent = this;
@@ -246,17 +246,19 @@ export function overrideSpanAndFormattedString() {
             value.parent = this;
         }
     };
+    const oldImplAddView = TextBase.prototype._addView;
     TextBase.prototype._addView = function (view) {
         if (view instanceof LightFormattedString) {
             return;
         }
-        this._super._addView(view);
+        oldImplAddView.call(this, view);
     };
+    const oldImplRemoveView = TextBase.prototype._addView;
     TextBase.prototype._removeView = function (view) {
         if (view instanceof LightFormattedString) {
             return;
         }
-        this._super._removeView(view);
+        oldImplRemoveView.call(this, view);
     };
     TextBase.prototype.eachChild = function (callback: (child: ViewBase) => boolean) {
         const text = this.formattedText;
@@ -269,10 +271,10 @@ export function overrideSpanAndFormattedString() {
     };
     TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {
-            if (global.isIOS) {
+            if (__IOS__) {
                 const color = value instanceof Color ? value.ios : value;
                 this._setColor(color);
-            } else if (global.isAndroid) {
+            } else if (__ANDROID__) {
                 if (value instanceof Color) {
                     this.nativeTextViewProtected.setTextColor(value.android);
                 } else {

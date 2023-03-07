@@ -11,6 +11,13 @@
             "ios": "3.0.0"
         }
     },
+    "scripts": {
+        "build": "npm run tsc",
+        "build.all": "npm run build",
+        "readme": "readme generate -c ../../tools/readme/blueprint.json",
+        "tsc": "cpy '**/*.d.ts' '../../packages/text' --parents --cwd=../../src/text && tsc -skipLibCheck -d",
+        "clean": "rimraf ./*.d.ts ./*.js ./*.js.map"
+    },
     "keywords": [
         "NativeScript",
         "JavaScript",
