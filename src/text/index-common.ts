@@ -18,6 +18,9 @@ import {
 import { FontStyleType, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
+import { iOSNativeHelper } from '@nativescript/core/utils';
+import { isNullOrUndefined, isString } from '@nativescript/core/utils/types';
+const majorVersion = iOSNativeHelper.MajorVersion;
 
 declare module '@nativescript/core/ui/text-base' {
     interface TextBase {
@@ -35,7 +38,6 @@ export function enableIOSDTCoreText() {}
 export function usingIOSDTCoreText() {
     return false;
 }
-
 export function computeBaseLineOffset(align, fontAscent, fontDescent, fontBottom, fontTop, fontSize, maxFontSize) {
     let result = 0;
     switch (align) {
@@ -283,4 +285,171 @@ export function overrideSpanAndFormattedString() {
             }
         }
     };
+
+    //@ts-ignore
+    if (__IOS__ && typeof TextBase.prototype.setFormattedTextDecorationAndTransform !== 'function') {
+        function NSStringFromNSAttributedString(source: NSAttributedString | string): NSString {
+            return NSString.stringWithString((source instanceof NSAttributedString && source.string) || (source as string));
+        }
+        function getTransformedText(text: string, textTransform: CoreTypes.TextTransformType): string {
+            if (!text || !isString(text)) {
+                return '';
+            }
+
+            switch (textTransform) {
+                case 'uppercase':
+                    return NSStringFromNSAttributedString(text).uppercaseString;
+                case 'lowercase':
+                    return NSStringFromNSAttributedString(text).lowercaseString;
+                case 'capitalize':
+                    return NSStringFromNSAttributedString(text).capitalizedString;
+                default:
+                    return text;
+            }
+        }
+        TextBase.prototype._setNativeText = function (reset = false): void {
+            if (reset) {
+                const nativeView = this.nativeTextViewProtected;
+                if (nativeView instanceof UIButton) {
+                    // Clear attributedText or title won't be affected.
+                    nativeView.setAttributedTitleForState(null, UIControlState.Normal);
+                    nativeView.setTitleForState(null, UIControlState.Normal);
+                } else {
+                    // Clear attributedText or text won't be affected.
+                    nativeView.attributedText = null;
+                    nativeView.text = null;
+                }
+
+                return;
+            }
+
+            if (this.formattedText) {
+                this.setFormattedTextDecorationAndTransform();
+            } else {
+                this.setTextDecorationAndTransform();
+            }
+        };
+        //@ts-ignore
+        TextBase.prototype.setFormattedTextDecorationAndTransform = function () {
+            const attrText = this.createFormattedTextNative(this.formattedText);
+            if (this.letterSpacing !== 0) {
+                attrText.addAttributeValueRange(NSKernAttributeName, this.letterSpacing * this.nativeTextViewProtected.font.pointSize, { location: 0, length: attrText.length });
+            }
+
+            if (this.style.lineHeight) {
+                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+                paragraphStyle.minimumLineHeight = this.lineHeight;
+                // make sure a possible previously set text alignment setting is not lost when line height is specified
+                if (this.nativeTextViewProtected instanceof UIButton) {
+                    paragraphStyle.alignment = (this.nativeTextViewProtected as UIButton).titleLabel.textAlignment;
+                } else {
+                    paragraphStyle.alignment = (this.nativeTextViewProtected as UITextField | UITextView | UILabel).textAlignment;
+                }
+
+                if (this.nativeTextViewProtected instanceof UILabel) {
+                    // make sure a possible previously set line break mode is not lost when line height is specified
+                    paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
+                }
+                attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
+            } else if (this.nativeTextViewProtected instanceof UITextView) {
+                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+                paragraphStyle.alignment = (this.nativeTextViewProtected as UITextView).textAlignment;
+                attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
+            }
+
+            if (this.nativeTextViewProtected instanceof UIButton) {
+                this.nativeTextViewProtected.setAttributedTitleForState(attrText, UIControlState.Normal);
+            } else {
+                if (majorVersion >= 13 && UIColor.labelColor) {
+                    this.nativeTextViewProtected.textColor = UIColor.labelColor;
+                }
+
+                this.nativeTextViewProtected.attributedText = attrText;
+            }
+        };
+        //@ts-ignore
+        TextBase.prototype.setTextDecorationAndTransform = function () {
+            const style = this.style;
+            const dict = new Map<string, any>();
+            switch (style.textDecoration) {
+                case 'none':
+                    break;
+                case 'underline':
+                    dict.set(NSUnderlineStyleAttributeName, NSUnderlineStyle.Single);
+                    break;
+                case 'line-through':
+                    dict.set(NSStrikethroughStyleAttributeName, NSUnderlineStyle.Single);
+                    break;
+                case 'underline line-through':
+                    dict.set(NSUnderlineStyleAttributeName, NSUnderlineStyle.Single);
+                    dict.set(NSStrikethroughStyleAttributeName, NSUnderlineStyle.Single);
+                    break;
+                default:
+                    throw new Error(`Invalid text decoration value: ${style.textDecoration}. Valid values are: 'none', 'underline', 'line-through', 'underline line-through'.`);
+            }
+
+            if (style.letterSpacing !== 0 && this.nativeTextViewProtected.font) {
+                const kern = style.letterSpacing * this.nativeTextViewProtected.font.pointSize;
+                dict.set(NSKernAttributeName, kern);
+                if (this.nativeTextViewProtected instanceof UITextField) {
+                    this.nativeTextViewProtected.defaultTextAttributes.setValueForKey(kern, NSKernAttributeName);
+                }
+            }
+
+            const isTextView = this.nativeTextViewProtected instanceof UITextView;
+            if (style.lineHeight) {
+                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+                paragraphStyle.lineSpacing = style.lineHeight;
+                // make sure a possible previously set text alignment setting is not lost when line height is specified
+                if (this.nativeTextViewProtected instanceof UIButton) {
+                    paragraphStyle.alignment = (this.nativeTextViewProtected as UIButton).titleLabel.textAlignment;
+                } else {
+                    paragraphStyle.alignment = (this.nativeTextViewProtected as UITextField | UITextView | UILabel).textAlignment;
+                }
+
+                if (this.nativeTextViewProtected instanceof UILabel) {
+                    // make sure a possible previously set line break mode is not lost when line height is specified
+                    paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
+                }
+                dict.set(NSParagraphStyleAttributeName, paragraphStyle);
+            } else if (isTextView) {
+                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+                paragraphStyle.alignment = (this.nativeTextViewProtected as UITextView).textAlignment;
+                dict.set(NSParagraphStyleAttributeName, paragraphStyle);
+            }
+
+            const source = getTransformedText(isNullOrUndefined(this.text) ? '' : `${this.text}`, this.textTransform);
+            if (dict.size > 0 || isTextView) {
+                if (isTextView && this.nativeTextViewProtected.font) {
+                    // UITextView's font seems to change inside.
+                    dict.set(NSFontAttributeName, this.nativeTextViewProtected.font);
+                }
+
+                const result = NSMutableAttributedString.alloc().initWithString(source);
+                result.setAttributesRange(dict as any, {
+                    location: 0,
+                    length: source.length
+                });
+                if (this.nativeTextViewProtected instanceof UIButton) {
+                    this.nativeTextViewProtected.setAttributedTitleForState(result, UIControlState.Normal);
+                } else {
+                    this.nativeTextViewProtected.attributedText = result;
+                }
+            } else {
+                if (this.nativeTextViewProtected instanceof UIButton) {
+                    // Clear attributedText or title won't be affected.
+                    this.nativeTextViewProtected.setAttributedTitleForState(null, UIControlState.Normal);
+                    this.nativeTextViewProtected.setTitleForState(source, UIControlState.Normal);
+                } else {
+                    // Clear attributedText or text won't be affected.
+                    this.nativeTextViewProtected.attributedText = undefined;
+                    this.nativeTextViewProtected.text = source;
+                }
+            }
+
+            if (!style.color && majorVersion >= 13 && UIColor.labelColor) {
+                this._setColor(UIColor.labelColor);
+            }
+        };
+    }
 }
