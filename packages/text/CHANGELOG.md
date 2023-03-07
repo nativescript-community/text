@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.12](https://github.com/nativescript-community/text/compare/v1.5.11...v1.5.12) (2023-03-07)
+
+
+### Bug Fixes
+
+* error when used with N main repo ([7fa8a98](https://github.com/nativescript-community/text/commit/7fa8a9858ee786bd7fc2e61eb1fdb3e31dcc7b00))
+
+
+
+
+
 ## [1.5.11](https://github.com/nativescript-community/text/compare/v1.5.10...v1.5.11) (2022-12-03)
 
 **Note:** Version bump only for package @nativescript-community/text
