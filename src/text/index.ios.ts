@@ -4,13 +4,13 @@ import { ObjectSpans, computeBaseLineOffset, getMaxFontSize, textAlignmentConver
 import { LightFormattedString } from './index.android';
 export * from './index-common';
 
-let iOSUseDTCoreText = false;
-export function enableIOSDTCoreText() {
-    iOSUseDTCoreText = true;
-}
-export function usingIOSDTCoreText() {
-    return iOSUseDTCoreText;
-}
+// let iOSUseDTCoreText = false;
+// export function enableIOSDTCoreText() {
+//     iOSUseDTCoreText = true;
+// }
+// export function usingIOSDTCoreText() {
+//     return iOSUseDTCoreText;
+// }
 export function init() {}
 
 function _createNativeAttributedString({
@@ -20,6 +20,7 @@ function _createNativeAttributedString({
     fontWeight,
     letterSpacing,
     lineHeight,
+    lineBreak,
     color,
     textAlignment,
     autoFontSizeEnabled = false,
@@ -32,6 +33,7 @@ function _createNativeAttributedString({
     fontSize: number;
     letterSpacing?: number;
     lineHeight?: number;
+    lineBreak?: number;
     textAlignment: NSTextAlignment;
     autoFontSizeEnabled: boolean;
     fontSizeRatio: number;
@@ -60,28 +62,44 @@ function _createNativeAttributedString({
     // }
     const nsString = NSString.stringWithString(htmlString);
     const nsData = nsString.dataUsingEncodingAllowLossyConversion(NSUnicodeStringEncoding, true);
-    let attrText: NSMutableAttributedString;
-    if (iOSUseDTCoreText) {
-        // on iOS 13.3 there is bug with the system font
-        // https://github.com/Cocoanetics/DTCoreText/issues/1168
-        const options = {
-            [DTDefaultTextAlignment]: kCTLeftTextAlignment,
-            [DTUseiOS6Attributes]: true,
-            [DTDocumentPreserveTrailingSpaces]: true
-        } as any;
-        attrText = NSMutableAttributedString.alloc().initWithHTMLDataOptionsDocumentAttributes(nsData, options, null);
-    } else {
-        attrText = NSMutableAttributedString.alloc().initWithDataOptionsDocumentAttributesError(
-            nsData,
+    // let attrText: NSMutableAttributedString;
+    // if (iOSUseDTCoreText) {
+    //     // on iOS 13.3 there is bug with the system font
+    //     // https://github.com/Cocoanetics/DTCoreText/issues/1168
+    //     const options = {
+    //         [DTDefaultTextAlignment]: kCTLeftTextAlignment,
+    //         [DTUseiOS6Attributes]: true,
+    //         [DTDocumentPreserveTrailingSpaces]: true
+    //     } as any;
+    //     attrText = NSMutableAttributedString.alloc().initWithHTMLDataOptionsDocumentAttributes(nsData, options, null);
+    // } else {
+    const attrText = NSMutableAttributedString.alloc().initWithDataOptionsDocumentAttributesError(
+        nsData,
+        {
+            [NSDocumentTypeDocumentAttribute]: NSHTMLTextDocumentType,
+            [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding
+        } as any,
+        null
+    );
+    // }
+    if (lineBreak) {
+        const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+        paragraphStyle.lineBreakMode = lineBreak;
+        const dict = new Map();
+        dict.set(NSParagraphStyleAttributeName, paragraphStyle);
+        attrText.addAttributesRange(
             {
-                [NSDocumentTypeDocumentAttribute]: NSHTMLTextDocumentType,
-                [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding
+                [NSParagraphStyleAttributeName]: paragraphStyle
             } as any,
-            null
+            {
+                location: 0,
+                length: attrText.length
+            }
         );
     }
-    if (autoFontSizeEnabled || iOSUseDTCoreText) {
-        attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, 0, (attributes: NSDictionary<any, any>, range, stop) => {
+    if (autoFontSizeEnabled) {
+        // if (autoFontSizeEnabled || iOSUseDTCoreText) {
+        attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, 0 as NSAttributedStringEnumerationOptions, (attributes: NSDictionary<any, any>, range, stop) => {
             if (!!attributes.valueForKey('DTGUID')) {
                 // We need to remove this attribute or links are not colored right
                 //

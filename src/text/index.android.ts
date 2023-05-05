@@ -230,6 +230,7 @@ export function createNativeAttributedString(
               fontWeight?: string;
               letterSpacing?: number;
               lineHeight?: number;
+              lineBreak?: number;
               relativeSize?: number;
               textAlignment?: number | CoreTypes.TextAlignmentType;
           }
