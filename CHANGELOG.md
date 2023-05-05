@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.14](https://github.com/nativescript-community/text/compare/v1.5.13...v1.5.14) (2023-05-05)
+
+
+### Bug Fixes
+
+* **ios:** correctly handle paragraphStyle ([31db03e](https://github.com/nativescript-community/text/commit/31db03ed627e789cb070dd53ad4e3e043715e293))
+
+
+
+
+
 ## [1.5.13](https://github.com/nativescript-community/text/compare/v1.5.12...v1.5.13) (2023-05-05)
 
 
