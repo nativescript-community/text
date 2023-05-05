@@ -82,21 +82,6 @@ function _createNativeAttributedString({
         null
     );
     // }
-    if (lineBreak) {
-        const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-        paragraphStyle.lineBreakMode = lineBreak;
-        const dict = new Map();
-        dict.set(NSParagraphStyleAttributeName, paragraphStyle);
-        attrText.addAttributesRange(
-            {
-                [NSParagraphStyleAttributeName]: paragraphStyle
-            } as any,
-            {
-                location: 0,
-                length: attrText.length
-            }
-        );
-    }
     if (autoFontSizeEnabled) {
         // if (autoFontSizeEnabled || iOSUseDTCoreText) {
         attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, 0 as NSAttributedStringEnumerationOptions, (attributes: NSDictionary<any, any>, range, stop) => {
@@ -117,24 +102,34 @@ function _createNativeAttributedString({
     if (letterSpacing !== undefined && letterSpacing !== 0) {
         attrText.addAttributeValueRange(NSKernAttributeName, letterSpacing * fontSize, { location: 0, length: attrText.length });
     }
-
+    let paragraphStyle;
+    const createParagraphStyle = () => {
+        if (!paragraphStyle) {
+            paragraphStyle = NSMutableParagraphStyle.alloc().init();
+        }
+    };
+    if (lineBreak) {
+        createParagraphStyle();
+        // make sure a possible previously set line break mode is not lost when line height is specified
+        paragraphStyle.lineBreakMode = lineBreak;
+    }
     if (lineHeight !== undefined) {
         if (lineHeight === 0) {
             lineHeight = 0.00001;
         }
-        const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+        createParagraphStyle();
         paragraphStyle.minimumLineHeight = lineHeight;
         paragraphStyle.maximumLineHeight = lineHeight;
         // make sure a possible previously set text alignment setting is not lost when line height is specified
         paragraphStyle.alignment = textAlignment;
         // if (this.nativeTextViewProtected instanceof UILabel) {
-        //     // make sure a possible previously set line break mode is not lost when line height is specified
         //     paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
         // }
-        attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
     } else if (textAlignment !== undefined) {
-        const paragraphStyle = NSMutableParagraphStyle.alloc().init();
+        createParagraphStyle();
         paragraphStyle.alignment = textAlignment;
+    }
+    if (paragraphStyle) {
         attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
     }
     return attrText;
