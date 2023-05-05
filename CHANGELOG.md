@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.13](https://github.com/nativescript-community/text/compare/v1.5.12...v1.5.13) (2023-05-05)
+
+
+### Bug Fixes
+
+* **ios:** added support for lineBreak and drop DTCoreText for now ([f45ec38](https://github.com/nativescript-community/text/commit/f45ec38dd6cf82124a00d48e87dd56c4fcc7265e))
+
+
+
+
+
 ## [1.5.12](https://github.com/nativescript-community/text/compare/v1.5.11...v1.5.12) (2023-03-07)
 
 
