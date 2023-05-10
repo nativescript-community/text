@@ -229,11 +229,13 @@ export function getMaxFontSize(value: FormattedString | LightFormattedString | O
 }
 
 export let overrideSpanAndFormattedStringEnabled = false;
-export function overrideSpanAndFormattedString(useLightFormattedString = true) {
+export let useLightFormattedString = false;
+export function overrideSpanAndFormattedString(useLightFormatString = true) {
     if (overrideSpanAndFormattedStringEnabled) {
         return;
     }
     overrideSpanAndFormattedStringEnabled = true;
+    useLightFormattedString = useLightFormatString;
     TextBase.prototype._addChildFromBuilder = function (name: string, value: any) {
         if (name === Span.name || value.constructor.isSpan) {
             if (!this.formattedText) {
