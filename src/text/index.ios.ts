@@ -1,16 +1,9 @@
 import { Color, CoreTypes, Font, FormattedString, ViewBase, fontInternalProperty } from '@nativescript/core';
 import { getTransformedText } from '@nativescript/core/ui/text-base';
-import { ObjectSpans, computeBaseLineOffset, getMaxFontSize, textAlignmentConverter } from './index-common';
+import { ObjectSpans, getMaxFontSize, textAlignmentConverter } from './index-common';
 import { LightFormattedString } from './index.android';
 export * from './index-common';
 
-// let iOSUseDTCoreText = false;
-// export function enableIOSDTCoreText() {
-//     iOSUseDTCoreText = true;
-// }
-// export function usingIOSDTCoreText() {
-//     return iOSUseDTCoreText;
-// }
 export function init() {}
 
 function _createNativeAttributedString({
@@ -21,10 +14,13 @@ function _createNativeAttributedString({
     letterSpacing,
     lineHeight,
     lineBreak,
+    linkColor,
+    linkDecoration,
     color,
     textAlignment,
     autoFontSizeEnabled = false,
-    fontSizeRatio = 1
+    fontSizeRatio = 1,
+    useCustomLinkTag
 }: {
     text: string;
     color: Color;
@@ -34,6 +30,9 @@ function _createNativeAttributedString({
     letterSpacing?: number;
     lineHeight?: number;
     lineBreak?: number;
+    linkColor?: string | Color;
+    linkDecoration?: string;
+    useCustomLinkTag?: boolean;
     textAlignment: NSTextAlignment;
     autoFontSizeEnabled: boolean;
     fontSizeRatio: number;
@@ -45,95 +44,42 @@ function _createNativeAttributedString({
               .map((s) => `'${s}'`)
               .join(',')
         : null;
+
     // if (iOSUseDTCoreText) {
+    let style = '';
+    if (linkColor || linkDecoration) {
+        style =
+            '<style>' +
+            `a, a:link, a:visited { ${linkColor ? `color:${(linkColor instanceof Color ? linkColor : new Color(linkColor)).hex} !important;` : ''} text-decoration: ${linkDecoration || 'none'}; }` +
+            '</style>';
+    }
     const htmlString =
-        color || familyName || fontSize || fontWeight
+        style +
+        (color || familyName || fontSize || fontWeight
             ? `<span style=" ${color ? `color: ${color};` : ''}  ${trueFontFamily ? `font-family:${trueFontFamily};` : ''}${fontSize ? `font-size: ${fontSize * fontSizeRatio}px;` : ''}${
                   fontWeight ? `font-weight: ${fontWeight};` : ''
               }">${text}</span>`
-            : text;
-    // } else {
-    //     htmlString =
-    //         color || familyName || fontSize || fontWeight
-    //             ? `<style>body{ ${color ? `color: ${color};` : ''}  ${trueFontFamily ? `font-family:${trueFontFamily};` : ''}${fontSize ? `font-size: ${fontSize * fontSizeRatio}px;` : ''}${
-    //                   fontWeight ? `font-weight: ${fontWeight};` : ''
-    //               }}</style>${text}`
-    //             : text;
-    // }
-    const nsString = NSString.stringWithString(htmlString);
-    const nsData = nsString.dataUsingEncodingAllowLossyConversion(NSUnicodeStringEncoding, true);
-    // let attrText: NSMutableAttributedString;
-    // if (iOSUseDTCoreText) {
-    //     // on iOS 13.3 there is bug with the system font
-    //     // https://github.com/Cocoanetics/DTCoreText/issues/1168
-    //     const options = {
-    //         [DTDefaultTextAlignment]: kCTLeftTextAlignment,
-    //         [DTUseiOS6Attributes]: true,
-    //         [DTDocumentPreserveTrailingSpaces]: true
-    //     } as any;
-    //     attrText = NSMutableAttributedString.alloc().initWithHTMLDataOptionsDocumentAttributes(nsData, options, null);
-    // } else {
-    const attrText = NSMutableAttributedString.alloc().initWithDataOptionsDocumentAttributesError(
-        nsData,
-        {
-            [NSDocumentTypeDocumentAttribute]: NSHTMLTextDocumentType,
-            [NSCharacterEncodingDocumentAttribute]: NSUTF8StringEncoding
-        } as any,
-        null
-    );
-    // }
-    if (autoFontSizeEnabled) {
-        // if (autoFontSizeEnabled || iOSUseDTCoreText) {
-        attrText.enumerateAttributesInRangeOptionsUsingBlock({ location: 0, length: attrText.length }, 0 as NSAttributedStringEnumerationOptions, (attributes: NSDictionary<any, any>, range, stop) => {
-            if (!!attributes.valueForKey('DTGUID')) {
-                // We need to remove this attribute or links are not colored right
-                //
-                // @see https://github.com/Cocoanetics/DTCoreText/issues/792
-                attrText.removeAttributeRange('CTForegroundColorFromContext', range);
-            }
-            const font: UIFont = attributes.valueForKey(NSFontAttributeName);
-            if (!!font) {
-                attrText.addAttributeValueRange('OriginalFontSize', font.pointSize, range);
-            }
-        });
-    }
+            : text);
 
-    // TODO: letterSpacing should be applied per Span.
-    if (letterSpacing !== undefined && letterSpacing !== 0) {
-        attrText.addAttributeValueRange(NSKernAttributeName, letterSpacing * fontSize, { location: 0, length: attrText.length });
-    }
-    let paragraphStyle;
-    const createParagraphStyle = () => {
-        if (!paragraphStyle) {
-            paragraphStyle = NSMutableParagraphStyle.alloc().init();
-        }
-    };
-    if (lineBreak) {
-        createParagraphStyle();
-        // make sure a possible previously set line break mode is not lost when line height is specified
-        paragraphStyle.lineBreakMode = lineBreak;
-    }
-    if (lineHeight !== undefined) {
-        if (lineHeight === 0) {
-            lineHeight = 0.00001;
-        }
-        createParagraphStyle();
-        paragraphStyle.minimumLineHeight = lineHeight;
-        paragraphStyle.maximumLineHeight = lineHeight;
-        // make sure a possible previously set text alignment setting is not lost when line height is specified
-        paragraphStyle.alignment = textAlignment;
-        // if (this.nativeTextViewProtected instanceof UILabel) {
-        //     paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
-        // }
-    } else if (textAlignment !== undefined) {
-        createParagraphStyle();
-        paragraphStyle.alignment = textAlignment;
-    }
-    if (paragraphStyle) {
-        attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
-    }
-    return attrText;
+    return NSTextUtils.createNativeHTMLAttributedString({
+        htmlString,
+        fontSize,
+        fontWeight,
+        letterSpacing,
+        lineHeight,
+        lineBreak,
+        linkColor,
+        linkDecoration,
+        color,
+        textAlignment,
+        autoFontSizeEnabled,
+        fontSizeRatio,
+        useCustomLinkTag
+    });
 }
+
+// TODO: fix typings
+declare const NSTextUtils;
 export function createNativeAttributedString(
     data:
         | {
@@ -152,33 +98,38 @@ export function createNativeAttributedString(
     fontSizeRatio = 1
 ) {
     if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
-        const ssb = NSMutableAttributedString.new();
+        // const ssb = NSMutableAttributedString.new();
         const maxFontSize = getMaxFontSize(data as any);
         const _spanRanges = [];
-        let spanStart = 0;
+        // let spanStart = 0;
         let hasLink = false;
-        data['spans'].forEach((s) => {
-            const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
-            if (res) {
-                if (s._tappable) {
-                    hasLink = true;
-                }
-                _spanRanges.push({
-                    location: spanStart,
-                    length: res.length
-                });
-                spanStart += res.length;
-                ssb.appendAttributedString(res);
+        const details = [];
+        data['spans'].forEach((s, index) => {
+            const spanDetails = createSpannableDetails(s, index, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+            // const length = spanDetails.text.length;
+            details.push(spanDetails);
+            // const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+            // if (res) {
+            if (s._tappable) {
+                hasLink = true;
             }
+            // _spanRanges.push({
+            //     location: spanStart,
+            //     length
+            // });
+            // spanStart += length;
+            //     ssb.appendAttributedString(res);
+            // }
         });
         if (parent) {
             parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
             if ((parent as any)._setTappableState) {
                 (parent as any)._setTappableState(hasLink);
             }
-            parent['_spanRanges'] = _spanRanges;
+            // parent['_spanRanges'] = _spanRanges;
         }
-        return ssb;
+        return NSTextUtils.createNativeAttributedString({ details });
+        // return ssb;
     }
     if (data.textAlignment && typeof data.textAlignment === 'string') {
         data.textAlignment = textAlignmentConverter(data.textAlignment);
@@ -190,116 +141,11 @@ export function createNativeAttributedString(
     data['fontSizeRatio'] = fontSizeRatio;
     return _createNativeAttributedString(data as any);
 }
-
-export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1): NSMutableAttributedString {
+export function createSpannableDetails(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
-    const attrDict = {} as { key: string; value: any };
-    const fontFamily = span.fontFamily;
-    let fontSize = span.fontSize;
-    let realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
-    if (span.relativeSize) {
-        realFontSize = ((parent && parent.fontSize) || (parentView && parentView.fontSize)) * span.relativeSize;
-    }
-    const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
-    const fontWeight = span.fontWeight;
-    const fontstyle = span.fontStyle;
-    const textcolor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
-    const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
-    const textDecorations = span.textDecoration || (parent && parent.textDecoration);
-    const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
-    let lineHeight = span.lineHeight || (parent && parent.lineHeight);
-    const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
-    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
-    // We CANT use parent verticalTextAlignment. Else it would break line height
-    // for multiple line text you want centered in the View
-    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-    //     verticalTextAlignment = grandParent?.verticalTextAlignment;
-    // }
-    let iosFont: UIFont;
-    if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
-        const font = new Font(
-            fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily),
-            realFontSize * fontSizeRatio,
-            fontstyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle),
-            fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
-        );
-        iosFont = font.getUIFont(UIFont.systemFontOfSize(realFontSize));
-        attrDict[NSFontAttributeName] = iosFont;
-        if (autoFontSizeEnabled) {
-            attrDict['OriginalFontSize'] = realFontSize;
-        }
-    }
-    if (verticalTextAlignment && verticalTextAlignment !== 'initial' && verticalTextAlignment !== 'stretch') {
-        if (!iosFont) {
-            iosFont = parentView[fontInternalProperty.getDefault]();
-            fontSize = iosFont.pointSize;
-        }
-        const ascent = CTFontGetAscent(iosFont);
-        const descent = CTFontGetDescent(iosFont);
-        attrDict[NSBaselineOffsetAttributeName] = -computeBaseLineOffset(verticalTextAlignment, -ascent, descent, -iosFont.descender, -iosFont.ascender, fontSize, realMaxFontSize);
-    }
-    if (span._tappable) {
-        attrDict[NSLinkAttributeName] = text;
-    }
-    if (textcolor) {
-        const color = !textcolor || textcolor instanceof Color ? textcolor : new Color(textcolor);
-        if (color) {
-            attrDict[NSForegroundColorAttributeName] = color.ios;
-        }
-    }
-
-    if (backgroundcolor) {
-        const color = !backgroundcolor || backgroundcolor instanceof Color ? backgroundcolor : new Color(backgroundcolor);
-        if (color) {
-            attrDict[NSBackgroundColorAttributeName] = color.ios;
-        }
-    }
-    if (letterSpacing) {
-        attrDict[NSKernAttributeName] = letterSpacing * iosFont.pointSize;
-    }
-
-    let paragraphStyle;
-    if (lineHeight !== undefined || textAlignment) {
-        paragraphStyle = NSMutableParagraphStyle.alloc().init();
-        switch (textAlignment) {
-            case 'middle':
-            case 'center':
-                paragraphStyle.alignment = NSTextAlignment.Center;
-                break;
-            case 'right':
-                paragraphStyle.alignment = NSTextAlignment.Right;
-                break;
-            default:
-                paragraphStyle.alignment = NSTextAlignment.Left;
-                break;
-        }
-        if (lineHeight !== undefined) {
-            if (lineHeight === 0) {
-                lineHeight = 0.00001;
-            }
-            paragraphStyle.maximumLineHeight = lineHeight;
-            paragraphStyle.minimumLineHeight = lineHeight;
-        }
-    }
-    if (paragraphStyle) {
-        attrDict[NSParagraphStyleAttributeName] = paragraphStyle;
-    }
-
-    if (textDecorations) {
-        const underline = textDecorations.indexOf('underline') !== -1;
-        if (underline) {
-            attrDict[NSUnderlineStyleAttributeName] = underline;
-        }
-
-        const strikethrough = textDecorations.indexOf('line-through') !== -1;
-        if (strikethrough) {
-            attrDict[NSStrikethroughStyleAttributeName] = strikethrough;
-        }
-    }
-
     if (!(text instanceof NSAttributedString)) {
         if (!(typeof text === 'string')) {
             text = text.toString();
@@ -311,10 +157,49 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
         if (textTransform) {
             text = getTransformedText(text, textTransform);
         }
-        return NSMutableAttributedString.alloc().initWithStringAttributes(text, attrDict as any);
-    } else {
-        const result = NSMutableAttributedString.alloc().initWithAttributedString(text);
-        result.setAttributesRange(attrDict as any, { location: 0, length: text.length });
-        return result;
     }
+    const fontFamily = span.fontFamily;
+    const fontSize = span.fontSize;
+    let realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
+    if (span.relativeSize) {
+        realFontSize = ((parent && parent.fontSize) || (parentView && parentView.fontSize)) * span.relativeSize;
+    }
+    const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
+    const fontWeight = span.fontWeight;
+    const fontstyle = span.fontStyle;
+    const textColor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
+    const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
+    const textDecoration = span.textDecoration || (parent && parent.textDecoration);
+    const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
+    const lineHeight = span.lineHeight || (parent && parent.lineHeight);
+    const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
+    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    let iosFont;
+    if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
+        const font = new Font(
+            fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily),
+            realFontSize * fontSizeRatio,
+            fontstyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle),
+            fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
+        );
+        iosFont = font.getUIFont(UIFont.systemFontOfSize(realFontSize));
+    } else {
+        iosFont = parentView[fontInternalProperty.getDefault]();
+    }
+    return {
+        text,
+        tapIndex: span._tappable ? index : undefined,
+        autoFontSizeEnabled,
+        iosFont,
+        realFontSize,
+        fontSize: fontSize || iosFont.pointSize,
+        realMaxFontSize,
+        backgroundColor: backgroundcolor ? (backgroundcolor instanceof Color ? backgroundcolor.ios : new Color(backgroundcolor).ios) : null,
+        color: textColor ? (textColor instanceof Color ? textColor.ios : new Color(textColor).ios) : null,
+        textDecoration,
+        letterSpacing,
+        lineHeight,
+        verticalTextAlignment,
+        textAlignment
+    };
 }

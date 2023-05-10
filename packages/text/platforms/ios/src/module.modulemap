@@ -1,0 +1,5 @@
+module NSText {
+  umbrella header "NSTextModule.h"
+  export *
+  module * { export * }
+}
