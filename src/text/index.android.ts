@@ -232,6 +232,8 @@ export function createNativeAttributedString(
               lineHeight?: number;
               lineBreak?: number;
               relativeSize?: number;
+              linkColor?: string | Color;
+              linkDecoration?: string;
               textAlignment?: number | CoreTypes.TextAlignmentType;
           }
         | FormattedString
