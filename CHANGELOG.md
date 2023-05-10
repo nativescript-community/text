@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.17](https://github.com/nativescript-community/text/compare/v1.5.16...v1.5.17) (2023-05-10)
+
+
+### Bug Fixes
+
+* know if LightFormattedString is used ([6199859](https://github.com/nativescript-community/text/commit/619985924d1d46e20ba93d6fb443e8413a371f20))
+
+
+
+
+
 ## [1.5.16](https://github.com/nativescript-community/text/compare/v1.5.15...v1.5.16) (2023-05-10)
 
 
