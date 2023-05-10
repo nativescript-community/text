@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.16](https://github.com/nativescript-community/text/compare/v1.5.15...v1.5.16) (2023-05-10)
+
+
+### Bug Fixes
+
+* allow to override without using LightFormattedString ([5a0ffd1](https://github.com/nativescript-community/text/commit/5a0ffd1e10f41be9230394e171fe7c11b9db5bef))
+
+
+
+
+
 ## [1.5.15](https://github.com/nativescript-community/text/compare/v1.5.14...v1.5.15) (2023-05-10)
 
 **Note:** Version bump only for package nativescript-text
