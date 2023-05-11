@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.18](https://github.com/nativescript-community/text/compare/v1.5.17...v1.5.18) (2023-05-11)
+
+
+### Bug Fixes
+
+* **ios:** bring back `createSpannable` ([cb89543](https://github.com/nativescript-community/text/commit/cb89543ee15d111a958485db82f14284c7628004))
+* **ios:** parent properties not being used ([4d0cb6b](https://github.com/nativescript-community/text/commit/4d0cb6b4e502088f5c4ac7e9e90550f60f20197d))
+
+
+
+
+
 ## [1.5.17](https://github.com/nativescript-community/text/compare/v1.5.16...v1.5.17) (2023-05-10)
 
 
