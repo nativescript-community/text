@@ -141,6 +141,9 @@ export function createNativeAttributedString(
     data['fontSizeRatio'] = fontSizeRatio;
     return _createNativeAttributedString(data as any);
 }
+export function createSpannable(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
+    return NSTextUtils.createNativeAttributedString({ details: [createSpannableDetails(span, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio)] });
+}
 export function createSpannableDetails(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
