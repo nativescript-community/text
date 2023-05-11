@@ -105,7 +105,7 @@ export function createNativeAttributedString(
         let hasLink = false;
         const details = [];
         data['spans'].forEach((s, index) => {
-            const spanDetails = createSpannableDetails(s, index, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+            const spanDetails = createSpannableDetails(s, index, undefined, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
             // const length = spanDetails.text.length;
             details.push(spanDetails);
             // const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
