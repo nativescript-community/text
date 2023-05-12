@@ -72,6 +72,33 @@ export function computeBaseLineOffset(align, fontAscent, fontDescent, fontBottom
     }
     return result;
 }
+function getCapitalizedString(str: string): string {
+    const words = str.split(' ');
+    const newWords = [];
+    for (let i = 0, length = words.length; i < length; i++) {
+        const word = words[i].toLowerCase();
+        newWords.push(word.substring(0, 1).toUpperCase() + word.substring(1));
+    }
+
+    return newWords.join(' ');
+}
+export function getTransformedText(text: string, textTransform: CoreTypes.TextTransformType): string {
+    if (!text || !isString(text)) {
+        return '';
+    }
+
+    switch (textTransform) {
+        case 'uppercase':
+            return text.toUpperCase();
+        case 'lowercase':
+            return text.toLowerCase();
+        case 'capitalize':
+            return getCapitalizedString(text);
+        case 'none':
+        default:
+            return text;
+    }
+}
 
 export const cssProperty = (target: Object, key: string | symbol) => {
     // property getter
@@ -334,121 +361,36 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
         };
         //@ts-ignore
         TextBase.prototype.setFormattedTextDecorationAndTransform = function () {
+            const nativeView = this.nativeTextViewProtected;
             const attrText = this.createFormattedTextNative(this.formattedText);
-            if (this.letterSpacing !== 0) {
-                attrText.addAttributeValueRange(NSKernAttributeName, this.letterSpacing * this.nativeTextViewProtected.font.pointSize, { location: 0, length: attrText.length });
+            // we override parent class behavior because we apply letterSpacing and lineHeight on a per Span basis
+            if (majorVersion >= 13 && UIColor.labelColor) {
+                this.nativeTextViewProtected.textColor = UIColor.labelColor;
             }
 
-            if (this.style.lineHeight) {
-                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-                paragraphStyle.minimumLineHeight = this.lineHeight;
-                // make sure a possible previously set text alignment setting is not lost when line height is specified
-                if (this.nativeTextViewProtected instanceof UIButton) {
-                    paragraphStyle.alignment = (this.nativeTextViewProtected as UIButton).titleLabel.textAlignment;
-                } else {
-                    paragraphStyle.alignment = (this.nativeTextViewProtected as UITextField | UITextView | UILabel).textAlignment;
-                }
-
-                if (this.nativeTextViewProtected instanceof UILabel) {
-                    // make sure a possible previously set line break mode is not lost when line height is specified
-                    paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
-                }
-                attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
-            } else if (this.nativeTextViewProtected instanceof UITextView) {
-                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-                paragraphStyle.alignment = (this.nativeTextViewProtected as UITextView).textAlignment;
-                attrText.addAttributeValueRange(NSParagraphStyleAttributeName, paragraphStyle, { location: 0, length: attrText.length });
-            }
-
-            if (this.nativeTextViewProtected instanceof UIButton) {
-                this.nativeTextViewProtected.setAttributedTitleForState(attrText, UIControlState.Normal);
-            } else {
-                if (majorVersion >= 13 && UIColor.labelColor) {
-                    this.nativeTextViewProtected.textColor = UIColor.labelColor;
-                }
-
-                this.nativeTextViewProtected.attributedText = attrText;
-            }
+            nativeView.attributedText = attrText;
         };
         //@ts-ignore
         TextBase.prototype.setTextDecorationAndTransform = function () {
             const style = this.style;
-            const dict = new Map<string, any>();
-            switch (style.textDecoration) {
-                case 'none':
-                    break;
-                case 'underline':
-                    dict.set(NSUnderlineStyleAttributeName, NSUnderlineStyle.Single);
-                    break;
-                case 'line-through':
-                    dict.set(NSStrikethroughStyleAttributeName, NSUnderlineStyle.Single);
-                    break;
-                case 'underline line-through':
-                    dict.set(NSUnderlineStyleAttributeName, NSUnderlineStyle.Single);
-                    dict.set(NSStrikethroughStyleAttributeName, NSUnderlineStyle.Single);
-                    break;
-                default:
-                    throw new Error(`Invalid text decoration value: ${style.textDecoration}. Valid values are: 'none', 'underline', 'line-through', 'underline line-through'.`);
-            }
-
-            if (style.letterSpacing !== 0 && this.nativeTextViewProtected.font) {
-                const kern = style.letterSpacing * this.nativeTextViewProtected.font.pointSize;
-                dict.set(NSKernAttributeName, kern);
-                if (this.nativeTextViewProtected instanceof UITextField) {
-                    this.nativeTextViewProtected.defaultTextAttributes.setValueForKey(kern, NSKernAttributeName);
+            const letterSpacing = style.letterSpacing ?? 0;
+            const lineHeight = style.lineHeight ?? -1;
+            let uiColor;
+            if (style.color) {
+                const color = !style.color || style.color instanceof Color ? style.color : new Color(style.color);
+                if (color) {
+                    uiColor = color.ios;
                 }
             }
-
-            const isTextView = this.nativeTextViewProtected instanceof UITextView;
-            if (style.lineHeight) {
-                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-                paragraphStyle.lineSpacing = style.lineHeight;
-                // make sure a possible previously set text alignment setting is not lost when line height is specified
-                if (this.nativeTextViewProtected instanceof UIButton) {
-                    paragraphStyle.alignment = (this.nativeTextViewProtected as UIButton).titleLabel.textAlignment;
-                } else {
-                    paragraphStyle.alignment = (this.nativeTextViewProtected as UITextField | UITextView | UILabel).textAlignment;
-                }
-
-                if (this.nativeTextViewProtected instanceof UILabel) {
-                    // make sure a possible previously set line break mode is not lost when line height is specified
-                    paragraphStyle.lineBreakMode = this.nativeTextViewProtected.lineBreakMode;
-                }
-                dict.set(NSParagraphStyleAttributeName, paragraphStyle);
-            } else if (isTextView) {
-                const paragraphStyle = NSMutableParagraphStyle.alloc().init();
-                paragraphStyle.alignment = (this.nativeTextViewProtected as UITextView).textAlignment;
-                dict.set(NSParagraphStyleAttributeName, paragraphStyle);
-            }
-
-            const source = getTransformedText(isNullOrUndefined(this.text) ? '' : `${this.text}`, this.textTransform);
-            if (dict.size > 0 || isTextView) {
-                if (isTextView && this.nativeTextViewProtected.font) {
-                    // UITextView's font seems to change inside.
-                    dict.set(NSFontAttributeName, this.nativeTextViewProtected.font);
-                }
-
-                const result = NSMutableAttributedString.alloc().initWithString(source);
-                result.setAttributesRange(dict as any, {
-                    location: 0,
-                    length: source.length
-                });
-                if (this.nativeTextViewProtected instanceof UIButton) {
-                    this.nativeTextViewProtected.setAttributedTitleForState(result, UIControlState.Normal);
-                } else {
-                    this.nativeTextViewProtected.attributedText = result;
-                }
-            } else {
-                if (this.nativeTextViewProtected instanceof UIButton) {
-                    // Clear attributedText or title won't be affected.
-                    this.nativeTextViewProtected.setAttributedTitleForState(null, UIControlState.Normal);
-                    this.nativeTextViewProtected.setTitleForState(source, UIControlState.Normal);
-                } else {
-                    // Clear attributedText or text won't be affected.
-                    this.nativeTextViewProtected.attributedText = undefined;
-                    this.nativeTextViewProtected.text = source;
-                }
-            }
+            const text = getTransformedText(isNullOrUndefined(this.text) ? '' : `${this.text}`, this.textTransform);
+            NSTextUtils.setTextDecorationAndTransformOnViewTextTextDecorationLetterSpacingLineHeightColor(
+                this.nativeTextViewProtected,
+                text,
+                this.style.textDecoration || '',
+                letterSpacing,
+                lineHeight,
+                uiColor
+            );
 
             if (!style.color && majorVersion >= 13 && UIColor.labelColor) {
                 this._setColor(UIColor.labelColor);
