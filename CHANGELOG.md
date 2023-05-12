@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.19](https://github.com/nativescript-community/text/compare/v1.5.18...v1.5.19) (2023-05-12)
+
+
+### Bug Fixes
+
+* **android:** faster span/html creation ([58ae027](https://github.com/nativescript-community/text/commit/58ae027b752e21d2393d0f6eaf5d32f6695dd023))
+* **ios:** faster TextBase components ([ec88f53](https://github.com/nativescript-community/text/commit/ec88f53bcfdd36c001d21a17f067ae165b6ccccb))
+* **ios:** handle null text or hidden spans ([a3a4309](https://github.com/nativescript-community/text/commit/a3a43098c45af2574d5005aa22697c5bf85e6d8f))
+
+
+
+
+
 ## [1.5.18](https://github.com/nativescript-community/text/compare/v1.5.17...v1.5.18) (2023-05-11)
 
 
