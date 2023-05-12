@@ -30,7 +30,7 @@ function _createNativeAttributedString({
     letterSpacing?: number;
     lineHeight?: number;
     lineBreak?: number;
-    linkColor?: string | Color;
+    linkColor?: Color;
     linkDecoration?: string;
     useCustomLinkTag?: boolean;
     textAlignment: NSTextAlignment;
@@ -48,10 +48,7 @@ function _createNativeAttributedString({
     // if (iOSUseDTCoreText) {
     let style = '';
     if (linkColor || linkDecoration) {
-        style =
-            '<style>' +
-            `a, a:link, a:visited { ${linkColor ? `color:${(linkColor instanceof Color ? linkColor : new Color(linkColor)).hex} !important;` : ''} text-decoration: ${linkDecoration || 'none'}; }` +
-            '</style>';
+        style = '<style>' + `a, a:link, a:visited { ${linkColor ? `color:${linkColor.hex} !important;` : ''} text-decoration: ${linkDecoration || 'none'}; }` + '</style>';
     }
     const htmlString =
         style +
@@ -60,7 +57,6 @@ function _createNativeAttributedString({
                   fontWeight ? `font-weight: ${fontWeight};` : ''
               }">${text}</span>`
             : text);
-
     return NSTextUtils.createNativeHTMLAttributedString({
         htmlString,
         fontSize,
@@ -106,20 +102,12 @@ export function createNativeAttributedString(
         const details = [];
         data['spans'].forEach((s, index) => {
             const spanDetails = createSpannableDetails(s, index, undefined, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
-            // const length = spanDetails.text.length;
-            details.push(spanDetails);
-            // const res = createSpannable(s, parent, undefined, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
-            // if (res) {
-            if (s._tappable) {
-                hasLink = true;
+            if (spanDetails) {
+                details.push(spanDetails);
+                if (s._tappable) {
+                    hasLink = true;
+                }
             }
-            // _spanRanges.push({
-            //     location: spanStart,
-            //     length
-            // });
-            // spanStart += length;
-            //     ssb.appendAttributedString(res);
-            // }
         });
         if (parent) {
             parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
@@ -134,15 +122,16 @@ export function createNativeAttributedString(
     if (data.textAlignment && typeof data.textAlignment === 'string') {
         data.textAlignment = textAlignmentConverter(data.textAlignment);
     }
-    if (data.color && !(data.color instanceof Color)) {
-        data.color = new Color(data.color as any);
-    }
+    // if (data.color && !(data.color instanceof Color)) {
+    //     data.color = new Color(data.color as any);
+    // }
     data['autoFontSizeEnabled'] = autoFontSizeEnabled;
     data['fontSizeRatio'] = fontSizeRatio;
     return _createNativeAttributedString(data as any);
 }
 export function createSpannable(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
-    return NSTextUtils.createNativeAttributedString({ details: [createSpannableDetails(span, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio)] });
+    const details = createSpannableDetails(span, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+    return details ? NSTextUtils.createNativeAttributedString({ details: [details] }) : null;
 }
 export function createSpannableDetails(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
     let text = span.text;
