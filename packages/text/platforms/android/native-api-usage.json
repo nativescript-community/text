@@ -8,6 +8,8 @@
         "android.text.style:AbsoluteSizeSpan*",
         "android.text.style:StyleSpan*",
         "android.text:Spanned*",
-        "com.nativescript.text*:*"
+        "com.nativescript.text*:*",
+        "androidx.core.widget:TextViewCompat"
+
     ]
 }

@@ -3,6 +3,7 @@ package com.nativescript.text;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -309,11 +310,11 @@ public class Font {
     }
 
     public static SpannableStringBuilder stringBuilderFromHtmlString(Context context, String fontFolder, String parentFontFamily,
-            String htmlString) {
+            String htmlString, final boolean disableLinkUnderline, final Color linkColor) {
         if (htmlString == null) {
             return null;
         }
-        CharSequence spannedString = fromHtml(htmlString, context, fontFolder, parentFontFamily, false);
+        CharSequence spannedString = fromHtml(htmlString, context, fontFolder, parentFontFamily, disableLinkUnderline, linkColor);
         SpannableStringBuilder builder = new SpannableStringBuilder(spannedString);
 
         return builder;
@@ -410,16 +411,27 @@ public class Font {
                         android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
+        int tapIndex = span.optInt("tapIndex", -1);
+        if (tapIndex != -1) {
+            ssb.setSpan(new URLSpanNoUnderline(String.valueOf(tapIndex), false, null, true), start, end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
     }
 
     public static SpannableStringBuilder stringBuilderFromFormattedString(Context context, String fontFolder, String parentFontFamily,
-            String options) {
+            String options, SpannableStringBuilder ssb) {
         if (options == null) {
             return null;
         }
         try {
             JSONArray arrayOptions = new JSONArray(options);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            if (ssb == null) {
+                ssb = new SpannableStringBuilder();
+            } else {
+                ssb.clear();
+                ssb.clearSpans();
+            }
             for (int i = 0, spanStart = 0, spanLength = 0, length = arrayOptions.length(); i < length; i++) {
                 JSONObject span = (JSONObject)arrayOptions.get(i);
                 String text = span.optString("text", "");
@@ -455,7 +467,7 @@ public class Font {
     static HtmlToSpannedConverter converter = null;
 
     public static CharSequence fromHtml(CharSequence html, Context context, String fontFolder, String parentFontFamily,
-            final boolean disableLinkStyle) {
+            final boolean disableLinkUnderline, final Color linkColor) {
         // long startTime = System.nanoTime();
         // XMLReader xmlReader;
         try {
@@ -464,10 +476,11 @@ public class Font {
                 saxParser = factory.newSAXParser();
             }
             if (converter == null) {
-                converter = new HtmlToSpannedConverter(context, fontFolder, parentFontFamily, null, null, disableLinkStyle);
+                converter = new HtmlToSpannedConverter(context, fontFolder, parentFontFamily, null, null, disableLinkUnderline, linkColor);
             } else {
                 converter.reset();
-                converter.disableLinkStyle = disableLinkStyle;
+                converter.disableLinkUnderline = disableLinkUnderline;
+                converter.linkColor = linkColor;
             }
             // Log.d(TAG, "parse: " +html);
             final String toParse = "<doc>" + ((String) html).replaceAll("<br>", "<br></br>") + "</doc>";
@@ -480,7 +493,7 @@ public class Font {
         return html;
     }
 
-    public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html) {
-        return fromHtml(html, context, fontFolder, parentFontFamily, false);
+    public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html, final boolean disableLinkUnderline, final Color linkColor) {
+        return fromHtml(html, context, fontFolder, parentFontFamily, disableLinkUnderline, linkColor);
     }
 }

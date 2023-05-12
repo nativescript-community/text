@@ -18,8 +18,21 @@ declare namespace com {
             }
 
             export class Font {
-                static stringBuilderFromHtmlString(context: globalAndroid.content.Context, fontPath: string, parentFontFamily: string, text: string): globalAndroid.text.SpannableStringBuilder;
-                static stringBuilderFromFormattedString(context: globalAndroid.content.Context, fontPath: string, parentFontFamily: string, nativeString: string): any;
+                static stringBuilderFromHtmlString(
+                    context: globalAndroid.content.Context,
+                    fontPath: string,
+                    parentFontFamily: string,
+                    text: string,
+                    disableLinkUnderline: boolean,
+                    linkColor: android.graphics.Color
+                ): globalAndroid.text.SpannableStringBuilder;
+                static stringBuilderFromFormattedString(
+                    context: globalAndroid.content.Context,
+                    fontPath: string,
+                    parentFontFamily: string,
+                    nativeString: string,
+                    ssp: globalAndroid.text.SpannableStringBuilder
+                ): any;
                 static createTypeface(
                     context: globalAndroid.content.Context,
                     fontFolder: string,
@@ -28,6 +41,15 @@ declare namespace com {
                     isBold: boolean,
                     isItalic: boolean
                 ): globalAndroid.graphics.Typeface;
+            }
+            export class URLSpanClickListener {
+                constructor(impl?: { onClick(span: android.text.style.URLSpan) });
+                onClick(span: android.text.style.URLSpan);
+            }
+
+            export class TextView extends androidx.appcompat.widget.AppCompatTextView {
+                urlSpanClickListener: URLSpanClickListener;
+                static attributedStringHasSpan(attributeString: android.text.Spannable, spanClass: sjava.lang.Class<any>): boolean;
             }
         }
     }

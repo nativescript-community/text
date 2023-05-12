@@ -29,6 +29,7 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
+import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,8 @@ class HtmlToSpannedConverter extends DefaultHandler {
     private final String TAG = "HtmlToSpannedConverter";
 
     // private Attributes _currentAtts = null;
-    public boolean disableLinkStyle = false;
+    public boolean disableLinkUnderline = false;
+    public Color linkColor = null;
     private SpannableStringBuilder mSpannableStringBuilder;
 
     private Html.ImageGetter mImageGetter;
@@ -55,13 +57,14 @@ class HtmlToSpannedConverter extends DefaultHandler {
     }
 
     public HtmlToSpannedConverter(Context context, String fontFolder, String parentFontFamily, Html.ImageGetter imageGetter,
-            Html.TagHandler tagHandler, final boolean disableLinkStyle) {
+            Html.TagHandler tagHandler, final boolean disableLinkUnderline, final Color linkColor) {
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
         this.fontFolder = fontFolder;
         this.parentFontFamily = parentFontFamily;
         this.context = context;
-        this.disableLinkStyle = disableLinkStyle;
+        this.disableLinkUnderline = disableLinkUnderline;
+        this.linkColor = linkColor;
         density = context.getResources().getDisplayMetrics().density;
         // if (mImageGetter == null) {
         // mImageGetter = new Html.ImageGetter() {
@@ -220,7 +223,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
             Href h = (Href) obj;
 
             if (h.mHref != null) {
-                text.setSpan(new URLSpanNoUnderline(h.mHref, !disableLinkStyle), where, len,
+                text.setSpan(new URLSpanNoUnderline(h.mHref, !disableLinkUnderline, linkColor), where, len,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
