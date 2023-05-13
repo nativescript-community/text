@@ -121,7 +121,7 @@ class NSTextUtils: NSObject {
       let fullRange:NSRange = NSRange(location: 0, length: attrText.length)
       let linkColor:UIColor! = data.object(forKey:"linkColor") as? UIColor
       let useCustomLinkTag:NSNumber! =  data.object(forKey:"useCustomLinkTag") as? NSNumber
-      if (linkColor != nil) || useCustomLinkTag.boolValue {
+      if (linkColor != nil) || (useCustomLinkTag != nil && useCustomLinkTag.boolValue) {
         // if linkColor is used for non UITextView we cant use NSLinkAttributeName
         // as it will force the rendered color
         attrText.enumerateAttribute(NSAttributedString.Key.link, in: fullRange) { value, range, stop in
@@ -285,7 +285,8 @@ class NSTextUtils: NSObject {
       }
       if text is NSAttributedString {
         let resultSpan:NSMutableAttributedString! = NSMutableAttributedString(attributedString:text as! NSAttributedString)
-        resultSpan.setAttributes(attributes as? [NSAttributedString.Key : Any], range:NSRange(location: 0, length: (text as! NSAttributedString).length));                      result.append(resultSpan)
+        resultSpan.setAttributes(attributes as? [NSAttributedString.Key : Any], range:NSRange(location: 0, length: (text as! NSAttributedString).length))
+        result.append(resultSpan)
       }
       else if text is String {
         result.append(NSMutableAttributedString(string:text as! String, attributes:attributes as? [NSAttributedString.Key : Any]))
