@@ -89,19 +89,23 @@ export function createNativeAttributedString(
           }
         | FormattedString
         | ObjectSpans,
-    parent: ViewBase,
+    parent?: any,
+    parentView?: ViewBase,
     autoFontSizeEnabled = false,
     fontSizeRatio = 1
 ) {
-    if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
+    if (data instanceof FormattedString || data instanceof LightFormattedString || data['spans']) {
         // const ssb = NSMutableAttributedString.new();
         const maxFontSize = getMaxFontSize(data as any);
-        const _spanRanges = [];
+        // const _spanRanges = [];
         // let spanStart = 0;
         let hasLink = false;
         const details = [];
+        if (!parent) {
+            parent = data;
+        }
         data['spans'].forEach((s, index) => {
-            const spanDetails = createSpannableDetails(s, index, undefined, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+            const spanDetails = createSpannableDetails(s, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
             if (spanDetails) {
                 details.push(spanDetails);
                 if (s._tappable) {
@@ -109,10 +113,12 @@ export function createNativeAttributedString(
                 }
             }
         });
-        if (parent) {
-            parent['nativeTextViewProtected'].selectable = parent['selectable'] === true || hasLink;
-            if ((parent as any)._setTappableState) {
-                (parent as any)._setTappableState(hasLink);
+        if (parentView) {
+            if (parentView['nativeTextViewProtected']) {
+                parentView['nativeTextViewProtected'].selectable = parentView['selectable'] === true || hasLink;
+            }
+            if ((parentView as any)._setTappableState) {
+                (parentView as any)._setTappableState(hasLink);
             }
             // parent['_spanRanges'] = _spanRanges;
         }
