@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.21](https://github.com/nativescript-community/text/compare/v1.5.20...v1.5.21) (2023-05-16)
+
+
+### Bug Fixes
+
+* **android:** linkColor broken after last version ([f920507](https://github.com/nativescript-community/text/commit/f92050747929a4db7948dff0e20cad22fcf63a2c))
+
+
+
+
+
 ## [1.5.20](https://github.com/nativescript-community/text/compare/v1.5.19...v1.5.20) (2023-05-13)
 
 **Note:** Version bump only for package nativescript-text
