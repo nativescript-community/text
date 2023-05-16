@@ -217,9 +217,16 @@ export function createNativeAttributedString(
     if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
         return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, formattedStringToNativeString(data, undefined, this), null);
     }
-    const linkColor = parent?.['linkColor'];
+    const linkColor = (data as any).linkColor || parentView?.['linkColor'];
     const aLinkColor = linkColor ? android.graphics.Color.valueOf((linkColor instanceof Color ? linkColor : new Color(linkColor)).android) : null;
-    const result = com.nativescript.text.Font.stringBuilderFromHtmlString(context, fontPath, parentView?.['fontFamily'] || null, (data as any).text, parent?.['linkUnderline'] === false, aLinkColor);
+    const result = com.nativescript.text.Font.stringBuilderFromHtmlString(
+        context,
+        fontPath,
+        (data as any).familyName || parentView?.['fontFamily'] || null,
+        (data as any).text,
+        ((data as any).linkDecoration && (data as any).linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
+        aLinkColor
+    );
     return result;
 }
 
