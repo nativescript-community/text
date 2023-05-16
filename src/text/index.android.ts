@@ -7,7 +7,7 @@ export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 
-function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent) {
+function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?) {
     let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
     formattedString.spans.forEach((s) => {
         if (s.fontSize) {
@@ -19,14 +19,14 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
         parent = formattedString;
     }
     formattedString.spans.forEach((s, index) => {
-        const spanDetails = spanToNativeString(s, parent, parentView, maxFontSize, index);
+        const spanDetails = spanToNativeString(s, parent, parentView, maxFontSize, index, density);
         if (spanDetails) {
             options.push(spanDetails);
         }
     });
     return `[${options.join(',')}]`;
 }
-function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1) {
+function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density?) {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
@@ -64,7 +64,9 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    const density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
+    if (!density) {
+        density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
+    }
     let backgroundColor = span.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
         backgroundColor = new Color(backgroundColor);
@@ -209,13 +211,14 @@ export function createNativeAttributedString(
     parent?: any,
     parentView?: ViewBase,
     autoFontSizeEnabled = false,
-    fontSizeRatio = 1 // used only on iOS
+    fontSizeRatio = 1, // used only on iOS,
+    density? // used only on Android
 ) {
     if (!context) {
         init();
     }
-    if (data instanceof FormattedString || data instanceof LightFormattedString || data.hasOwnProperty('spans')) {
-        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, formattedStringToNativeString(data, undefined, this), null);
+    if (data instanceof FormattedString || data instanceof LightFormattedString || data['spans']) {
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, formattedStringToNativeString(data, undefined, this, density), null);
     }
     const linkColor = (data as any).linkColor || parentView?.['linkColor'];
     const aLinkColor = linkColor ? android.graphics.Color.valueOf((linkColor instanceof Color ? linkColor : new Color(linkColor)).android) : null;
@@ -231,7 +234,7 @@ export function createNativeAttributedString(
 }
 
 export function createSpannable(span: any, parentView: any, parent?: any, maxFontSize?: number) {
-    const details = spanToNativeString(span, parent, parentView, maxFontSize);
+    const details = spanToNativeString(span, parent, parentView, maxFontSize, -1, 1);
     let ssb: android.text.SpannableStringBuilder;
     if (details) {
         ssb = com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, `[${details}]`, span._ssb);
