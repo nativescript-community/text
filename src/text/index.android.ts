@@ -54,7 +54,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         textDecoration = parentView?.style.textDecoration;
     }
     const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
-    const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    let verticalTextAlignment = span.verticalTextAlignment;
 
     // We CANT use parent verticalTextAlignment. Else it would break line height
     // for multiple line text you want centered in the View
@@ -65,9 +65,11 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         text = getTransformedText(text, textTransform);
     }
     if (!density) {
+        // that means not for canvaslabel!
         density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
+        verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
-    let backgroundColor = span.backgroundColor;
+    let backgroundColor = span.backgroundColor || parent?.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
         backgroundColor = new Color(backgroundColor);
     }
@@ -75,6 +77,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (color && !(color instanceof Color)) {
         color = new Color(color);
     }
+    const lineHeight = span.lineHeight || parent?.lineHeight;
     return JSON.stringify({
         text,
         fontFamily,
@@ -87,8 +90,8 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         maxFontSize: maxFontSize ? maxFontSize * density : undefined,
         relativeSize: span.relativeSize,
         verticalTextAlignment,
-        lineHeight: span.lineHeight !== undefined ? span.lineHeight * density : undefined,
-        letterSpacing: span.letterSpacing,
+        lineHeight: lineHeight !== undefined ? lineHeight * density : undefined,
+        letterSpacing: span.letterSpacing || parent?.letterSpacing,
         color: color ? color.android : undefined,
         backgroundColor: backgroundColor ? backgroundColor.android : undefined
     });
