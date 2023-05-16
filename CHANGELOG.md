@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.22](https://github.com/nativescript-community/text/compare/v1.5.21...v1.5.22) (2023-05-16)
+
+
+### Bug Fixes
+
+* **android:** fix for canvaslabel ([6e7b420](https://github.com/nativescript-community/text/commit/6e7b42009e806e2d4e4f5c78049816d97b5d5092))
+
+
+
+
+
 ## [1.5.21](https://github.com/nativescript-community/text/compare/v1.5.20...v1.5.21) (2023-05-16)
 
 
