@@ -37,23 +37,12 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     let fontStyle = span.fontStyle;
     let fontFamily = span.fontFamily;
     if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
-        fontFamily = fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily);
-        fontWeight = fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight);
-        fontStyle = fontStyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle);
+        fontFamily = fontFamily || parent?.fontFamily || parentView.fontFamily;
+        fontWeight = fontWeight || parent?.fontWeight || parentView.fontWeight;
+        fontStyle = fontStyle || parent?.fontStyle || parentView.fontStyle;
     }
-    let textDecoration;
-    if (spanStyle && textDecorationProperty.isSet(spanStyle)) {
-        textDecoration = spanStyle.textDecoration;
-    } else if (span.textDecoration) {
-        textDecoration = spanStyle.textDecoration;
-    } else if (parent?.textDecoration) {
-        // span.parent is FormattedString
-        textDecoration = parent?.textDecoration;
-    } else if (!!parentView && textDecorationProperty.isSet(parentView?.style)) {
-        // span.parent.parent is TextBase
-        textDecoration = parentView?.style.textDecoration;
-    }
-    const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
+    const textDecoration = span?.textDecoration || parent?.textDecoration || parentView?.textDecoration;
+    const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
     let verticalTextAlignment = span.verticalTextAlignment;
 
     // We CANT use parent verticalTextAlignment. Else it would break line height
