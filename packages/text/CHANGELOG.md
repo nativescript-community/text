@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.26](https://github.com/nativescript-community/text/compare/v1.5.25...v1.5.26) (2023-05-24)
+
+
+### Bug Fixes
+
+* **android:** proguard fix ([834e5c7](https://github.com/nativescript-community/text/commit/834e5c74368b0cb0b4eac56162dc7f6ea8b9e331))
+
+
+
+
+
 ## [1.5.25](https://github.com/nativescript-community/text/compare/v1.5.24...v1.5.25) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
