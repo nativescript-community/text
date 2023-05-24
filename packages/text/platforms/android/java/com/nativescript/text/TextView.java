@@ -4,7 +4,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import android.text.style.URLSpan;
 import android.content.Context;
 
-class TextView extends AppCompatTextView {
+public class TextView extends AppCompatTextView {
     public URLSpanClickListener urlSpanClickListener;
 
     public TextView(Context context) {
