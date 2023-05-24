@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.27](https://github.com/nativescript-community/text/compare/v1.5.26...v1.5.27) (2023-05-24)
+
+**Note:** Version bump only for package @nativescript-community/text
+
+
+
+
+
 ## [1.5.26](https://github.com/nativescript-community/text/compare/v1.5.25...v1.5.26) (2023-05-24)
 
 

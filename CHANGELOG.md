@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.27](https://github.com/nativescript-community/text/compare/v1.5.26...v1.5.27) (2023-05-24)
+
+
+### Bug Fixes
+
+* **android:** crash fix with uglify ([7879069](https://github.com/nativescript-community/text/commit/787906929f7e20f8c2dc9d8399fdbf1f6c390416))
+
+
+
+
+
 ## [1.5.26](https://github.com/nativescript-community/text/compare/v1.5.25...v1.5.26) (2023-05-24)
 
 
