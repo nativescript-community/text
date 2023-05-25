@@ -37,9 +37,9 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     let fontStyle = span.fontStyle;
     let fontFamily = span.fontFamily;
     if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
-        fontFamily = fontFamily || parent?.fontFamily || parentView.fontFamily;
-        fontWeight = fontWeight || parent?.fontWeight || parentView.fontWeight;
-        fontStyle = fontStyle || parent?.fontStyle || parentView.fontStyle;
+        fontFamily = fontFamily || parent?.fontFamily || parentView?.fontFamily;
+        fontWeight = fontWeight || parent?.fontWeight || parentView?.fontWeight;
+        fontStyle = fontStyle || parent?.fontStyle || parentView?.fontStyle;
     }
     const textDecoration = span?.textDecoration || parent?.textDecoration || parentView?.textDecoration;
     const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
@@ -62,15 +62,17 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (backgroundColor && !(backgroundColor instanceof Color)) {
         backgroundColor = new Color(backgroundColor);
     }
-    let color = span.color;
+    let color = span.color || parent?.color;
     if (color && !(color instanceof Color)) {
         color = new Color(color);
     }
     const lineHeight = span.lineHeight || parent?.lineHeight;
+    const fontSize = span.fontSize || parent?.fontSize;
+    const letterSpacing = span.letterSpacing || parent?.letterSpacing;
     return JSON.stringify({
         text,
         fontFamily,
-        fontSize: span.fontSize ? span.fontSize * density : undefined,
+        fontSize: fontSize ? fontSize * density : undefined,
         fontWeight: fontWeight ? fontWeight + '' : undefined,
         fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
         textDecoration,
@@ -80,7 +82,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         relativeSize: span.relativeSize,
         verticalTextAlignment,
         lineHeight: lineHeight !== undefined ? lineHeight * density : undefined,
-        letterSpacing: span.letterSpacing || parent?.letterSpacing,
+        letterSpacing: letterSpacing !== undefined ? letterSpacing * density : undefined,
         color: color ? color.android : undefined,
         backgroundColor: backgroundColor ? backgroundColor.android : undefined
     });
