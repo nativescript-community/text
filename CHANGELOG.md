@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.28](https://github.com/nativescript-community/text/compare/v1.5.27...v1.5.28) (2023-05-25)
+
+
+### Bug Fixes
+
+* **android:** regresssions fix ([ad68644](https://github.com/nativescript-community/text/commit/ad686448e4c87ffb989a5248316d93171f6da7e0))
+
+
+
+
+
 ## [1.5.27](https://github.com/nativescript-community/text/compare/v1.5.26...v1.5.27) (2023-05-24)
 
 
