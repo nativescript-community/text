@@ -20,7 +20,6 @@ import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
 import { iOSNativeHelper } from '@nativescript/core/utils';
 import { isNullOrUndefined, isString } from '@nativescript/core/utils/types';
-const majorVersion = iOSNativeHelper.MajorVersion;
 
 declare module '@nativescript/core/ui/text-base' {
     interface TextBase {
@@ -318,6 +317,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
 
     //@ts-ignore
     if (__IOS__ && typeof TextBase.prototype.setFormattedTextDecorationAndTransform !== 'function') {
+        const majorVersion = iOSNativeHelper.MajorVersion;
         function NSStringFromNSAttributedString(source: NSAttributedString | string): NSString {
             return NSString.stringWithString((source instanceof NSAttributedString && source.string) || (source as string));
         }
