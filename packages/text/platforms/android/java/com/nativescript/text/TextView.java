@@ -25,4 +25,13 @@ public class TextView extends AppCompatTextView {
         // const urlSpan = result.getSpans(0, result.length(), android.text.style.URLSpan.class);
 
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (getText() == null || getText().length() == 0) {
+            setMeasuredDimension(0, 0);
+        } else {
+             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
 }
