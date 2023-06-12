@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.30](https://github.com/nativescript-community/text/compare/v1.5.29...v1.5.30) (2023-06-12)
+
+
+### Bug Fixes
+
+* **android:** TextView measures to height 0 if no text ([d7afb6f](https://github.com/nativescript-community/text/commit/d7afb6ff6883a849dacf4d16558d241eaa3c0663))
+
+
+
+
+
 ## [1.5.29](https://github.com/nativescript-community/text/compare/v1.5.28...v1.5.29) (2023-06-06)
 
 
