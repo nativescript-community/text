@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.32](https://github.com/nativescript-community/text/compare/v1.5.31...v1.5.32) (2023-09-01)
+
+
+### Bug Fixes
+
+* **android:** allow spaces in html strings ([fb03d0e](https://github.com/nativescript-community/text/commit/fb03d0e9a0f06c1c161539896a3700de4fe8c151))
+
+
+
+
+
 ## [1.5.31](https://github.com/nativescript-community/text/compare/v1.5.30...v1.5.31) (2023-06-16)
 
 
