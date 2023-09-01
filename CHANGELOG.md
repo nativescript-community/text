@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.31](https://github.com/nativescript-community/text/compare/v1.5.30...v1.5.31) (2023-06-16)
+
+
+### Bug Fixes
+
+* **ios:** text not applied on TextFied, TextView … ([529875b](https://github.com/nativescript-community/text/commit/529875b8f9dec5a637770dd3e7ad6338776cd180))
+
+
+
+
+
 ## [1.5.30](https://github.com/nativescript-community/text/compare/v1.5.29...v1.5.30) (2023-06-12)
 
 

@@ -49,7 +49,7 @@ class NSTextUtils: NSObject {
       }
       attrDict[NSAttributedString.Key.paragraphStyle] = paragraphStyle
     }
-    
+
     if attrDict.count > 0 {
       if isTextView && ((view as! UITextView).font != nil) {
         // UITextView's font seems to change inside.
@@ -66,24 +66,27 @@ class NSTextUtils: NSObject {
       if (view is UIButton) {
         (view as! UIButton).setAttributedTitle(result, for:UIControl.State.normal)
       }
-      else if(view is UILabel) {
-        (view as! UILabel).attributedText = result
-      } else if(view is UITextView) {
-        (view as! UITextView).attributedText = result
+      else {
+        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        if (attributedTextProperty != nil) {
+          view.setValue(result, forKey: "attributedText")
+        }
       }
     } else {
       if (view is UIButton) {
         // Clear attributedText or title won't be affected.
         (view as! UIButton).setAttributedTitle(nil, for:UIControl.State.normal)
         (view as! UIButton).setTitle(text, for:UIControl.State.normal)
-      } else if(view is UILabel) {
-        // Clear attributedText or text won't be affected.
-        (view as! UILabel).attributedText = nil
-        (view as! UILabel).text = text
-      } else if(view is UITextView) {
-        // Clear attributedText or text won't be affected.
-        (view as! UITextView).attributedText = nil
-        (view as! UITextView).text = text
+      } else {
+        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        var textProperty = class_getProperty(type(of: view), "text");
+        if (attributedTextProperty != nil) {
+          // Clear attributedText or text won't be affected.
+          view.setValue(nil, forKey: "attributedText")
+        }
+        if (textProperty != nil) {
+          view.setValue(text, forKey: "text")
+        }
       }
     }
   }
