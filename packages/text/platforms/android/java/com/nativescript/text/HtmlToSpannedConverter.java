@@ -658,25 +658,25 @@ class HtmlToSpannedConverter extends DefaultHandler {
          */
         for (int i = 0; i < length; i++) {
             char c = ch[i + start];
-            if (c == ' ' || c == '\n') {
-                char pred;
-                int len = sb.length();
-                if (len == 0) {
-                    len = mSpannableStringBuilder.length();
-                    if (len == 0) {
-                        pred = '\n';
-                    } else {
-                        pred = mSpannableStringBuilder.charAt(len - 1);
-                    }
-                } else {
-                    pred = sb.charAt(len - 1);
-                }
-                if (pred != ' ' && pred != '\n') {
-                    sb.append(' ');
-                }
-            } else {
-                sb.append(c);
-            }
+            // if (c == ' ' || c == '\n') {
+            //     char pred;
+            //     int len = sb.length();
+            //     if (len == 0) {
+            //         len = mSpannableStringBuilder.length();
+            //         if (len == 0) {
+            //             pred = '\n';
+            //         } else {
+            //             pred = mSpannableStringBuilder.charAt(len - 1);
+            //         }
+            //     } else {
+            //         pred = sb.charAt(len - 1);
+            //     }
+            //     if (pred != ' ' && pred != '\n') {
+            //         sb.append(' ');
+            //     }
+            // } else {
+            sb.append(c);
+            // }
         }
         mSpannableStringBuilder.append(sb);
     }
