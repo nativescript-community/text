@@ -215,7 +215,10 @@ export function createNativeAttributedString(
         return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, formattedStringToNativeString(data, undefined, this, density), null);
     }
     const linkColor = (data as any).linkColor || parentView?.['linkColor'];
-    const aLinkColor = linkColor ? android.graphics.Color.valueOf((linkColor instanceof Color ? linkColor : new Color(linkColor)).android) : null;
+    let aLinkColor = null;
+    if (linkColor && android.os.Build.VERSION.SDK_INT >= 26) {
+        aLinkColor = android.graphics.Color.valueOf((linkColor instanceof Color ? linkColor : new Color(linkColor)).android);
+    }
     const result = com.nativescript.text.Font.stringBuilderFromHtmlString(
         context,
         fontPath,
