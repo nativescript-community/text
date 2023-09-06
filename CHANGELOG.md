@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.33](https://github.com/nativescript-community/text/compare/v1.5.32...v1.5.33) (2023-09-06)
+
+
+### Bug Fixes
+
+* **android:** use int instead of android.graphics.Color to fix issue on older Android < 26 ([259dfa9](https://github.com/nativescript-community/text/commit/259dfa912f7f25656a2041c03e23e9e73fc9b0ba))
+
+
+
+
+
 ## [1.5.32](https://github.com/nativescript-community/text/compare/v1.5.31...v1.5.32) (2023-09-01)
 
 
