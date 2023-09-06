@@ -3,7 +3,6 @@ package com.nativescript.text;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.graphics.Color;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -310,7 +309,7 @@ public class Font {
     }
 
     public static SpannableStringBuilder stringBuilderFromHtmlString(Context context, String fontFolder, String parentFontFamily,
-            String htmlString, final boolean disableLinkUnderline, final Color linkColor) {
+            String htmlString, final boolean disableLinkUnderline, final int linkColor) {
         if (htmlString == null) {
             return null;
         }
@@ -413,7 +412,7 @@ public class Font {
         }
         int tapIndex = span.optInt("tapIndex", -1);
         if (tapIndex != -1) {
-            ssb.setSpan(new URLSpanNoUnderline(String.valueOf(tapIndex), false, null, true), start, end,
+            ssb.setSpan(new URLSpanNoUnderline(String.valueOf(tapIndex), false, 0, true), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -467,7 +466,7 @@ public class Font {
     static HtmlToSpannedConverter converter = null;
 
     public static CharSequence fromHtml(CharSequence html, Context context, String fontFolder, String parentFontFamily,
-            final boolean disableLinkUnderline, final Color linkColor) {
+            final boolean disableLinkUnderline, final int linkColor) {
         // long startTime = System.nanoTime();
         // XMLReader xmlReader;
         try {
@@ -493,7 +492,7 @@ public class Font {
         return html;
     }
 
-    public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html, final boolean disableLinkUnderline, final Color linkColor) {
+    public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html, final boolean disableLinkUnderline, final int linkColor) {
         return fromHtml(html, context, fontFolder, parentFontFamily, disableLinkUnderline, linkColor);
     }
 }

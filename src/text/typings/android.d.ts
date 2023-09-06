@@ -14,7 +14,7 @@ declare namespace com {
                 constructor(size: number);
             }
             export class URLSpanNoUnderline extends globalAndroid.text.style.URLSpan {
-                constructor(url: string, showUnderline: boolean);
+                constructor(url: string, showUnderline: boolean, color?: number, disableStyle?: boolean);
             }
 
             export class Font {
@@ -24,7 +24,7 @@ declare namespace com {
                     parentFontFamily: string,
                     text: string,
                     disableLinkUnderline: boolean,
-                    linkColor: android.graphics.Color
+                    linkColor: number
                 ): globalAndroid.text.SpannableStringBuilder;
                 static stringBuilderFromFormattedString(
                     context: globalAndroid.content.Context,

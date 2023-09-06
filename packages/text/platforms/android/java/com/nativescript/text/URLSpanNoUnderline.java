@@ -5,17 +5,20 @@ import android.text.style.URLSpan;
 import android.graphics.Color;
 
 public class URLSpanNoUnderline extends URLSpan {
-    private boolean disableStyle;
-    private boolean showUnderline;
-    private Color color;
-    public URLSpanNoUnderline(String url, boolean showUnderline, Color color, boolean disableStyle) {
+    private boolean disableStyle = false;
+    private boolean showUnderline = false;
+    private int color = 0;
+    public URLSpanNoUnderline(String url, boolean showUnderline, int color, boolean disableStyle) {
         super(url);
         this.showUnderline = showUnderline;
         this.color = color;
         this.disableStyle = disableStyle;
     }
-    public URLSpanNoUnderline(String url, boolean showUnderline, Color color) {
+    public URLSpanNoUnderline(String url, boolean showUnderline, int color) {
         this(url, showUnderline, color, false);
+    }
+    public URLSpanNoUnderline(String url, boolean showUnderline) {
+        this(url, showUnderline, 0);
     }
     @Override
     public void updateDrawState(TextPaint ds) {
@@ -26,8 +29,8 @@ public class URLSpanNoUnderline extends URLSpan {
         if (!this.showUnderline) {
             ds.setUnderlineText(false);
         }
-        if (this.color != null){
-            ds.setColor(color.toArgb());
+        if (this.color != 0){
+            ds.setColor(color);
         }
     }
     @Override
