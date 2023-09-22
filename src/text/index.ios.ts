@@ -165,7 +165,9 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
     const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
     const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;
-    const textColor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
+    // const textColor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
+    // TODO: ensure we dont need parent view color. First test says no
+    const textColor = span.color || (parent && parent.color);
     const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
     const textDecoration = span.textDecoration || (parent && parent.textDecoration);
     const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
@@ -198,6 +200,6 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         letterSpacing,
         lineHeight,
         verticalTextAlignment,
-        textAlignment
+        textAlignment: textAlignment !== 'initial' ? textAlignment : null
     };
 }
