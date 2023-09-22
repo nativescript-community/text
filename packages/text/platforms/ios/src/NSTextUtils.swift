@@ -67,7 +67,7 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(result, for:UIControl.State.normal)
       }
       else {
-        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
         if (attributedTextProperty != nil) {
           view.setValue(result, forKey: "attributedText")
         }
@@ -78,8 +78,8 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(nil, for:UIControl.State.normal)
         (view as! UIButton).setTitle(text, for:UIControl.State.normal)
       } else {
-        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
-        var textProperty = class_getProperty(type(of: view), "text");
+        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        let textProperty = class_getProperty(type(of: view), "text");
         if (attributedTextProperty != nil) {
           // Clear attributedText or text won't be affected.
           view.setValue(nil, forKey: "attributedText")
