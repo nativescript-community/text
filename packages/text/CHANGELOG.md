@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.34](https://github.com/nativescript-community/text/compare/v1.5.33...v1.5.34) (2023-11-23)
+
+
+### Bug Fixes
+
+* **ios:** build warning fixes ([65b48d0](https://github.com/nativescript-community/text/commit/65b48d03d4ef7f678ed3d3a02528ca08510f1a9c))
+
+
+
+
+
 ## [1.5.33](https://github.com/nativescript-community/text/compare/v1.5.32...v1.5.33) (2023-09-06)
 
 

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.34](https://github.com/nativescript-community/text/compare/v1.5.33...v1.5.34) (2023-11-23)
+
+
+### Bug Fixes
+
+* **ios:** build warning fixes ([65b48d0](https://github.com/nativescript-community/text/commit/65b48d03d4ef7f678ed3d3a02528ca08510f1a9c))
+* **ios:** crash when no parentView ([c4feaba](https://github.com/nativescript-community/text/commit/c4feaba2f61931362a50b39cb5e00bf0d69c852c))
+* **ios:** trying to fix color hoping to not break anythign ([c2cbaf9](https://github.com/nativescript-community/text/commit/c2cbaf9db0a5baff1b750ec5feb56e4ff4ee3429))
+
+
+
+
+
 ## [1.5.33](https://github.com/nativescript-community/text/compare/v1.5.32...v1.5.33) (2023-09-06)
 
 
