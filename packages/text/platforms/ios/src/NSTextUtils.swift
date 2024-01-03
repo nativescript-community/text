@@ -67,7 +67,7 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(result, for:UIControl.State.normal)
       }
       else {
-        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
         if (attributedTextProperty != nil) {
           view.setValue(result, forKey: "attributedText")
         }
@@ -78,8 +78,8 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(nil, for:UIControl.State.normal)
         (view as! UIButton).setTitle(text, for:UIControl.State.normal)
       } else {
-        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
-        let textProperty = class_getProperty(type(of: view), "text");
+        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        var textProperty = class_getProperty(type(of: view), "text");
         if (attributedTextProperty != nil) {
           // Clear attributedText or text won't be affected.
           view.setValue(nil, forKey: "attributedText")
@@ -141,7 +141,7 @@ class NSTextUtils: NSObject {
               attributes.setObject(sValue[index!...], forKey:"CustomLinkAttribute" as NSCopying)
               
             } else {
-              attributes.setObject(sValue, forKey:"CustomLinkAttribute" as NSCopying)
+              attributes.setObject(sValue!, forKey:"CustomLinkAttribute" as NSCopying)
             }
             attributes.removeObject(forKey: NSAttributedString.Key.link)
             attrText.setAttributes(attributes as? [NSAttributedString.Key : Any], range:range)
@@ -200,7 +200,7 @@ class NSTextUtils: NSObject {
         // }
       }
       if (paragraphStyle != nil) {
-        attrText.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:fullRange)
+        attrText.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle!, range:fullRange)
       }
       return attrText
     } catch {
@@ -220,7 +220,7 @@ class NSTextUtils: NSObject {
       let attributes:NSMutableDictionary! = NSMutableDictionary()
       let iosFont:UIFont! = spanDetails.object(forKey: "iosFont") as? UIFont
       if (iosFont != nil) {
-        attributes.setObject(iosFont, forKey:NSAttributedString.Key.font as NSCopying)
+        attributes.setObject(iosFont!, forKey:NSAttributedString.Key.font as NSCopying)
       }
       let autoFontSizeEnabled:NSNumber! = spanDetails.object(forKey: "autoFontSizeEnabled") as? NSNumber
       if autoFontSizeEnabled.boolValue {
@@ -238,12 +238,12 @@ class NSTextUtils: NSObject {
       }
       let color:UIColor! = spanDetails.object(forKey: "color") as? UIColor
       if (color != nil) {
-        attributes.setObject(color, forKey:NSAttributedString.Key.foregroundColor as NSCopying)
+        attributes.setObject(color!, forKey:NSAttributedString.Key.foregroundColor as NSCopying)
         
       }
       let backgroundColor:UIColor! = spanDetails.object(forKey: "backgroundColor") as? UIColor
       if (backgroundColor != nil) {
-        attributes.setObject(backgroundColor, forKey:NSAttributedString.Key.backgroundColor as NSCopying)
+        attributes.setObject(backgroundColor!, forKey:NSAttributedString.Key.backgroundColor as NSCopying)
       }
       let letterSpacing:NSNumber! = spanDetails.object(forKey: "letterSpacing") as? NSNumber
       if (iosFont != nil) && (letterSpacing != nil) {
@@ -252,12 +252,12 @@ class NSTextUtils: NSObject {
       
       let tapIndex:NSNumber! = spanDetails.object(forKey: "tapIndex") as? NSNumber
       if (tapIndex != nil) {
-        attributes.setObject(tapIndex, forKey:"CustomLinkAttribute" as NSCopying)
+        attributes.setObject(tapIndex!, forKey:"CustomLinkAttribute" as NSCopying)
       }
       let lineHeight:NSNumber! = spanDetails.object(forKey: "lineHeight") as? NSNumber
       let textAlignment:String! = spanDetails.object(forKey: "textAlignment") as? String
       if (lineHeight != nil) || (textAlignment != nil) {
-        let paragraphStyle:NSMutableParagraphStyle! = NSMutableParagraphStyle()
+        let paragraphStyle:NSMutableParagraphStyle = NSMutableParagraphStyle()
         if (textAlignment == "middle") || (textAlignment == "center") {
           paragraphStyle.alignment = NSTextAlignment.center
         } else if (textAlignment == "right") {
