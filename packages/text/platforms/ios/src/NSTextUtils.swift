@@ -19,7 +19,7 @@ class NSTextUtils: NSObject {
       attrDict[NSAttributedString.Key.strikethroughStyle] = (NSUnderlineStyle.single)
     }
     
-    if letterSpacing != 0 && isTextType && (view as! UILabel).font != nil {
+    if letterSpacing != 0 && isTextType && view is UILabel && (view as! UILabel).font != nil {
       let kern:NSNumber! = NSNumber.init(value: letterSpacing * (view as! UILabel).font.pointSize)
       attrDict[NSAttributedString.Key.kern] = kern
     }
@@ -40,10 +40,8 @@ class NSTextUtils: NSObject {
     if (paragraphStyle != nil) {
       if (view is UIButton) {
         paragraphStyle.alignment = (view as! UIButton).titleLabel!.textAlignment
-      } else {
+      } else if (view is UILabel) {
         paragraphStyle.alignment = (view as! UILabel).textAlignment
-      }
-      if (view is UILabel) {
         // make sure a possible previously set line break mode is not lost when line height is specified
         paragraphStyle.lineBreakMode = (view as! UILabel).lineBreakMode
       }
