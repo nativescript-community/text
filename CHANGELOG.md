@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.36](https://github.com/nativescript-community/text/compare/v1.5.35...v1.5.36) (2024-01-05)
+
+
+### Bug Fixes
+
+* type casting for Swift ([6a1cbb4](https://github.com/nativescript-community/text/commit/6a1cbb4c26705b97d91a033acd52e082e19a49c6))
+
+
+
+
+
 ## [1.5.35](https://github.com/nativescript-community/text/compare/v1.5.34...v1.5.35) (2023-11-24)
 
 **Note:** Version bump only for package nativescript-text
