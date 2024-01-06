@@ -298,7 +298,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
         }
     };
     TextBase.prototype.createFormattedTextNative = function (value: LightFormattedString | FormattedString) {
-        return createNativeAttributedString(value as any, this, this['autoFontSize'], this['fontSizeRatio']);
+        return createNativeAttributedString(value as any, undefined, this, this['autoFontSize'], this['fontSizeRatio']);
     };
     TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {
