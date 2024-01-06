@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.37](https://github.com/nativescript-community/text/compare/v1.5.36...v1.5.37) (2024-01-06)
+
+
+### Bug Fixes
+
+* ensure we get properties inheritance from parent view ([1ae0336](https://github.com/nativescript-community/text/commit/1ae0336cc4bba036d3f0bd88260ad92f1e099491))
+
+
+
+
+
 ## [1.5.36](https://github.com/nativescript-community/text/compare/v1.5.35...v1.5.36) (2024-01-05)
 
 
