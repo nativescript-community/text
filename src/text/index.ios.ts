@@ -183,7 +183,7 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
             fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
         );
         iosFont = font.getUIFont(UIFont.systemFontOfSize(realFontSize));
-    } else if(parentView) {
+    } else if (parentView) {
         iosFont = parentView[fontInternalProperty.getDefault]();
     } else {
         iosFont = Font.default.getUIFont(UIFont.systemFontOfSize(16));
