@@ -139,6 +139,24 @@ export function createSpannable(span: any, index, parentView: any, parent?: any,
     const details = createSpannableDetails(span, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
     return details ? NSTextUtils.createNativeAttributedString({ details: [details] }) : null;
 }
+
+// TODO: refactor this is duplicated in N, ui-canvas, ui-text
+export function adjustMinMaxFontScale(value, view) {
+    let finalValue;
+    if (view.iosAccessibilityAdjustsFontSize) {
+        finalValue = value;
+
+        if (view.iosAccessibilityMinFontScale && view.iosAccessibilityMinFontScale > value) {
+            finalValue = view.iosAccessibilityMinFontScale;
+        }
+        if (view.iosAccessibilityMaxFontScale && view.iosAccessibilityMaxFontScale < value) {
+            finalValue = view.iosAccessibilityMaxFontScale;
+        }
+    } else {
+        finalValue = 1.0;
+    }
+    return finalValue;
+}
 export function createSpannableDetails(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
@@ -151,38 +169,52 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         if (text.indexOf('\n') !== -1) {
             text = text.replace(/\\n/g, '\u{2029}');
         }
-        const textTransform = span.textTransform || (parent && parent.textTransform);
+        const textTransform = span.textTransform || parent?.textTransform;
         if (textTransform) {
             text = getTransformedText(text, textTransform);
         }
     }
     const fontFamily = span.fontFamily;
     const fontSize = span.fontSize;
-    let realFontSize = fontSize || (parent && parent.fontSize) || (parentView && parentView.fontSize);
+    let fontScale = 1;
+    if (fontSize === undefined) {
+        if (span.style?.fontScaleInternal) {
+            fontScale = adjustMinMaxFontScale(span.style.fontScaleInternal, span);
+        } else if (parent?.style?.fontScaleInternal) {
+            fontScale = adjustMinMaxFontScale(parent.style.fontScaleInternal, parent);
+        } else if (parentView?.style?.fontScaleInternal) {
+            fontScale = adjustMinMaxFontScale(parentView.style.fontScaleInternal, parentView);
+        }
+    }
+
+    let realFontSize = fontSize || parent?.fontSize || parentView?.fontSize;
     if (span.relativeSize) {
-        realFontSize = ((parent && parent.fontSize) || (parentView && parentView.fontSize)) * span.relativeSize;
+        realFontSize = (parent?.fontSize || parentView?.fontSize) * span.relativeSize;
     }
     const realMaxFontSize = Math.max(maxFontSize, realFontSize || 0);
     const fontWeight = span.fontWeight;
     const fontstyle = span.fontStyle;
-    // const textColor = span.color || (parent && parent.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
+    const fontVariationSettings = span.fontVariationSettings || parent?.fontVariationSettings || parentView?.fontVariationSettings;
+    // const textColor = span.color || (parent?.color) || (parentView && !(parentView.nativeView instanceof UIButton) && parentView.color);
     // TODO: ensure we dont need parent view color. First test says no
-    const textColor = span.color || (parent && parent.color);
-    const backgroundcolor = span.backgroundColor || (parent && parent.backgroundColor);
-    const textDecoration = span.textDecoration || (parent && parent.textDecoration);
-    const letterSpacing = span.letterSpacing || (parent && parent.letterSpacing);
-    const lineHeight = span.lineHeight || (parent && parent.lineHeight);
-    const textAlignment = span.textAlignment || (parent && parent.textAlignment) || (parentView && parentView.textAlignment);
+    const textColor = span.color || parent?.color;
+    const backgroundcolor = span.backgroundColor || parent?.backgroundColor;
+    const textDecoration = span.textDecoration || parent?.textDecoration;
+    const letterSpacing = span.letterSpacing || parent?.letterSpacing;
+    const lineHeight = span.lineHeight || parent?.lineHeight;
+    const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
     const verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     let iosFont;
-    if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1) {
+    if ((fontWeight && fontWeight !== 'normal') || fontstyle || fontFamily || realFontSize || fontSizeRatio !== 1 || fontScale !== 1 || fontVariationSettings) {
         const font = new Font(
-            fontFamily || (parent && parent.fontFamily) || (parentView && parentView.fontFamily),
-            realFontSize * fontSizeRatio,
-            fontstyle || (parent && parent.fontStyle) || (parentView && parentView.fontStyle),
-            fontWeight || (parent && parent.fontWeight) || (parentView && parentView.fontWeight)
+            fontFamily || parent?.fontFamily || parentView?.fontFamily,
+            realFontSize ? realFontSize * fontSizeRatio : undefined,
+            fontstyle || parent?.fontStyle || parentView?.fontStyle,
+            fontWeight || parent?.fontWeight || parentView?.fontWeight,
+            fontScale,
+            fontVariationSettings || parent?.fontVariationSettings || parentView?.fontVariationSettings
         );
-        iosFont = font.getUIFont(UIFont.systemFontOfSize(realFontSize));
+        iosFont = font.getUIFont(parentView?.[fontInternalProperty.getDefault] ? parentView[fontInternalProperty.getDefault]() : UIFont.systemFontOfSize(16));
     } else if (parentView) {
         iosFont = parentView[fontInternalProperty.getDefault]();
     } else {
