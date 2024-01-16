@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.39](https://github.com/nativescript-community/text/compare/v1.5.38...v1.5.39) (2024-01-16)
+
+
+### Bug Fixes
+
+* **ios:** another ay11n sizing fix ([89cc5e6](https://github.com/nativescript-community/text/commit/89cc5e67ca73249b03f188aba747c02e1a080eb8))
+
+
+
+
+
 ## [1.5.38](https://github.com/nativescript-community/text/compare/v1.5.37...v1.5.38) (2024-01-16)
 
 
