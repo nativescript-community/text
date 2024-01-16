@@ -218,7 +218,8 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
     } else if (parentView) {
         iosFont = parentView[fontInternalProperty.getDefault]();
     } else {
-        iosFont = Font.default.getUIFont(UIFont.systemFontOfSize(16));
+        // in this case we dont want to set a font to use the drawing parent font
+        // iosFont = Font.default.getUIFont(UIFont.systemFontOfSize(16));
     }
     return {
         text,
@@ -226,7 +227,7 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         autoFontSizeEnabled,
         iosFont,
         realFontSize,
-        fontSize: fontSize || iosFont.pointSize,
+        fontSize,
         realMaxFontSize,
         backgroundColor: backgroundcolor ? (backgroundcolor instanceof Color ? backgroundcolor.ios : new Color(backgroundcolor).ios) : null,
         color: textColor ? (textColor instanceof Color ? textColor.ios : new Color(textColor).ios) : null,
