@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.38](https://github.com/nativescript-community/text/compare/v1.5.37...v1.5.38) (2024-01-16)
+
+
+### Bug Fixes
+
+* **ios:** ios-a11y-adjusts-font-size support ([e1118ab](https://github.com/nativescript-community/text/commit/e1118ab82e6552046b8c291227631f1021a11b92))
+* **ios:** let the parent decide of the font if none is needed ([11f0829](https://github.com/nativescript-community/text/commit/11f0829ab5974a8414b2236b96ea43222df82369))
+
+
+
+
+
 ## [1.5.37](https://github.com/nativescript-community/text/compare/v1.5.36...v1.5.37) (2024-01-06)
 
 
