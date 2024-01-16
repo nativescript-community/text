@@ -1,4 +1,4 @@
-import { Color, CoreTypes, Font, FormattedString, ViewBase, fontInternalProperty } from '@nativescript/core';
+import { Color, CoreTypes, Font, FormattedString, ViewBase, fontInternalProperty, fontSizeProperty } from '@nativescript/core';
 import { getTransformedText } from '@nativescript/core/ui/text-base';
 import { ObjectSpans, getMaxFontSize, textAlignmentConverter } from './index-common';
 import { LightFormattedString } from './index.android';
@@ -214,7 +214,7 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
             fontScale,
             fontVariationSettings || parent?.fontVariationSettings || parentView?.fontVariationSettings
         );
-        iosFont = font.getUIFont(parentView?.[fontInternalProperty.getDefault] ? parentView[fontInternalProperty.getDefault]() : UIFont.systemFontOfSize(16));
+        iosFont = font.getUIFont(UIFont.systemFontOfSize(parentView?.[fontSizeProperty.getDefault] ? parentView[fontSizeProperty.getDefault]() : 16));
     } else if (parentView) {
         iosFont = parentView[fontInternalProperty.getDefault]();
     } else {
@@ -227,7 +227,7 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         autoFontSizeEnabled,
         iosFont,
         realFontSize,
-        fontSize,
+        fontSize: fontSize || iosFont?.pointSize,
         realMaxFontSize,
         backgroundColor: backgroundcolor ? (backgroundcolor instanceof Color ? backgroundcolor.ios : new Color(backgroundcolor).ios) : null,
         color: textColor ? (textColor instanceof Color ? textColor.ios : new Color(textColor).ios) : null,
