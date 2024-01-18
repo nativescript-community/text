@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.41](https://github.com/nativescript-community/text/compare/v1.5.40...v1.5.41) (2024-01-18)
+
+### Bug Fixes
+
+* **android:** html font size was a bit "off size" compared to normal text ([12586fd](https://github.com/nativescript-community/text/commit/12586fd72bd5978e099b8593cca2029cd457a42e))
+* **android:** white color in spans could be ignored ([bf9f2a3](https://github.com/nativescript-community/text/commit/bf9f2a352d8915189840e58db647479965e3eec6))
+* improved span details handling ([4f3bbbb](https://github.com/nativescript-community/text/commit/4f3bbbba0a14920a16abd4d32a7d206fd08cec8f))
+
 ## [1.5.40](https://github.com/nativescript-community/text/compare/v1.5.39...v1.5.40) (2024-01-18)
 
 ### Bug Fixes
