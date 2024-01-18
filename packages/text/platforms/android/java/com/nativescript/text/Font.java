@@ -2,6 +2,7 @@ package com.nativescript.text;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
@@ -386,11 +387,18 @@ public class Font {
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        int color = span.optInt("color", -1);
-        if (color != -1) {
-            ssb.setSpan(new ForegroundColorSpan(color), start, end,
-                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (!span.isNull("color")) {
+            String strColor = span.optString("color", null);
+            try {
+                int color = Integer.parseInt(strColor);
+                ssb.setSpan(new ForegroundColorSpan(color), start, end,
+                            android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } catch (NumberFormatException nfe) {
+                ssb.setSpan(new ForegroundColorSpan(Color.parseColor(strColor)), start, end,
+                        android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
+        
 
         int backgroundColor = span.optInt("backgroundColor", -1);
         if (backgroundColor != -1) {
