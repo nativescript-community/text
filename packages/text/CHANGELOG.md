@@ -3,257 +3,142 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.40](https://github.com/nativescript-community/text/compare/v1.5.39...v1.5.40) (2024-01-18)
+
+### Bug Fixes
+
+* **android:** font size for spans was not correct (a bit too small) ([6ebc2a8](https://github.com/nativescript-community/text/commit/6ebc2a863f4418db5ce5bad291465ab22f42ed1c))
+
 ## [1.5.39](https://github.com/nativescript-community/text/compare/v1.5.38...v1.5.39) (2024-01-16)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.38](https://github.com/nativescript-community/text/compare/v1.5.37...v1.5.38) (2024-01-16)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.37](https://github.com/nativescript-community/text/compare/v1.5.36...v1.5.37) (2024-01-06)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.36](https://github.com/nativescript-community/text/compare/v1.5.35...v1.5.36) (2024-01-05)
-
 
 ### Bug Fixes
 
 * type casting for Swift ([6a1cbb4](https://github.com/nativescript-community/text/commit/6a1cbb4c26705b97d91a033acd52e082e19a49c6))
 
-
-
-
-
 ## [1.5.35](https://github.com/nativescript-community/text/compare/v1.5.34...v1.5.35) (2023-11-24)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.34](https://github.com/nativescript-community/text/compare/v1.5.33...v1.5.34) (2023-11-23)
-
 
 ### Bug Fixes
 
 * **ios:** build warning fixes ([65b48d0](https://github.com/nativescript-community/text/commit/65b48d03d4ef7f678ed3d3a02528ca08510f1a9c))
 
-
-
-
-
 ## [1.5.33](https://github.com/nativescript-community/text/compare/v1.5.32...v1.5.33) (2023-09-06)
-
 
 ### Bug Fixes
 
 * **android:** use int instead of android.graphics.Color to fix issue on older Android < 26 ([259dfa9](https://github.com/nativescript-community/text/commit/259dfa912f7f25656a2041c03e23e9e73fc9b0ba))
 
-
-
-
-
 ## [1.5.32](https://github.com/nativescript-community/text/compare/v1.5.31...v1.5.32) (2023-09-01)
-
 
 ### Bug Fixes
 
 * **android:** allow spaces in html strings ([fb03d0e](https://github.com/nativescript-community/text/commit/fb03d0e9a0f06c1c161539896a3700de4fe8c151))
 
-
-
-
-
 ## [1.5.31](https://github.com/nativescript-community/text/compare/v1.5.30...v1.5.31) (2023-06-16)
-
 
 ### Bug Fixes
 
 * **ios:** text not applied on TextFied, TextView … ([529875b](https://github.com/nativescript-community/text/commit/529875b8f9dec5a637770dd3e7ad6338776cd180))
 
-
-
-
-
 ## [1.5.30](https://github.com/nativescript-community/text/compare/v1.5.29...v1.5.30) (2023-06-12)
-
 
 ### Bug Fixes
 
 * **android:** TextView measures to height 0 if no text ([d7afb6f](https://github.com/nativescript-community/text/commit/d7afb6ff6883a849dacf4d16558d241eaa3c0663))
 
-
-
-
-
 ## [1.5.29](https://github.com/nativescript-community/text/compare/v1.5.28...v1.5.29) (2023-06-06)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.28](https://github.com/nativescript-community/text/compare/v1.5.27...v1.5.28) (2023-05-25)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.27](https://github.com/nativescript-community/text/compare/v1.5.26...v1.5.27) (2023-05-24)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.26](https://github.com/nativescript-community/text/compare/v1.5.25...v1.5.26) (2023-05-24)
-
 
 ### Bug Fixes
 
 * **android:** proguard fix ([834e5c7](https://github.com/nativescript-community/text/commit/834e5c74368b0cb0b4eac56162dc7f6ea8b9e331))
 
-
-
-
-
 ## [1.5.25](https://github.com/nativescript-community/text/compare/v1.5.24...v1.5.25) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.24](https://github.com/nativescript-community/text/compare/v1.5.23...v1.5.24) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.23](https://github.com/nativescript-community/text/compare/v1.5.22...v1.5.23) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.22](https://github.com/nativescript-community/text/compare/v1.5.21...v1.5.22) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.21](https://github.com/nativescript-community/text/compare/v1.5.20...v1.5.21) (2023-05-16)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.20](https://github.com/nativescript-community/text/compare/v1.5.19...v1.5.20) (2023-05-13)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.19](https://github.com/nativescript-community/text/compare/v1.5.18...v1.5.19) (2023-05-12)
-
 
 ### Bug Fixes
 
 * **android:** faster span/html creation ([58ae027](https://github.com/nativescript-community/text/commit/58ae027b752e21d2393d0f6eaf5d32f6695dd023))
 * **ios:** faster TextBase components ([ec88f53](https://github.com/nativescript-community/text/commit/ec88f53bcfdd36c001d21a17f067ae165b6ccccb))
 
-
-
-
-
 ## [1.5.18](https://github.com/nativescript-community/text/compare/v1.5.17...v1.5.18) (2023-05-11)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.17](https://github.com/nativescript-community/text/compare/v1.5.16...v1.5.17) (2023-05-10)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.16](https://github.com/nativescript-community/text/compare/v1.5.15...v1.5.16) (2023-05-10)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.15](https://github.com/nativescript-community/text/compare/v1.5.14...v1.5.15) (2023-05-10)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.14](https://github.com/nativescript-community/text/compare/v1.5.13...v1.5.14) (2023-05-05)
 
 **Note:** Version bump only for package @nativescript-community/text
-
-
-
-
 
 ## [1.5.13](https://github.com/nativescript-community/text/compare/v1.5.12...v1.5.13) (2023-05-05)
 
 **Note:** Version bump only for package @nativescript-community/text
 
-
-
-
-
 ## [1.5.12](https://github.com/nativescript-community/text/compare/v1.5.11...v1.5.12) (2023-03-07)
-
 
 ### Bug Fixes
 
 * error when used with N main repo ([7fa8a98](https://github.com/nativescript-community/text/commit/7fa8a9858ee786bd7fc2e61eb1fdb3e31dcc7b00))
-
-
-
-
 
 ## [1.5.11](https://github.com/nativescript-community/text/compare/v1.5.10...v1.5.11) (2022-12-03)
 
