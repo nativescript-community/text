@@ -1,4 +1,4 @@
-import { Color, CoreTypes, FormattedString, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
+import { Color, CoreTypes, FormattedString, Screen, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
 import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { ObjectSpans } from '.';
@@ -59,9 +59,9 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     }
     if (!density) {
         if (!FONT_SIZE_FACTOR) {
-            FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
+            FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext()) / Screen.mainScreen.scale;
         }
-        // that means not for canvaslabel, so we need to apply the font scale factor as applied with TextView.setTextSize
+        // that means not for canvaslabel
         density = FONT_SIZE_FACTOR;
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
