@@ -22,7 +22,7 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
         parent = formattedString;
     }
     formattedString.spans.forEach((s, index) => {
-        const spanDetails = spanToNativeString(s, parent, parentView, maxFontSize, index, density);
+        const spanDetails = typeof s === 'string' ? s : spanToNativeString(s, parent, parentView, maxFontSize, index, density);
         if (spanDetails) {
             options.push(spanDetails);
         }
@@ -36,7 +36,6 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
-    const spanStyle = span.style;
     const textTransform = span.textTransform || parentView?.textTransform;
     let fontWeight = span.fontWeight;
     let fontStyle = span.fontStyle;
@@ -139,7 +138,7 @@ export function init() {
         return;
     }
     initialized = true;
-    context = Utils.ad.getApplicationContext();
+    context = Utils.android.getApplicationContext();
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         if (!this._typeface) {

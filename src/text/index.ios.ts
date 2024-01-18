@@ -105,7 +105,7 @@ export function createNativeAttributedString(
             parent = data;
         }
         data['spans'].forEach((s, index) => {
-            const spanDetails = createSpannableDetails(s, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
+            const spanDetails = typeof s === 'string' ? s : createSpannableDetails(s, index, parentView, parent, maxFontSize, autoFontSizeEnabled, fontSizeRatio);
             if (spanDetails) {
                 details.push(spanDetails);
                 if (s._tappable) {
