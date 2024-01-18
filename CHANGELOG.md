@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.39](https://github.com/nativescript-community/text/compare/v1.5.38...v1.5.39) (2024-01-16)
+
+
+### Bug Fixes
+
+* **ios:** another ay11n sizing fix ([89cc5e6](https://github.com/nativescript-community/text/commit/89cc5e67ca73249b03f188aba747c02e1a080eb8))
+
+
+
+
+
+## [1.5.38](https://github.com/nativescript-community/text/compare/v1.5.37...v1.5.38) (2024-01-16)
+
+
+### Bug Fixes
+
+* **ios:** ios-a11y-adjusts-font-size support ([e1118ab](https://github.com/nativescript-community/text/commit/e1118ab82e6552046b8c291227631f1021a11b92))
+* **ios:** let the parent decide of the font if none is needed ([11f0829](https://github.com/nativescript-community/text/commit/11f0829ab5974a8414b2236b96ea43222df82369))
+
+
+
+
+
+## [1.5.37](https://github.com/nativescript-community/text/compare/v1.5.36...v1.5.37) (2024-01-06)
+
+
+### Bug Fixes
+
+* ensure we get properties inheritance from parent view ([1ae0336](https://github.com/nativescript-community/text/commit/1ae0336cc4bba036d3f0bd88260ad92f1e099491))
+
+
+
+
+
+## [1.5.36](https://github.com/nativescript-community/text/compare/v1.5.35...v1.5.36) (2024-01-05)
+
+
+### Bug Fixes
+
+* type casting for Swift ([6a1cbb4](https://github.com/nativescript-community/text/commit/6a1cbb4c26705b97d91a033acd52e082e19a49c6))
+
+
+
+
+
 ## [1.5.35](https://github.com/nativescript-community/text/compare/v1.5.34...v1.5.35) (2023-11-24)
 
 **Note:** Version bump only for package nativescript-text

@@ -7,6 +7,9 @@ export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 
+export function adjustMinMaxFontScale(value, view) {
+    // Only for iOS
+}
 function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?) {
     let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
     formattedString.spans.forEach((s) => {
