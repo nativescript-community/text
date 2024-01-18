@@ -41,6 +41,7 @@ declare namespace com {
                     isBold: boolean,
                     isItalic: boolean
                 ): globalAndroid.graphics.Typeface;
+                static getFontSizeFactor(context: globalAndroid.content.Context): number;
             }
             export class URLSpanClickListener {
                 constructor(impl?: { onClick(span: android.text.style.URLSpan) });

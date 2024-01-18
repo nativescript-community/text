@@ -495,4 +495,9 @@ public class Font {
     public static CharSequence fromHtml(Context context, String fontFolder, String parentFontFamily, CharSequence html, final boolean disableLinkUnderline, final int linkColor) {
         return fromHtml(html, context, fontFolder, parentFontFamily, disableLinkUnderline, linkColor);
     }
+
+    public static float getFontSizeFactor(Context context) {
+        return android.util.TypedValue.applyDimension(
+            android.util.TypedValue.COMPLEX_UNIT_SP, 1, context.getResources().getDisplayMetrics());
+    }
 }

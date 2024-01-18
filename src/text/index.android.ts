@@ -26,6 +26,8 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
     });
     return `[${options.join(',')}]`;
 }
+
+let FONT_SIZE_FACTOR;
 function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density?) {
     let text = span.text;
     if (!text || (span.visibility && span.visibility !== 'visible')) {
@@ -54,8 +56,11 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         text = getTransformedText(text, textTransform);
     }
     if (!density) {
-        // that means not for canvaslabel!
-        density = spanStyle ? Utils.layout.getDisplayDensity() : 1;
+        if (!FONT_SIZE_FACTOR) {
+            FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
+        }
+        // that means not for canvaslabel, so we need to apply the font scale factor as applied with TextView.setTextSize
+        density = FONT_SIZE_FACTOR;
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
     let backgroundColor = span.backgroundColor || parent?.backgroundColor;
@@ -142,7 +147,7 @@ export function init() {
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
                 if (!context) {
-                    context = Utils.ad.getApplicationContext();
+                    context = Utils.android.getApplicationContext();
                 }
                 this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, fontFamily, this.fontWeight, this.isBold, this.isItalic);
             } else {
