@@ -472,7 +472,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                         needsFontSpan = true;
                         break;
                     case "font-size":
-                        fontSize = Float.parseFloat(value.replace("px", "").replace("pt", "").trim()) * density;
+                        fontSize = Float.parseFloat(value.replace("px", "").replace("pt", "").trim()) * Font.getFontSizeFactor(this.context);
                         needsFontSpan = true;
                         break;
                     case "font-weight":
