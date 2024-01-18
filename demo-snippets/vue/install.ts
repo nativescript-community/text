@@ -3,6 +3,7 @@ import Spans from './Spans.vue';
 import { overrideSpanAndFormattedString } from '@nativescript-community/text';
 
 export function installPlugin() {
+    Vue.registerElement('HTMLLabel', () => require('@nativescript-community/ui-label').Label);
     overrideSpanAndFormattedString();
 }
 

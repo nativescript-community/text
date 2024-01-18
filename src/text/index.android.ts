@@ -219,7 +219,8 @@ export function createNativeAttributedString(
         init();
     }
     if (data instanceof FormattedString || data instanceof LightFormattedString || data['spans']) {
-        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, formattedStringToNativeString(data, undefined, this, density), null);
+        const strData = formattedStringToNativeString(data, undefined, this, density);
+        return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, strData, null);
     }
     const linkColor = (data as any).linkColor || parentView?.['linkColor'];
     const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : null;
