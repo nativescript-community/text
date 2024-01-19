@@ -58,11 +58,13 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         text = getTransformedText(text, textTransform);
     }
     if (!density) {
-        if (!FONT_SIZE_FACTOR) {
-            FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext()) / Screen.mainScreen.scale;
-        }
+        // if (!FONT_SIZE_FACTOR) {
+        //     FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext()) / Screen.mainScreen.scale;
+        // }
         // that means not for canvaslabel
-        density = FONT_SIZE_FACTOR;
+        // density = FONT_SIZE_FACTOR;
+        density = 1;
+        // console.log('text FONT_SIZE_FACTOR', FONT_SIZE_FACTOR, Screen.mainScreen.scale)
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
     let backgroundColor = span.backgroundColor || parent?.backgroundColor;

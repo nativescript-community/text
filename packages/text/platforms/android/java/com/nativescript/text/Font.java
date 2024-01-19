@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
@@ -361,7 +360,7 @@ public class Font {
                     
         }
         if (!Double.isNaN(fontSize)) {
-            ssb.setSpan(new AbsoluteSizeSpan(fontSize.intValue(), true), start, end,
+            ssb.setSpan(new FontSizeSpan(context, fontSize.floatValue(), true), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         Double relativeSize = span.optDouble("relativeSize");

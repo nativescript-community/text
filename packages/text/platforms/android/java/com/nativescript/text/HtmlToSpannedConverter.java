@@ -16,7 +16,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.ParagraphStyle;
@@ -472,7 +471,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                         needsFontSpan = true;
                         break;
                     case "font-size":
-                        fontSize = Float.parseFloat(value.replace("px", "").replace("pt", "").trim()) * Font.getFontSizeFactor(this.context);
+                        fontSize = Float.parseFloat(value.replace("px", "").replace("pt", "").trim());
                         needsFontSpan = true;
                         break;
                     case "font-weight":
@@ -506,7 +505,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                         }
                     }
                     if (fontSize != 0) {
-                        result.add(new AbsoluteSizeSpan(Math.round(fontSize)));
+                        result.add(new FontSizeSpan(this.context, fontSize, true));
                     }
                     if (color != null) {
                         result.add(new ForegroundColorSpan(Color.parseColor(color)));
