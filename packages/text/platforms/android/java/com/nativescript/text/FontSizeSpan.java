@@ -30,13 +30,7 @@ public class FontSizeSpan extends MetricAffectingSpan {
     public FontSizeSpan(Context context, float size, boolean dip) {
         mContext = context;
         mDip = dip;
-        // if (dip) {
-        //     // SP unit does not seem to be linear so we can store a const factor
-        //     mSize = android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP, size, context.getResources().getDisplayMetrics());
-        //     Log.d("JS", "FontSizeSpan " + size + " " + mSize);
-        // } else {
         mSize = size;
-        // }
     }
 
     public float getSize() {
