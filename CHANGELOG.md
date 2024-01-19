@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.43](https://github.com/nativescript-community/text/compare/v1.5.42...v1.5.43) (2024-01-19)
+
+### Bug Fixes
+
+* **android:** rewrote text scaling again. This time it seems to work almost perfectly (still a slight difference between Canvas and TextView drawing) ([929cc3c](https://github.com/nativescript-community/text/commit/929cc3c01b55eb8f3f72f1f7f71da89fe9e2b01f))
+
 ## [1.5.42](https://github.com/nativescript-community/text/compare/v1.5.41...v1.5.42) (2024-01-18)
 
 ### Bug Fixes
