@@ -1984,24 +1984,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@nativescript-community/ui-canvas@npm:4.6.16":
-  version: 4.6.16
-  resolution: "@nativescript-community/ui-canvas@npm:4.6.16"
+"@nativescript-community/ui-canvas@portal:/home/mguillon/dev/nativescript/ui-canvas/packages/ui-canvas::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@nativescript-community/ui-canvas@portal:/home/mguillon/dev/nativescript/ui-canvas/packages/ui-canvas::locator=root-workspace-0b6124%40workspace%3A."
   peerDependencies:
     "@nativescript-community/arraybuffers": ^1.1.3
-  checksum: 2e79f91425c2ea714048f9ea83b4dd278ca302eaa72071ec9b4fdcf41dfb51eef71158a0d368ec326e6bd3385a2c48e325a319e72fe9b93ec24b1848a9dc25fc
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@nativescript-community/ui-canvaslabel@npm:1.2.19":
-  version: 1.2.19
-  resolution: "@nativescript-community/ui-canvaslabel@npm:1.2.19"
+"@nativescript-community/ui-canvaslabel@portal:/home/mguillon/dev/nativescript/ui-canvas/packages/ui-canvaslabel::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@nativescript-community/ui-canvaslabel@portal:/home/mguillon/dev/nativescript/ui-canvas/packages/ui-canvaslabel::locator=root-workspace-0b6124%40workspace%3A."
   peerDependencies:
     "@nativescript-community/text": ^1.5.33
     "@nativescript-community/ui-canvas": ^4.5.1
-  checksum: 05bdc17959f7e7957f79f20b9565dd70943a0a3d4aae00c3807f23ee3b17703df6d8f3fa3083ebcd8f35b34d6297933ae2a0723aee5012226d40bce9c2c92d5d
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@nativescript-community/ui-label@npm:1.3.13":
   version: 1.3.13
