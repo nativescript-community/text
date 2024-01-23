@@ -1,8 +1,7 @@
 {
     "uses": [
         "android.text.style:ClickableSpan",
-        "android.text:Spanned",
-        "com.nativescript.text*:*"
-
+        "com.nativescript.text:TextView",
+        "com.nativescript.text:URLSpanClickListener"
     ]
 }

@@ -16,7 +16,7 @@ public class TextView extends AppCompatTextView {
     
     public void onURLSpanClick(URLSpan span) {
         if (this.urlSpanClickListener != null) {
-            this.urlSpanClickListener.onClick(span);
+            this.urlSpanClickListener.onClick(span.getURL());
         }
     }
 

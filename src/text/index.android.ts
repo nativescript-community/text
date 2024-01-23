@@ -244,7 +244,7 @@ export function createSpannable(span: any, parentView: any, parent?: any, maxFon
         ssb = com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, `[${details}]`, span._ssb);
         if (span.tappable) {
             initializeClickableSpan();
-            ssb.setSpan(new ClickableSpan(span), 0, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new ClickableSpan(span), 0, length, 33 /* android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE */);
         }
     }
     return ssb;
