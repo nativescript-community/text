@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.44](https://github.com/nativescript-community/text/compare/v1.5.43...v1.5.44) (2024-01-23)
+
+### Bug Fixes
+
+* **android:** faster implementation ([f8bc934](https://github.com/nativescript-community/text/commit/f8bc93480df2d6db0e6cb508e6adecd62b2bc0c4))
+
 ## [1.5.43](https://github.com/nativescript-community/text/compare/v1.5.42...v1.5.43) (2024-01-19)
 
 ### Bug Fixes
