@@ -50,7 +50,7 @@ declare namespace com {
 
             export class TextView extends androidx.appcompat.widget.AppCompatTextView {
                 urlSpanClickListener: URLSpanClickListener;
-                static attributedStringHasSpan(attributeString: android.text.Spannable, spanClass: sjava.lang.Class<any>): boolean;
+                static attributedStringHasSpan(attributeString: android.text.Spannable, spanClass: java.lang.Class<any>): boolean;
             }
         }
     }
