@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.45](https://github.com/nativescript-community/text/compare/v1.5.44...v1.5.45) (2024-01-25)
+
+### Bug Fixes
+
+* **android:** refactor for plugins using text ([1645350](https://github.com/nativescript-community/text/commit/16453504485f9d23e64321f0f2a113a5628647a1))
+
 ## [1.5.44](https://github.com/nativescript-community/text/compare/v1.5.43...v1.5.44) (2024-01-23)
 
 ### Bug Fixes
