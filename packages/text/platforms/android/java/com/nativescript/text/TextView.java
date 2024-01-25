@@ -20,7 +20,7 @@ public class TextView extends AppCompatTextView {
         }
     }
 
-    public static boolean attributedStringHasSpan(android.text.Spannable attributeString, java.lang.Class spanClass) {
+    public static boolean attributedStringHasSpan(android.text.Spanned attributeString, java.lang.Class spanClass) {
         return attributeString.getSpans(0, attributeString.length(), spanClass).length > 0;
         // const urlSpan = result.getSpans(0, result.length(), android.text.style.URLSpan.class);
 
