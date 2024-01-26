@@ -60,12 +60,19 @@ public class BaselineAdjustedSpan extends CharacterStyle {
     }
 
     public void updateState(TextPaint paint) {
-        paint.setTextSize(fontSize);
+        float stateFontSize = fontSize;
+        float stateMaxFontSize = maxFontSize;
+        if (fontSize != -1) {
+            paint.setTextSize(fontSize);
+        } else {
+            stateFontSize = paint.getTextSize();
+            stateMaxFontSize = Math.max(stateMaxFontSize, stateFontSize);
+        }
         Paint.FontMetrics metrics = paint.getFontMetrics();
         // TODO: when or why should we add bottom?
         // result += metrics.bottom;
         int baselineShift = computeBaseLineOffset(align, metrics.ascent, metrics.descent, metrics.bottom, metrics.top,
-                fontSize, maxFontSize);
+                stateFontSize, stateMaxFontSize);
         paint.baselineShift = baselineShift;
     }
 }
