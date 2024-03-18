@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.47](https://github.com/nativescript-community/text/compare/v1.5.46...v1.5.47) (2024-03-18)
+
+### Bug Fixes
+
+* **ios:** formattedText on button was broken ([597156b](https://github.com/nativescript-community/text/commit/597156badd5da78b8458a47c14077029f62623cd))
+
 ## [1.5.46](https://github.com/nativescript-community/text/compare/v1.5.45...v1.5.46) (2024-01-26)
 
 ### Bug Fixes
