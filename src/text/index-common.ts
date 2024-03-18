@@ -364,11 +364,14 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
             const nativeView = this.nativeTextViewProtected;
             const attrText = this.createFormattedTextNative(this.formattedText);
             // we override parent class behavior because we apply letterSpacing and lineHeight on a per Span basis
-            if (majorVersion >= 13 && UIColor.labelColor) {
-                this.nativeTextViewProtected.textColor = UIColor.labelColor;
+            if (nativeView instanceof UIButton) {
+                nativeView.setAttributedTitleForState(attrText, UIControlState.Normal);
+            } else {
+                if (majorVersion >= 13 && UIColor.labelColor) {
+                    nativeView.textColor = UIColor.labelColor;
+                }
+                nativeView.attributedText = attrText;
             }
-
-            nativeView.attributedText = attrText;
         };
         //@ts-ignore
         TextBase.prototype.setTextDecorationAndTransform = function () {
