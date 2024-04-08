@@ -7,7 +7,7 @@ import CoreGraphics
 class NSTextUtils: NSObject {
   class func setTextDecorationAndTransformOn(view:UIView!, text:String!, textDecoration:String!, letterSpacing:CGFloat, lineHeight:CGFloat, color:UIColor!) {
     let attrDict:NSMutableDictionary! = NSMutableDictionary()
-    var paragraphStyle:NSMutableParagraphStyle! = nil
+    let paragraphStyle:NSMutableParagraphStyle! = nil
     let isTextType:Bool = (view is UITextField) || (view is UITextView) || (view is UILabel) || (view is UIButton)
     let isTextView:Bool = (view is UITextView)
     
@@ -23,7 +23,7 @@ class NSTextUtils: NSObject {
       let kern:NSNumber! = NSNumber.init(value: letterSpacing * (view as! UILabel).font.pointSize)
       attrDict[NSAttributedString.Key.kern] = kern
     }
-    var fLineHeight = lineHeight
+    let fLineHeight = lineHeight
     if fLineHeight >= 0 {
       if fLineHeight == 0 {
         fLineHeight = 0.00001
@@ -65,7 +65,7 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(result, for:UIControl.State.normal)
       }
       else {
-        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
         if (attributedTextProperty != nil) {
           view.setValue(result, forKey: "attributedText")
         }
@@ -76,8 +76,8 @@ class NSTextUtils: NSObject {
         (view as! UIButton).setAttributedTitle(nil, for:UIControl.State.normal)
         (view as! UIButton).setTitle(text, for:UIControl.State.normal)
       } else {
-        var attributedTextProperty = class_getProperty(type(of: view), "attributedText");
-        var textProperty = class_getProperty(type(of: view), "text");
+        let attributedTextProperty = class_getProperty(type(of: view), "attributedText");
+        let textProperty = class_getProperty(type(of: view), "text");
         if (attributedTextProperty != nil) {
           // Clear attributedText or text won't be affected.
           view.setValue(nil, forKey: "attributedText")
@@ -89,7 +89,7 @@ class NSTextUtils: NSObject {
     }
   }
   class func computeBaseLineOffset(align:String!, fontAscent:Float, fontDescent:Float, fontBottom:Float, fontTop:Float, fontSize:Float, maxFontSize:Float) -> Float {
-    var result:Float = 0
+    let result:Float = 0
     if (align == "top") {
       result = -maxFontSize - fontBottom - fontTop
     } else if (align == "bottom") {
@@ -128,7 +128,7 @@ class NSTextUtils: NSObject {
         attrText.enumerateAttribute(NSAttributedString.Key.link, in: fullRange) { value, range, stop in
           if (value != nil) {
             let attributes:NSMutableDictionary! = NSMutableDictionary(dictionary:attrText.attributes(at: range.location, longestEffectiveRange:nil, in:range))
-            var sValue:String! = nil
+            let sValue:String! = nil
             if (value is NSURL) {
               sValue = (value as! NSURL).absoluteString
             } else {
@@ -162,7 +162,7 @@ class NSTextUtils: NSObject {
       if (letterSpacing != nil) && letterSpacing.floatValue != 0 {
         attrText.addAttribute(NSAttributedString.Key.kern, value:letterSpacing.floatValue * fontSize.floatValue, range:fullRange)
       }
-      var paragraphStyle:NSMutableParagraphStyle! = nil
+      let paragraphStyle:NSMutableParagraphStyle! = nil
       let textAlignment:NSNumber! =  data.object(forKey:"textAlignment") as? NSNumber
       let createParagraphStyle:()->Void = {
         if (paragraphStyle == nil) {
@@ -186,7 +186,7 @@ class NSTextUtils: NSObject {
       let lineHeight:NSNumber! =  data.object(forKey:"lineHeight") as? NSNumber
       if (lineHeight != nil) {
         createParagraphStyle()
-        var fLineHeight:Float = lineHeight.floatValue
+        let fLineHeight:Float = lineHeight.floatValue
         if fLineHeight == 0.0 {
           fLineHeight = 0.00001
         }
@@ -264,7 +264,7 @@ class NSTextUtils: NSObject {
           paragraphStyle.alignment = NSTextAlignment.left
         }
         if (lineHeight != nil) {
-          var fLineHeight:CGFloat = CGFloat(lineHeight.floatValue)
+          let fLineHeight:CGFloat = CGFloat(lineHeight.floatValue)
           if fLineHeight == 0.0 {
             fLineHeight = 0.00001
           }
