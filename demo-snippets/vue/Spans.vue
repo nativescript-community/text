@@ -4,6 +4,8 @@
         <GridLayout rows="*,auto">
             <StackLayout ref="holder">
                 <!-- GOOD -->
+                <!-- <Label :text="String.fromCharCode(0xe838)" fontFamily='"Material Symbols Rounded", "MaterialSymbolsRounded"' :fontVariationSettings="fontVariationSettings" fontSize="40" /> -->
+                <HTMLLabel :text="String.fromCharCode(0xe838)" fontFamily='"Material Symbols Rounded", "MaterialSymbolsRounded"' :fontVariationSettings="fontVariationSettings" fontSize="40" />
                 <HTMLLabel :html="`<span style=&quot;color:green;&quot;>${text}</span>`" :fontSize="fontSize" textWrap="false" />
                 <HTMLLabel :html="`<span style=&quot;color:yellow;font-size:${fontSize};&quot;>${text}</span>`" textWrap="false" />
                 <HTMLLabel :text="nativeText" textWrap="false" />
@@ -56,6 +58,7 @@ export default class Simple extends Vue {
     fontSize = fontSize;
     canvasHeight = canvasHeight;
     nativeText = nativeText;
+    fontVariationSettings = [{ axis: 'FILL', value: 1 }, { axis: 'wght', value: 700}, { axis: 'opsz', value: 48}]
     onBack() {
         Frame.topmost().goBack();
     }
