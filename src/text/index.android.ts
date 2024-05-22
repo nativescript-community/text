@@ -7,12 +7,6 @@ export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 
-declare module '@nativescript/core' {
-    interface Font {
-        _typeface: android.graphics.Typeface;
-    }
-}
-
 export function adjustMinMaxFontScale(value, view) {
     // Only for iOS
 }
@@ -150,7 +144,7 @@ export function init() {
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
         const theFont = this as Font;
-        if (!theFont._typeface) {
+        if (!theFont['_typeface']) {
             // css loader to json transform font-family: res/toto to font-family: res,toto
             const fontFamily = theFont.fontFamily?.replace(/res,/g, 'res/');
             const fontCacheKey: string = fontFamily + (theFont.fontWeight || '') + (theFont.fontStyle || '') + (theFont.fontVariationSettings || '');
@@ -160,7 +154,7 @@ export function init() {
                 if (!context) {
                     context = Utils.android.getApplicationContext();
                 }
-                theFont._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(
+                theFont['_typeface'] = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(
                     context,
                     fontPath,
                     fontFamily,
@@ -170,10 +164,10 @@ export function init() {
                     FontVariationSettings.toString(theFont.fontVariationSettings)
                 );
             } else {
-                theFont._typeface = typeface;
+                theFont['_typeface'] = typeface;
             }
         }
-        return theFont._typeface;
+        return theFont['_typeface'];
     });
 
     FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
@@ -208,24 +202,23 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
+interface AttributedStringData {
+    text: string;
+    color?: Color | string | number;
+    familyName?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    letterSpacing?: number;
+    lineHeight?: number;
+    lineBreak?: number;
+    relativeSize?: number;
+    linkColor?: string | Color;
+    linkDecoration?: string;
+    textAlignment?: number | CoreTypes.TextAlignmentType;
+}
+
 export function createNativeAttributedString(
-    data:
-        | {
-              text: string;
-              color?: Color | string | number;
-              familyName?: string;
-              fontSize?: number;
-              fontWeight?: string;
-              letterSpacing?: number;
-              lineHeight?: number;
-              lineBreak?: number;
-              relativeSize?: number;
-              linkColor?: string | Color;
-              linkDecoration?: string;
-              textAlignment?: number | CoreTypes.TextAlignmentType;
-          }
-        | FormattedString
-        | ObjectSpans,
+    data: AttributedStringData | FormattedString | ObjectSpans,
     parent?: any,
     parentView?: ViewBase,
     autoFontSizeEnabled = false,
@@ -235,18 +228,19 @@ export function createNativeAttributedString(
     if (!context) {
         init();
     }
-    if (data instanceof FormattedString || data instanceof LightFormattedString || data['spans']) {
+    if (data instanceof FormattedString || data instanceof LightFormattedString || (data as ObjectSpans).spans) {
         const strData = formattedStringToNativeString(data, undefined, this, density);
         return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, strData, null);
     }
-    const linkColor = (data as any).linkColor || parentView?.['linkColor'];
+    const theData = data as AttributedStringData;
+    const linkColor = theData.linkColor || parentView?.['linkColor'];
     const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : null;
     const result = com.nativescript.text.Font.stringBuilderFromHtmlString(
         context,
         fontPath,
-        (data as any).familyName || parentView?.['fontFamily'] || null,
-        (data as any).text,
-        ((data as any).linkDecoration && (data as any).linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
+        theData.familyName || parentView?.['fontFamily'] || null,
+        theData.text,
+        (theData.linkDecoration && theData.linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
         aLinkColor
     );
     return result;

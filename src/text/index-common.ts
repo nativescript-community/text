@@ -17,9 +17,10 @@ import {
 } from '@nativescript/core';
 import { FontStyleType, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { TextBase } from '@nativescript/core/ui/text-base';
+import { SDK_VERSION } from '@nativescript/core/utils/constants';
 import { createNativeAttributedString } from './index';
-import { iOSNativeHelper } from '@nativescript/core/utils';
 import { isNullOrUndefined, isString } from '@nativescript/core/utils/types';
+import type { FontVariationSettingsType } from '@nativescript/core/ui/styling/font-interfaces';
 
 declare module '@nativescript/core/ui/text-base' {
     interface TextBase {
@@ -145,6 +146,7 @@ export class LightFormattedString extends Observable {
     fontSize: number;
     fontStyle: FontStyleType;
     fontWeight: FontWeightType;
+    fontVariationSettings: FontVariationSettingsType[];
     textAlignment: CoreTypes.TextAlignmentType;
     verticalTextAlignment: CoreTypes.VerticalAlignmentTextType;
     textDecoration: CoreTypes.TextDecorationType;
@@ -317,7 +319,6 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
 
     //@ts-ignore
     if (__IOS__ && typeof TextBase.prototype.setFormattedTextDecorationAndTransform !== 'function') {
-        const majorVersion = iOSNativeHelper.MajorVersion;
         function NSStringFromNSAttributedString(source: NSAttributedString | string): NSString {
             return NSString.stringWithString((source instanceof NSAttributedString && source.string) || (source as string));
         }
@@ -367,7 +368,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
             if (nativeView instanceof UIButton) {
                 nativeView.setAttributedTitleForState(attrText, UIControlState.Normal);
             } else {
-                if (majorVersion >= 13 && UIColor.labelColor) {
+                if (SDK_VERSION >= 13 && UIColor.labelColor) {
                     nativeView.textColor = UIColor.labelColor;
                 }
                 nativeView.attributedText = attrText;
@@ -395,7 +396,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
                 uiColor
             );
 
-            if (!style.color && majorVersion >= 13 && UIColor.labelColor) {
+            if (!style.color && SDK_VERSION >= 13 && UIColor.labelColor) {
                 this._setColor(UIColor.labelColor);
             }
         };
