@@ -1,11 +1,17 @@
 import { Color, CoreTypes, FormattedString, Screen, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
-import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
+import { Font, FontVariationSettings, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
+
+declare module '@nativescript/core' {
+    interface Font {
+        _typeface: android.graphics.Typeface;
+    }
+}
 
 export function adjustMinMaxFontScale(value, view) {
     // Only for iOS
@@ -143,22 +149,31 @@ export function init() {
     context = Utils.android.getApplicationContext();
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
-        if (!this._typeface) {
+        const theFont = this as Font;
+        if (!theFont._typeface) {
             // css loader to json transform font-family: res/toto to font-family: res,toto
-            const fontFamily = this.fontFamily?.replace(/res,/g, 'res/');
-            const fontCacheKey: string = fontFamily + (this.fontWeight || '') + (this.fontStyle || '');
+            const fontFamily = theFont.fontFamily?.replace(/res,/g, 'res/');
+            const fontCacheKey: string = fontFamily + (theFont.fontWeight || '') + (theFont.fontStyle || '') + (theFont.fontVariationSettings || '');
 
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
                 if (!context) {
                     context = Utils.android.getApplicationContext();
                 }
-                this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, fontFamily, this.fontWeight, this.isBold, this.isItalic);
+                theFont._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(
+                    context,
+                    fontPath,
+                    fontFamily,
+                    theFont.fontWeight,
+                    theFont.isBold,
+                    theFont.isItalic,
+                    FontVariationSettings.toString(theFont.fontVariationSettings)
+                );
             } else {
-                this._typeface = typeface;
+                theFont._typeface = typeface;
             }
         }
-        return this._typeface;
+        return theFont._typeface;
     });
 
     FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {

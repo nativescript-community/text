@@ -34,12 +34,14 @@ public class Font {
 
     static final String TAG = "Font";
 
-    public static Typeface loadFontFromFile(Context context, String fontFolder, String fontFamily) {
-        if (typefaceCache.containsKey(fontFamily)) {
-            return typefaceCache.get(fontFamily);
+    public static Typeface loadFontFromFile(Context context, String fontFolder, String fontFamily, String fontVariationSettings) {
+        String key =  (Build.VERSION.SDK_INT >= 26 && fontVariationSettings != null) ? (fontFamily + "_" + fontVariationSettings) : fontFamily;
+        if (typefaceCache.containsKey(key)) {
+            return typefaceCache.get(key);
         }
         Typeface result = null;
         if (fontFamily.startsWith("res/")) {
+            // TODO: for now fontVariationSettings is not supported in res:/. Maybe use androidx.core.provider.FontRequest
             int fontID = context.getResources().getIdentifier(fontFamily.substring(4), "font",
                     context.getPackageName());
             try {
@@ -48,7 +50,10 @@ public class Font {
                 Log.w(TAG, "\"Error loading font res: " + fontFamily + "," + e.getLocalizedMessage());
             }
             if (result != null) {
-                typefaceCache.put(fontFamily, result);
+                // if (Build.VERSION.SDK_INT >= 26 && fontVariationSettings != null) {
+                //     result = new Typeface.Builder(result).setFontVariationSettings(fontVariationSettings).build();
+                // }
+                typefaceCache.put(key, result);
                 return result;
             }
         }
@@ -60,7 +65,7 @@ public class Font {
             return null;
         }
 
-        result = typefaceCache.get(fontFamily);
+        result = typefaceCache.get(key);
         // Check for undefined explicitly as null mean we tried to load the font, but
         // failed.
         File file = new File(fontFolder, fontFamily + ".ttf");
@@ -77,11 +82,24 @@ public class Font {
         }
 
         try {
-            result = Typeface.createFromFile(file.getAbsolutePath());
+            if (Build.VERSION.SDK_INT >= 26) {
+                android.graphics.Typeface.Builder builder = new android.graphics.Typeface.Builder(file.getAbsolutePath());
+                if (builder != null) {
+                    if (fontVariationSettings != null) {
+                        builder.setFontVariationSettings(fontVariationSettings);
+                    }
+                    result = builder.build();
+                }
+            } 
+            if (result == null) {
+                result = Typeface.createFromFile(file.getAbsolutePath());
+            }
         } catch (Exception e) {
             Log.w(TAG, "\"Error loading font asset: " + file.getAbsolutePath() + "," + e.getLocalizedMessage());
         }
-        typefaceCache.put(fontFamily, result);
+        if (result != null) {
+            typefaceCache.put(key, result);
+        }
 
         return result;
     }
@@ -201,7 +219,7 @@ public class Font {
     }
 
     public static Typeface createTypeface(Context context, String fontFolder, String fontFamily, String fontWeight,
-            boolean isBold, boolean isItalic) {
+            boolean isBold, boolean isItalic, String fontVariationSettings) {
 
         int fontStyle = 0;
         if (isBold) {
@@ -243,42 +261,25 @@ public class Font {
                         String newFontFamily = currentFontFamily;
                         // on pre 28 Typeface.create does not support passing the fontWeight
                         // so we need to try and load the font directly hoping the file is named correctly
-                        if(fontWeightInt == 400) {
-                            if (isItalic) {
-                                result = loadFontFromFile(context, fontFolder, newFontFamily + "_italic"); 
-                                if (result != null) {
-                                    fontStyle = 0;
-                                } else {
-                                    result = loadFontFromFile(context, fontFolder, newFontFamily); 
-                                }
+                        if(fontWeightInt != 400) {
+                            newFontFamily += getCustomFontWeightSuffix(fontWeightInt);
+                        }
+                        if (isItalic) {
+                            result = loadFontFromFile(context, fontFolder, newFontFamily + "_italic", fontVariationSettings); 
+                            if (result != null) {
+                                fontStyle = 0;
                             } else {
-                                result = loadFontFromFile(context, fontFolder, newFontFamily); 
-                                if (result != null) {
-                                    fontStyle = 0;
-                                }
+                                result = loadFontFromFile(context, fontFolder, newFontFamily, fontVariationSettings); 
                             }
                         } else {
-                            newFontFamily += getCustomFontWeightSuffix(fontWeightInt);
-                            if (isItalic) {
-                                result = loadFontFromFile(context, fontFolder, newFontFamily + "italic"); 
-                                if (result != null) {
-                                    // Log.d("JS", "Font loading font style found: " + newFontFamily + ",fontStyle "
-                                    // + fontStyle + ",fontWeightInt " + fontWeightInt);
-                                    fontStyle = 0;
-                                } else {
-                                    result = loadFontFromFile(context, fontFolder, newFontFamily); 
-                                }
-                            } else {
-                                result = loadFontFromFile(context, fontFolder, newFontFamily); 
-                                if (result != null) {
-                                    fontStyle = 0;
-                                }
+                            result = loadFontFromFile(context, fontFolder, newFontFamily, fontVariationSettings); 
+                            if (result != null) {
+                                fontStyle = 0;
                             }
-                            
                         }
                     }
                     if(result == null) {
-                        result = loadFontFromFile(context, fontFolder, currentFontFamily); 
+                        result = loadFontFromFile(context, fontFolder, currentFontFamily, fontVariationSettings); 
                     }
 
                     if (result != null && (fontStyle != 0 || fontWeightInt != 400)) {
@@ -336,7 +337,8 @@ public class Font {
         }
         Typeface typeface = null;
         if (fontFamily != null) {
-            typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic);
+            String fontVariationSettings = span.optString("fontVariationSettings", null);
+            typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic, fontVariationSettings);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
             ssb.setSpan(typefaceSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
