@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.3](https://github.com/nativescript-community/text/compare/v1.6.2...v1.6.3) (2024-05-22)
+
+### Bug Fixes
+
+* typings fix for ui-label build ([d11b910](https://github.com/nativescript-community/text/commit/d11b910b0b6554cf4ad25293472d0899be56ee6f))
+
 ## [1.6.2](https://github.com/nativescript-community/text/compare/v1.6.1...v1.6.2) (2024-05-22)
 
 **Note:** Version bump only for package text
