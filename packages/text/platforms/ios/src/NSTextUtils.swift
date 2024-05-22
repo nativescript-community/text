@@ -128,7 +128,7 @@ class NSTextUtils: NSObject {
         attrText.enumerateAttribute(NSAttributedString.Key.link, in: fullRange) { value, range, stop in
           if (value != nil) {
             let attributes:NSMutableDictionary! = NSMutableDictionary(dictionary:attrText.attributes(at: range.location, longestEffectiveRange:nil, in:range))
-            let sValue:String! = nil
+            var sValue:String! = nil
             if (value is NSURL) {
               sValue = (value as! NSURL).absoluteString
             } else {
