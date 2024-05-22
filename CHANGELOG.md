@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.1](https://github.com/nativescript-community/text/compare/v1.6.0...v1.6.1) (2024-05-22)
+
+### Bug Fixes
+
+* **ios:** build issues after PR merge ([595c3e8](https://github.com/nativescript-community/text/commit/595c3e8d0bfee6a4e68b2c0cd80a597c721d2eb8))
+
 ## [1.6.0](https://github.com/nativescript-community/text/compare/v1.5.47...v1.6.0) (2024-05-22)
 
 ### Features
