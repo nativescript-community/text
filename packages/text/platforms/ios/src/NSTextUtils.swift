@@ -7,7 +7,7 @@ import CoreGraphics
 class NSTextUtils: NSObject {
   class func setTextDecorationAndTransformOn(view:UIView!, text:String!, textDecoration:String!, letterSpacing:CGFloat, lineHeight:CGFloat, color:UIColor!) {
     let attrDict:NSMutableDictionary! = NSMutableDictionary()
-    let paragraphStyle:NSMutableParagraphStyle! = nil
+    var paragraphStyle:NSMutableParagraphStyle! = nil
     let isTextType:Bool = (view is UITextField) || (view is UITextView) || (view is UILabel) || (view is UIButton)
     let isTextView:Bool = (view is UITextView)
     
@@ -23,7 +23,7 @@ class NSTextUtils: NSObject {
       let kern:NSNumber! = NSNumber.init(value: letterSpacing * (view as! UILabel).font.pointSize)
       attrDict[NSAttributedString.Key.kern] = kern
     }
-    let fLineHeight = lineHeight
+    var fLineHeight = lineHeight
     if fLineHeight >= 0 {
       if fLineHeight == 0 {
         fLineHeight = 0.00001
@@ -89,7 +89,7 @@ class NSTextUtils: NSObject {
     }
   }
   class func computeBaseLineOffset(align:String!, fontAscent:Float, fontDescent:Float, fontBottom:Float, fontTop:Float, fontSize:Float, maxFontSize:Float) -> Float {
-    let result:Float = 0
+    var result:Float = 0
     if (align == "top") {
       result = -maxFontSize - fontBottom - fontTop
     } else if (align == "bottom") {
@@ -162,7 +162,7 @@ class NSTextUtils: NSObject {
       if (letterSpacing != nil) && letterSpacing.floatValue != 0 {
         attrText.addAttribute(NSAttributedString.Key.kern, value:letterSpacing.floatValue * fontSize.floatValue, range:fullRange)
       }
-      let paragraphStyle:NSMutableParagraphStyle! = nil
+      var paragraphStyle:NSMutableParagraphStyle! = nil
       let textAlignment:NSNumber! =  data.object(forKey:"textAlignment") as? NSNumber
       let createParagraphStyle:()->Void = {
         if (paragraphStyle == nil) {
@@ -186,7 +186,7 @@ class NSTextUtils: NSObject {
       let lineHeight:NSNumber! =  data.object(forKey:"lineHeight") as? NSNumber
       if (lineHeight != nil) {
         createParagraphStyle()
-        let fLineHeight:Float = lineHeight.floatValue
+        var fLineHeight:Float = lineHeight.floatValue
         if fLineHeight == 0.0 {
           fLineHeight = 0.00001
         }
@@ -264,7 +264,7 @@ class NSTextUtils: NSObject {
           paragraphStyle.alignment = NSTextAlignment.left
         }
         if (lineHeight != nil) {
-          let fLineHeight:CGFloat = CGFloat(lineHeight.floatValue)
+          var fLineHeight:CGFloat = CGFloat(lineHeight.floatValue)
           if fLineHeight == 0.0 {
             fLineHeight = 0.00001
           }
