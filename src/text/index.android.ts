@@ -147,7 +147,8 @@ export function init() {
         if (!theFont['_typeface']) {
             // css loader to json transform font-family: res/toto to font-family: res,toto
             const fontFamily = theFont.fontFamily?.replace(/res,/g, 'res/');
-            const fontCacheKey: string = fontFamily + (theFont.fontWeight || '') + (theFont.fontStyle || '') + (theFont.fontVariationSettings || '');
+            const fontVariationSettings = FontVariationSettings.toString(theFont.fontVariationSettings);
+            const fontCacheKey = fontFamily + (theFont.fontWeight || '') + (theFont.fontStyle || '') + (fontVariationSettings ?? '');
 
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
@@ -161,7 +162,7 @@ export function init() {
                     theFont.fontWeight,
                     theFont.isBold,
                     theFont.isItalic,
-                    FontVariationSettings.toString(theFont.fontVariationSettings)
+                    fontVariationSettings
                 );
             } else {
                 theFont['_typeface'] = typeface;

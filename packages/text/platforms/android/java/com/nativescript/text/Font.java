@@ -229,7 +229,7 @@ public class Font {
             fontStyle |= Typeface.ITALIC;
         }
         int fontWeightInt = getIntFontWeight(fontWeight);
-        final String cacheKey = fontFamily + fontWeightInt + isItalic;
+        final String cacheKey = fontFamily + fontWeightInt + isItalic + (fontVariationSettings != null ? fontVariationSettings : "");
         // Log.d("JS", "Font createTypeface: " + fontFamily + ",fontFolder " +
         // fontFolder + ",isItalic " + isItalic + ",fontWeight " + fontWeight
         // + ",fontWeightInt " + fontWeightInt);
