@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.4](https://github.com/nativescript-community/text/compare/v1.6.3...v1.6.4) (2024-05-23)
+
+### Bug Fixes
+
+* **android:** another FontVariationSettings fix ([3c6620e](https://github.com/nativescript-community/text/commit/3c6620ec9b75a555217353abc42420b3dc665da4))
+
 ## [1.6.3](https://github.com/nativescript-community/text/compare/v1.6.2...v1.6.3) (2024-05-22)
 
 **Note:** Version bump only for package @nativescript-community/text
