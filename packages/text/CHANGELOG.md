@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.5](https://github.com/nativescript-community/text/compare/v1.6.4...v1.6.5) (2024-06-20)
+
+### Bug Fixes
+
+* **android:** html string not working in production builds ([e7f73a3](https://github.com/nativescript-community/text/commit/e7f73a3dd0de33b5951728cc4e80ddba2ea71312))
+
 ## [1.6.4](https://github.com/nativescript-community/text/compare/v1.6.3...v1.6.4) (2024-05-23)
 
 ### Bug Fixes
