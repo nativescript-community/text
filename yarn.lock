@@ -1946,7 +1946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nativescript-community/arraybuffers@npm:1.1.5":
+"@nativescript-community/arraybuffers@npm:1.1.5, @nativescript-community/arraybuffers@npm:^1.1.5":
   version: 1.1.5
   resolution: "@nativescript-community/arraybuffers@npm:1.1.5"
   checksum: b6d0aca5cfdba26048f543095d1ebba4bfcaa2407e9c17e3ff2da5d0ee25f5c4b959a9483ccb63ea89b5e868954116cad7e31aa93dd57a430d1d9585e65a4035
@@ -2031,26 +2031,33 @@ __metadata:
   dependencies:
     "@nativescript-community/arraybuffers": "npm:1.1.5"
     "@nativescript-community/text": "npm:*"
-    "@nativescript-community/ui-canvas": "npm:4.6.17"
+    "@nativescript-community/ui-canvas": "npm:4.6.34"
     "@nativescript-community/ui-canvaslabel": "npm:1.2.20"
-    "@nativescript-community/ui-label": "npm:1.3.13"
+    "@nativescript-community/ui-label": "npm:1.3.32"
     vue-class-component: "npm:7.2.6"
     vue-property-decorator: "npm:9.1.2"
   languageName: unknown
   linkType: soft
 
-"@nativescript-community/text@npm:*, @nativescript-community/text@npm:^1.5.41, @nativescript-community/text@workspace:packages/text":
+"@nativescript-community/text@npm:*, @nativescript-community/text@workspace:packages/text":
   version: 0.0.0-use.local
   resolution: "@nativescript-community/text@workspace:packages/text"
   languageName: unknown
   linkType: soft
 
-"@nativescript-community/ui-canvas@npm:4.6.17":
-  version: 4.6.17
-  resolution: "@nativescript-community/ui-canvas@npm:4.6.17"
-  peerDependencies:
-    "@nativescript-community/arraybuffers": ^1.1.3
-  checksum: 2cf63d3a111a02d18710b0a31efbaf370f7982cc1c01096fca19c6121bc1df8b279a6aec7e01ea06928a57b08092f9a5e802e09d7a98cd734af41f52d7c34797
+"@nativescript-community/text@npm:^1.6.3":
+  version: 1.6.5
+  resolution: "@nativescript-community/text@npm:1.6.5"
+  checksum: 28de62beb349faaba1d5ce76a40969b8d3c3c828128352183a72809147471861cf146c541c931219e9f3932f3817c0c02271eb84f8cf5f48c44b973198f9ee45
+  languageName: node
+  linkType: hard
+
+"@nativescript-community/ui-canvas@npm:4.6.34":
+  version: 4.6.34
+  resolution: "@nativescript-community/ui-canvas@npm:4.6.34"
+  dependencies:
+    "@nativescript-community/arraybuffers": "npm:^1.1.5"
+  checksum: c70449d32856d562312e5983afa7e85db9a322faa53b79c4c6a137f050b343c5102a61be50956aefe59e7b84f614bbadf722248536290ecbfb49815e872f903e
   languageName: node
   linkType: hard
 
@@ -2064,12 +2071,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nativescript-community/ui-label@npm:1.3.13":
-  version: 1.3.13
-  resolution: "@nativescript-community/ui-label@npm:1.3.13"
+"@nativescript-community/ui-label@npm:1.3.32":
+  version: 1.3.32
+  resolution: "@nativescript-community/ui-label@npm:1.3.32"
   dependencies:
-    "@nativescript-community/text": "npm:^1.5.41"
-  checksum: 9e685515886e13d7d1a1ebfdf10057b6de02cec65cf53e1c46821ee963bd0d13f355afcdcbdcc2cb454e14bffba1657117f7f9b1fa7499238652e718f40684f2
+    "@nativescript-community/text": "npm:^1.6.3"
+  checksum: 4719f245d25adbaf0865dcce341f4718dc99543e58f686ca7c9946a50ae2f2a47dec503813561d285cb286158befdafb0917bb941221a09a2a7116c6d8e3044a
   languageName: node
   linkType: hard
 
