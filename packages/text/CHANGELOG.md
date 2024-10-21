@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.5](https://github.com/nativescript-community/text/compare/v1.6.4...v1.6.5) (2024-06-20)
+
+### Bug Fixes
+
+* **android:** html string not working in production builds ([e7f73a3](https://github.com/nativescript-community/text/commit/e7f73a3dd0de33b5951728cc4e80ddba2ea71312))
+
+## [1.6.4](https://github.com/nativescript-community/text/compare/v1.6.3...v1.6.4) (2024-05-23)
+
+### Bug Fixes
+
+* **android:** another FontVariationSettings fix ([3c6620e](https://github.com/nativescript-community/text/commit/3c6620ec9b75a555217353abc42420b3dc665da4))
+
+## [1.6.3](https://github.com/nativescript-community/text/compare/v1.6.2...v1.6.3) (2024-05-22)
+
+**Note:** Version bump only for package @nativescript-community/text
+
+## [1.6.2](https://github.com/nativescript-community/text/compare/v1.6.1...v1.6.2) (2024-05-22)
+
+**Note:** Version bump only for package @nativescript-community/text
+
+## [1.6.1](https://github.com/nativescript-community/text/compare/v1.6.0...v1.6.1) (2024-05-22)
+
+### Bug Fixes
+
+* **ios:** build issues after PR merge ([595c3e8](https://github.com/nativescript-community/text/commit/595c3e8d0bfee6a4e68b2c0cd80a597c721d2eb8))
+
+## [1.6.0](https://github.com/nativescript-community/text/compare/v1.5.47...v1.6.0) (2024-05-22)
+
+### Features
+
+* **android:** fontVariationSettings support ([34153f8](https://github.com/nativescript-community/text/commit/34153f8c453acdd1239072e7c982a31f4aeda642))
+
 ## [1.5.47](https://github.com/nativescript-community/text/compare/v1.5.46...v1.5.47) (2024-03-18)
 
 **Note:** Version bump only for package @nativescript-community/text

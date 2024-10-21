@@ -4,7 +4,8 @@
         <GridLayout rows="*,auto">
             <StackLayout ref="holder">
                 <!-- GOOD -->
-                <HTMLLabel linkColor="red" :html="htmlTest" :fontSize="fontSize" textWrap="true" @linkTap="console.log($event.link)"/>
+                <!-- <Label :text="String.fromCharCode(0xe838)" fontFamily='"Material Symbols Rounded", "MaterialSymbolsRounded"' :fontVariationSettings="fontVariationSettings" fontSize="40" /> -->
+                <HTMLLabel :text="String.fromCharCode(0xe838)" fontFamily='"Material Symbols Rounded", "MaterialSymbolsRounded"' :fontVariationSettings="changeVariant ? fontVariationSettings2 : fontVariationSettings1" fontSize="40" @tap="changeVariant = !changeVariant"/>
                 <HTMLLabel :html="`<span style=&quot;color:green;&quot;>${text}</span>`" :fontSize="fontSize" textWrap="false" />
                 <HTMLLabel :html="`<span style=&quot;color:yellow;font-size:${fontSize};&quot;>${text}</span>`" textWrap="false" />
                 <HTMLLabel :text="nativeText" textWrap="false" />
@@ -53,11 +54,13 @@ const textPaint = new Paint();
 textPaint.setTextSize(fontSize);
 @Component
 export default class Simple extends Vue {
-    htmlTest='Raconte moi une histoire<br/><small><small>La communauté <a href="https://monurl.ca/lunii.creations">Raconte moi une histoire</a> crée et partage des histoires et des outils pour gérer ce contenu sur la Lunii, spécifiquement conçus pour cet appareil</small></small>'
     text = text;
     fontSize = fontSize;
     canvasHeight = canvasHeight;
     nativeText = nativeText;
+    changeVariant = false;
+    fontVariationSettings1 = [{ axis: 'FILL', value: 1 }, { axis: 'wght', value: 700}, { axis: 'opsz', value: 48}]
+    fontVariationSettings2 = [{ axis: 'FILL', value: 0 }, { axis: 'wght', value: 700}, { axis: 'opsz', value: 48}]
     onBack() {
         Frame.topmost().goBack();
     }

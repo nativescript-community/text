@@ -440,6 +440,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
             int radius = 0;
             String fontWeight = null;
             String fontFamily = this.parentFontFamily;
+            String fontVariationSettings = null;
             String fontStyle = null;
             float fontSize = 0;
             boolean needsBgdSpan = false;
@@ -470,6 +471,10 @@ class HtmlToSpannedConverter extends DefaultHandler {
                         fontFamily = value;
                         needsFontSpan = true;
                         break;
+                    case "font-variation-settings":
+                        fontVariationSettings = value;
+                        needsFontSpan = true;
+                        break;
                     case "font-size":
                         fontSize = Float.parseFloat(value.replace("px", "").replace("pt", "").trim());
                         needsFontSpan = true;
@@ -498,7 +503,7 @@ class HtmlToSpannedConverter extends DefaultHandler {
                     boolean isBold = fontWeight != null && (fontWeight.equals("bold") || fontWeight.equals("700"));
                     if (fontFamily != null) {
                         result.add(new CustomTypefaceSpan(fontFamily, Font.createTypeface(this.context, this.fontFolder,
-                                fontFamily, fontWeight, isBold, false)));
+                                fontFamily, fontWeight, isBold, false, fontVariationSettings)));
                     } else {
                         if (isBold) {
                             result.add(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD));
@@ -639,12 +644,12 @@ class HtmlToSpannedConverter extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        handleStartTag(localName, attributes);
+        handleStartTag(qName, attributes);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        handleEndTag(localName);
+        handleEndTag(qName);
     }
 
     @Override

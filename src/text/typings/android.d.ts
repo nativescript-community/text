@@ -39,7 +39,8 @@ declare namespace com {
                     fontFamily: string,
                     fontWeight: string,
                     isBold: boolean,
-                    isItalic: boolean
+                    isItalic: boolean,
+                    fontVariationSettings: string,
                 ): globalAndroid.graphics.Typeface;
                 static getFontSizeFactor(context: globalAndroid.content.Context): number;
             }

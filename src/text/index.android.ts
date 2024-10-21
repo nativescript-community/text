@@ -1,5 +1,5 @@
 import { Color, CoreTypes, FormattedString, Screen, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
-import { Font, FontWeightType } from '@nativescript/core/ui/styling/font';
+import { Font, FontVariationSettings, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
 import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
@@ -143,22 +143,32 @@ export function init() {
     context = Utils.android.getApplicationContext();
 
     Font.prototype.getAndroidTypeface = profile('getAndroidTypeface', function () {
-        if (!this._typeface) {
+        const theFont = this as Font;
+        if (!theFont['_typeface']) {
             // css loader to json transform font-family: res/toto to font-family: res,toto
-            const fontFamily = this.fontFamily?.replace(/res,/g, 'res/');
-            const fontCacheKey: string = fontFamily + (this.fontWeight || '') + (this.fontStyle || '');
+            const fontFamily = theFont.fontFamily?.replace(/res,/g, 'res/');
+            const fontVariationSettings = FontVariationSettings.toString(theFont.fontVariationSettings);
+            const fontCacheKey = fontFamily + (theFont.fontWeight || '') + (theFont.fontStyle || '') + (fontVariationSettings ?? '');
 
             const typeface = typefaceCache[fontCacheKey];
             if (!typeface) {
                 if (!context) {
                     context = Utils.android.getApplicationContext();
                 }
-                this._typeface = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(context, fontPath, fontFamily, this.fontWeight, this.isBold, this.isItalic);
+                theFont['_typeface'] = typefaceCache[fontCacheKey] = com.nativescript.text.Font.createTypeface(
+                    context,
+                    fontPath,
+                    fontFamily,
+                    theFont.fontWeight,
+                    theFont.isBold,
+                    theFont.isItalic,
+                    fontVariationSettings
+                );
             } else {
-                this._typeface = typeface;
+                theFont['_typeface'] = typeface;
             }
         }
-        return this._typeface;
+        return theFont['_typeface'];
     });
 
     FormattedString.prototype.toNativeString = LightFormattedString.prototype.toNativeString = function () {
@@ -193,24 +203,23 @@ declare module '@nativescript/core/ui/text-base/span' {
     }
 }
 
+interface AttributedStringData {
+    text: string;
+    color?: Color | string | number;
+    familyName?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    letterSpacing?: number;
+    lineHeight?: number;
+    lineBreak?: number;
+    relativeSize?: number;
+    linkColor?: string | Color;
+    linkDecoration?: string;
+    textAlignment?: number | CoreTypes.TextAlignmentType;
+}
+
 export function createNativeAttributedString(
-    data:
-        | {
-              text: string;
-              color?: Color | string | number;
-              familyName?: string;
-              fontSize?: number;
-              fontWeight?: string;
-              letterSpacing?: number;
-              lineHeight?: number;
-              lineBreak?: number;
-              relativeSize?: number;
-              linkColor?: string | Color;
-              linkDecoration?: string;
-              textAlignment?: number | CoreTypes.TextAlignmentType;
-          }
-        | FormattedString
-        | ObjectSpans,
+    data: AttributedStringData | FormattedString | ObjectSpans,
     parent?: any,
     parentView?: ViewBase,
     autoFontSizeEnabled = false,
@@ -220,18 +229,19 @@ export function createNativeAttributedString(
     if (!context) {
         init();
     }
-    if (data instanceof FormattedString || data instanceof LightFormattedString || data['spans']) {
+    if (data instanceof FormattedString || data instanceof LightFormattedString || (data as ObjectSpans).spans) {
         const strData = formattedStringToNativeString(data, undefined, this, density);
         return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, strData, null);
     }
-    const linkColor = (data as any).linkColor || parentView?.['linkColor'];
+    const theData = data as AttributedStringData;
+    const linkColor = theData.linkColor || parentView?.['linkColor'];
     const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : null;
     const result = com.nativescript.text.Font.stringBuilderFromHtmlString(
         context,
         fontPath,
-        (data as any).familyName || parentView?.['fontFamily'] || null,
-        (data as any).text,
-        ((data as any).linkDecoration && (data as any).linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
+        theData.familyName || parentView?.['fontFamily'] || null,
+        theData.text,
+        (theData.linkDecoration && theData.linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
         aLinkColor
     );
     return result;
