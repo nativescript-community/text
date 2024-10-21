@@ -15,10 +15,10 @@ import {
     makeParser,
     makeValidator
 } from '@nativescript/core';
+import { SDK_VERSION } from '@nativescript/core/utils';
 import { FontStyleType, FontWeightType } from '@nativescript/core/ui/styling/font';
 import { TextBase } from '@nativescript/core/ui/text-base';
 import { createNativeAttributedString } from './index';
-import { iOSNativeHelper } from '@nativescript/core/utils';
 import { isNullOrUndefined, isString } from '@nativescript/core/utils/types';
 
 declare module '@nativescript/core/ui/text-base' {
@@ -33,10 +33,10 @@ export interface ObjectSpans extends Partial<Pick<LightFormattedString, keyof Li
 
 const CHILD_FORMATTED_TEXT = 'formattedText';
 
-// export function enableIOSDTCoreText() {}
-// export function usingIOSDTCoreText() {
-//     return false;
-// }
+export function disableIOSDTCoreText() {}
+export function usingIOSDTCoreText() {
+    return false;
+}
 export function computeBaseLineOffset(align, fontAscent, fontDescent, fontBottom, fontTop, fontSize, maxFontSize) {
     let result = 0;
     switch (align) {
@@ -317,7 +317,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
 
     //@ts-ignore
     if (__IOS__ && typeof TextBase.prototype.setFormattedTextDecorationAndTransform !== 'function') {
-        const majorVersion = iOSNativeHelper.MajorVersion;
+        const majorVersion = SDK_VERSION;
         function NSStringFromNSAttributedString(source: NSAttributedString | string): NSString {
             return NSString.stringWithString((source instanceof NSAttributedString && source.string) || (source as string));
         }

@@ -4,11 +4,19 @@ import { ObjectSpans, getMaxFontSize, textAlignmentConverter } from './index-com
 import { LightFormattedString } from './index.android';
 export * from './index-common';
 
+let iOSUseDTCoreText = true;
+export function disableIOSDTCoreText() {
+    iOSUseDTCoreText = false;
+}
+export function usingIOSDTCoreText() {
+    return iOSUseDTCoreText;
+}
+DTCoreTextFontDescriptor.asyncPreloadFontLookupTable();
 export function init() {}
 
 function _createNativeAttributedString({
     text,
-    familyName = '-apple-system',
+    familyName,
     fontSize,
     fontWeight,
     letterSpacing,
@@ -37,18 +45,26 @@ function _createNativeAttributedString({
     autoFontSizeEnabled: boolean;
     fontSizeRatio: number;
 }) {
-    const trueFontFamily = familyName
+    let trueFontFamily = familyName
         ? familyName
               .replace(/'/g, '')
               .split(',')
               .map((s) => `'${s}'`)
               .join(',')
         : null;
-
+    if (!trueFontFamily) {
+        if (iOSUseDTCoreText) {
+        } else {
+            trueFontFamily = '-apple-system';
+        }
+    }
     // if (iOSUseDTCoreText) {
     let style = '';
     if (linkColor || linkDecoration) {
-        style = '<style>' + `a, a:link, a:visited { ${linkColor ? `color:${linkColor.hex} !important;` : ''} text-decoration: ${linkDecoration || 'none'}; }` + '</style>';
+        style =
+            '<style>' +
+            `a, a:link, a:visited { ${linkColor ? `color:${linkColor.hex} !important; text-decoration-color:${linkColor.hex} !important;` : ''} text-decoration: ${linkDecoration || 'none'}; }` +
+            '</style>';
     }
     const htmlString =
         style +
@@ -57,21 +73,25 @@ function _createNativeAttributedString({
                   fontWeight ? `font-weight: ${fontWeight};` : ''
               }">${text}</span>`
             : text);
-    return NSTextUtils.createNativeHTMLAttributedString({
-        htmlString,
-        fontSize,
-        fontWeight,
-        letterSpacing,
-        lineHeight,
-        lineBreak,
-        linkColor,
-        linkDecoration,
-        color,
-        textAlignment,
-        autoFontSizeEnabled,
-        fontSizeRatio,
-        useCustomLinkTag
-    });
+
+    return NSTextUtils.createNativeHTMLAttributedString(
+        {
+            htmlString,
+            fontSize,
+            fontWeight,
+            letterSpacing,
+            lineHeight,
+            lineBreak,
+            linkColor,
+            linkDecoration,
+            color,
+            textAlignment,
+            autoFontSizeEnabled,
+            fontSizeRatio,
+            useCustomLinkTag
+        },
+        iOSUseDTCoreText
+    );
 }
 
 // TODO: fix typings
