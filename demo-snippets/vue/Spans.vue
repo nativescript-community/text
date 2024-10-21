@@ -4,6 +4,7 @@
         <GridLayout rows="*,auto">
             <StackLayout ref="holder">
                 <!-- GOOD -->
+                <HTMLLabel linkColor="red" :html="htmlTest" :fontSize="fontSize" textWrap="true" @linkTap="console.log($event.link)"/>
                 <HTMLLabel :html="`<span style=&quot;color:green;&quot;>${text}</span>`" :fontSize="fontSize" textWrap="false" />
                 <HTMLLabel :html="`<span style=&quot;color:yellow;font-size:${fontSize};&quot;>${text}</span>`" textWrap="false" />
                 <HTMLLabel :text="nativeText" textWrap="false" />
@@ -52,6 +53,7 @@ const textPaint = new Paint();
 textPaint.setTextSize(fontSize);
 @Component
 export default class Simple extends Vue {
+    htmlTest='Raconte moi une histoire<br/><small><small>La communauté <a href="https://monurl.ca/lunii.creations">Raconte moi une histoire</a> crée et partage des histoires et des outils pour gérer ce contenu sur la Lunii, spécifiquement conçus pour cet appareil</small></small>'
     text = text;
     fontSize = fontSize;
     canvasHeight = canvasHeight;
