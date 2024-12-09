@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.7](https://github.com/nativescript-community/text/compare/v1.6.6...v1.6.7) (2024-12-09)
+
+### Bug Fixes
+
+* **android:** prevent crash when fontWeight is passed to font as a  number ([146dbd7](https://github.com/nativescript-community/text/commit/146dbd7bc4700cbfacb48efd97f71a62dbac0741))
+
 ## [1.6.6](https://github.com/nativescript-community/text/compare/v1.6.5...v1.6.6) (2024-10-21)
 
 ### Bug Fixes
