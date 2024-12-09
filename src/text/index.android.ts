@@ -159,7 +159,7 @@ export function init() {
                     context,
                     fontPath,
                     fontFamily,
-                    theFont.fontWeight,
+                    theFont.fontWeight + '',
                     theFont.isBold,
                     theFont.isItalic,
                     fontVariationSettings
