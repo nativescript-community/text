@@ -34,10 +34,10 @@ export interface ObjectSpans extends Partial<Pick<LightFormattedString, keyof Li
 
 const CHILD_FORMATTED_TEXT = 'formattedText';
 
-// export function enableIOSDTCoreText() {}
-// export function usingIOSDTCoreText() {
-//     return false;
-// }
+export function disableIOSDTCoreText() {}
+export function usingIOSDTCoreText() {
+    return false;
+}
 export function computeBaseLineOffset(align, fontAscent, fontDescent, fontBottom, fontTop, fontSize, maxFontSize) {
     let result = 0;
     switch (align) {

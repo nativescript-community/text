@@ -1,0 +1,1 @@
+pod 'DTCoreText', :git => 'https://github.com/nativescript-community/DTCoreText.git'

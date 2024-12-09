@@ -1,6 +1,7 @@
 import CoreFoundation
 import UIKit
 import CoreGraphics
+import DTCoreText
 
 @objcMembers
 @objc(NSTextUtils)
@@ -107,17 +108,34 @@ class NSTextUtils: NSObject {
     }
     return result
   }
-  
   class func createNativeHTMLAttributedString(_ data:NSDictionary!) -> NSMutableAttributedString! {
+    return createNativeHTMLAttributedString(data, true)
+  }
+  class func createNativeHTMLAttributedString(_ data:NSDictionary!, _ useDTCoreText: Bool) -> NSMutableAttributedString! {
     do {
+      let htmlString:String! = data.object(forKey: "htmlString") as? String
+      let strData = htmlString.data(using: .unicode, allowLossyConversion: true)
+      let attrText:NSMutableAttributedString
+      if (useDTCoreText) {
+        attrText = NSMutableAttributedString.init(htmlData: strData!, options: [
+          DTDefaultTextAlignment: CTTextAlignment.left.rawValue,
+          DTDefaultFontFamily: UIFont.systemFont(ofSize: UIFont.systemFontSize).familyName,
+//          DTDefaultFontName: UIFont.systemFont(ofSize: UIFont.systemFontSize).fontName,
+          DTUseiOS6Attributes: true,
+          DTDocumentPreserveTrailingSpaces:true], documentAttributes: nil);
+        attrText.enumerateAttribute(NSAttributedString.Key(rawValue: "DTGUID"), in: NSRange(location: 0, length: attrText.length), options: .reverse) { value, range, stop in
+              // We need to remove this attribute or links are not colored right
+              //
+              // @see https://github.com/Cocoanetics/DTCoreText/issues/792
+          attrText.removeAttribute(NSAttributedString.Key(rawValue: "CTForegroundColorFromContext"), range: range);
+        }
+      } else  {
+        attrText = try NSMutableAttributedString(data:strData!, options:[.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes:nil)
+      }
       //    if (!attributedString) {
       //        NSData* data = [nsString dataUsingEncoding: NSUnicodeStringEncoding allowLossyConversion: YES];
       //        attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
       //    }
-      let htmlString:String! = data.object(forKey: "htmlString") as? String
-      let dic:NSDictionary! = [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.html,
-                               NSAttributedString.DocumentReadingOptionKey.characterEncoding: NSUTF8StringEncoding]
-      let attrText:NSMutableAttributedString! = try NSMutableAttributedString(data:htmlString.data(using: String.Encoding(rawValue: NSUTF8StringEncoding), allowLossyConversion: false)!, options:dic as! [NSAttributedString.DocumentReadingOptionKey : Any], documentAttributes:nil)
       
       let fullRange:NSRange = NSRange(location: 0, length: attrText.length)
       let linkColor:UIColor! = data.object(forKey:"linkColor") as? UIColor

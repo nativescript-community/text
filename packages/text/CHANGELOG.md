@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.6](https://github.com/nativescript-community/text/compare/v1.6.5...v1.6.6) (2024-10-21)
+
+### Bug Fixes
+
+* **ios:** brought back DTCoreText as default html converter ([4f4e7a2](https://github.com/nativescript-community/text/commit/4f4e7a204155546ac6abc91c015e2f9775c93c3c))
+
 ## [1.6.5](https://github.com/nativescript-community/text/compare/v1.6.4...v1.6.5) (2024-06-20)
 
 ### Bug Fixes
