@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.8](https://github.com/nativescript-community/text/compare/v1.6.7...v1.6.8) (2025-09-05)
+
+### Bug Fixes
+
+* **android:** now by default native created string wont have font size scaled to screen text scale ([e6e5060](https://github.com/nativescript-community/text/commit/e6e50603f21def295dd299fc8ff73aaee2eaec64))
+
 ## [1.6.7](https://github.com/nativescript-community/text/compare/v1.6.6...v1.6.7) (2024-12-09)
 
 ### Bug Fixes
