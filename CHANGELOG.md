@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.14](https://github.com/nativescript-community/text/compare/v1.6.8...v1.6.14) (2025-09-26)
+
+### Bug Fixes
+
+* **android:** another fix for dip font size in FormattedString ([a5537fb](https://github.com/nativescript-community/text/commit/a5537fb9ee8997b522e4650601c18b55126b31ff))
+
 ## [1.6.8](https://github.com/nativescript-community/text/compare/v1.6.7...v1.6.8) (2025-09-05)
 
 ### Bug Fixes
