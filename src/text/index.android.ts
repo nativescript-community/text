@@ -82,6 +82,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         text,
         fontFamily,
         fontSize: fontSize ? fontSize * density : undefined,
+        fontSizeDip: true,
         fontWeight: fontWeight ? fontWeight + '' : undefined,
         fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
         textDecoration,

@@ -6,6 +6,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
+import android.util.TypedValue;
 
 public class FontSizeSpan extends MetricAffectingSpan {
 
@@ -53,8 +54,11 @@ public class FontSizeSpan extends MetricAffectingSpan {
                 FONT_SIZE_FACTOR = android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP, 1, metrics);
             }
             if (mDip && (flags & 2048) != 2048) {
-                // this case is for use with TextView
-                ds.setTextSize(mSize * FONT_SIZE_FACTOR);
+                ds.setTextSize(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    mSize,
+                    mContext.getResources().getDisplayMetrics()
+                ));
             } else {
                 // this case is for StaticLayout drawing in canvas
                 ds.setTextSize(mSize * FONT_SIZE_FACTOR / SCREEN_DENSITY);

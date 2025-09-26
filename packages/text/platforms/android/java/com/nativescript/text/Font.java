@@ -362,7 +362,8 @@ public class Font {
                     
         }
         if (!Double.isNaN(fontSize)) {
-            ssb.setSpan(new FontSizeSpan(context, fontSize.floatValue(), false), start, end,
+            Boolean fontSizeDip =  span.optBoolean("fontSizeDip", false);
+            ssb.setSpan(new FontSizeSpan(context, fontSize.floatValue(), fontSizeDip), start, end,
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         Double relativeSize = span.optDouble("relativeSize");
