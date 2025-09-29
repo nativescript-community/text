@@ -13,11 +13,11 @@ class NSTextUtils: NSObject {
     let isTextView:Bool = (view is UITextView)
     
     if textDecoration.contains("underline") {
-      attrDict[NSAttributedString.Key.underlineStyle] = (NSUnderlineStyle.single)
+      attrDict[NSAttributedString.Key.underlineStyle] = (NSUnderlineStyle.single.rawValue)
     }
     
     if textDecoration.contains("line-through") {
-      attrDict[NSAttributedString.Key.strikethroughStyle] = (NSUnderlineStyle.single)
+      attrDict[NSAttributedString.Key.strikethroughStyle] = (NSUnderlineStyle.single.rawValue)
     }
     
     if letterSpacing != 0 && isTextType && view is UILabel && (view as! UILabel).font != nil {
