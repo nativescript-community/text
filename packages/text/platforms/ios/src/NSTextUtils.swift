@@ -235,8 +235,13 @@ class NSTextUtils: NSObject {
       }
       let attributes:NSMutableDictionary! = NSMutableDictionary()
       let iosFont:UIFont! = spanDetails.object(forKey: "iosFont") as? UIFont
+      let fontSize:NSNumber! = spanDetails.object(forKey: "fontSize") as? NSNumber
       if (iosFont != nil) {
         attributes.setObject(iosFont!, forKey:NSAttributedString.Key.font as NSCopying)
+        if (fontSize == nil) {
+          // we add a custom attribute so that canvas can see it and apply the paint font size
+          attributes.setObject(true, forKey:"fontSizeNotSet" as NSCopying)
+        }
       }
       let autoFontSizeEnabled:NSNumber! = spanDetails.object(forKey: "autoFontSizeEnabled") as? NSNumber
       if autoFontSizeEnabled.boolValue {
