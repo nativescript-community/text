@@ -247,7 +247,7 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         autoFontSizeEnabled,
         iosFont,
         realFontSize,
-        fontSize: fontSize || iosFont?.pointSize,
+        fontSize: fontSize || /* iosFont?.pointSize */, // testing for fontSize undefined to be defined by canvas
         realMaxFontSize,
         backgroundColor: backgroundcolor ? (backgroundcolor instanceof Color ? backgroundcolor.ios : new Color(backgroundcolor).ios) : null,
         color: textColor ? (textColor instanceof Color ? textColor.ios : new Color(textColor).ios) : null,
