@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.16](https://github.com/nativescript-community/text/compare/v1.6.15...v1.6.16) (2025-10-03)
+
+### Bug Fixes
+
+* **ios:** custom attribute for attribute string without fontSize ([ee679df](https://github.com/nativescript-community/text/commit/ee679df72858db933f040436d672a1c1a24949a4))
+
+## [1.6.15](https://github.com/nativescript-community/text/compare/v1.6.14...v1.6.15) (2025-09-29)
+
+### Bug Fixes
+
+* **ios:** textDecoration broken ([4675633](https://github.com/nativescript-community/text/commit/4675633a4a6b76d347f35047a2e61722c6958ad1))
+
 ## [1.6.14](https://github.com/nativescript-community/text/compare/v1.6.8...v1.6.14) (2025-09-26)
 
 ### Bug Fixes

@@ -13,11 +13,11 @@ class NSTextUtils: NSObject {
     let isTextView:Bool = (view is UITextView)
     
     if textDecoration.contains("underline") {
-      attrDict[NSAttributedString.Key.underlineStyle] = (NSUnderlineStyle.single)
+      attrDict[NSAttributedString.Key.underlineStyle] = (NSUnderlineStyle.single.rawValue)
     }
     
     if textDecoration.contains("line-through") {
-      attrDict[NSAttributedString.Key.strikethroughStyle] = (NSUnderlineStyle.single)
+      attrDict[NSAttributedString.Key.strikethroughStyle] = (NSUnderlineStyle.single.rawValue)
     }
     
     if letterSpacing != 0 && isTextType && view is UILabel && (view as! UILabel).font != nil {
@@ -235,8 +235,13 @@ class NSTextUtils: NSObject {
       }
       let attributes:NSMutableDictionary! = NSMutableDictionary()
       let iosFont:UIFont! = spanDetails.object(forKey: "iosFont") as? UIFont
+      let fontSize:NSNumber! = spanDetails.object(forKey: "fontSize") as? NSNumber
       if (iosFont != nil) {
         attributes.setObject(iosFont!, forKey:NSAttributedString.Key.font as NSCopying)
+        if (fontSize == nil) {
+          // we add a custom attribute so that canvas can see it and apply the paint font size
+          attributes.setObject(true, forKey:"fontSizeNotSet" as NSCopying)
+        }
       }
       let autoFontSizeEnabled:NSNumber! = spanDetails.object(forKey: "autoFontSizeEnabled") as? NSNumber
       if autoFontSizeEnabled.boolValue {
@@ -245,7 +250,7 @@ class NSTextUtils: NSObject {
       }
       let verticalTextAlignment:String! = spanDetails.object(forKey: "verticalTextAlignment") as? String
       if (verticalTextAlignment != nil) && (iosFont != nil) && !(verticalTextAlignment == "initial") && !(verticalTextAlignment == "stretch") {
-        let fontSize:NSNumber! = spanDetails.object(forKey: "fontSize") as? NSNumber
+        let fontSize:NSNumber! = fontSize != nil ? fontSize : NSNumber(value: Float(iosFont.pointSize))
         let ctFont:CTFont = iosFont
         let ascent:CGFloat = CTFontGetAscent(ctFont)
         let descent:CGFloat = CTFontGetDescent(ctFont)
