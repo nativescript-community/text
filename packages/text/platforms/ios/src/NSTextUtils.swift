@@ -250,7 +250,7 @@ class NSTextUtils: NSObject {
       }
       let verticalTextAlignment:String! = spanDetails.object(forKey: "verticalTextAlignment") as? String
       if (verticalTextAlignment != nil) && (iosFont != nil) && !(verticalTextAlignment == "initial") && !(verticalTextAlignment == "stretch") {
-        let fontSize:NSNumber! = spanDetails.object(forKey: "fontSize") as? NSNumber
+        let fontSize:NSNumber! = fontSize != nil ? fontSize : NSNumber(value: Float(iosFont.pointSize))
         let ctFont:CTFont = iosFont
         let ascent:CGFloat = CTFontGetAscent(ctFont)
         let descent:CGFloat = CTFontGetDescent(ctFont)
