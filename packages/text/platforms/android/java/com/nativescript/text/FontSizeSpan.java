@@ -51,11 +51,11 @@ public class FontSizeSpan extends MetricAffectingSpan {
             if (FONT_SIZE_FACTOR == -1) {
                 android.util.DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
                 SCREEN_DENSITY = metrics.density;
-                FONT_SIZE_FACTOR = android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP, 1, metrics);
+                FONT_SIZE_FACTOR = android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_DIP, 1, metrics);
             }
             if (mDip && (flags & 2048) != 2048) {
                 ds.setTextSize(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_SP,
+                    TypedValue.COMPLEX_UNIT_DIP,
                     mSize,
                     mContext.getResources().getDisplayMetrics()
                 ));
