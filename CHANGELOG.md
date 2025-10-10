@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.17](https://github.com/nativescript-community/text/compare/v1.6.16...v1.6.17) (2025-10-10)
+
+### Bug Fixes
+
+* **android:** use DIP instead of SP. Was an issue on android 35 as StaticLayout started to apply SP (system font scale) ([1bf52a9](https://github.com/nativescript-community/text/commit/1bf52a9f5003a09ef3c68e594a775d5c78bf1228))
+* **ios:** regression fix ([9ee7301](https://github.com/nativescript-community/text/commit/9ee73018611fb993f4a652c83bf9488814eeeafa))
+
 ## [1.6.16](https://github.com/nativescript-community/text/compare/v1.6.15...v1.6.16) (2025-10-03)
 
 ### Bug Fixes
