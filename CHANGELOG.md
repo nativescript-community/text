@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.19](https://github.com/nativescript-community/text/compare/v1.6.18...v1.6.19) (2026-02-07)
+
+### Bug Fixes
+
+* **android:** span now supports html ([8c0b03c](https://github.com/nativescript-community/text/commit/8c0b03c9a62af165307ec488b7ab164a54dbcaf2))
+* **ios:** span html support ([5b27793](https://github.com/nativescript-community/text/commit/5b27793e9be4adef015175d97e3eb66868995bfe))
+
 ## [1.6.18](https://github.com/nativescript-community/text/compare/v1.6.17...v1.6.18) (2026-02-07)
 
 ### Bug Fixes
