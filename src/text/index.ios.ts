@@ -15,19 +15,19 @@ DTCoreTextFontDescriptor.asyncPreloadFontLookupTable();
 export function init() {}
 
 function _createNativeAttributedString({
-    text,
+    autoFontSizeEnabled = false,
+    color,
     familyName,
     fontSize,
+    fontSizeRatio = 1,
     fontWeight,
     letterSpacing,
-    lineHeight,
     lineBreak,
+    lineHeight,
     linkColor,
     linkDecoration,
-    color,
+    text,
     textAlignment,
-    autoFontSizeEnabled = false,
-    fontSizeRatio = 1,
     useCustomLinkTag
 }: {
     text: string;
@@ -179,6 +179,10 @@ export function adjustMinMaxFontScale(value, view) {
 }
 export function createSpannableDetails(span: any, index, parentView: any, parent?: any, maxFontSize?, autoFontSizeEnabled = false, fontSizeRatio = 1) {
     let text = span.text;
+    const html = span.html;
+    if (html) {
+        text = _createNativeAttributedString({ ...span, text: html, autoFontSizeEnabled, fontSizeRatio });
+    }
     if (!text || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
@@ -241,13 +245,14 @@ export function createSpannableDetails(span: any, index, parentView: any, parent
         // in this case we dont want to set a font to use the drawing parent font
         // iosFont = Font.default.getUIFont(UIFont.systemFontOfSize(16));
     }
+
     return {
         text,
         tapIndex: span._tappable ? index : undefined,
         autoFontSizeEnabled,
         iosFont,
         realFontSize,
-        fontSize: fontSize/* || iosFont?.pointSize */, // testing for fontSize undefined to be defined by canvas
+        fontSize /* || iosFont?.pointSize */, // testing for fontSize undefined to be defined by canvas
         realMaxFontSize,
         backgroundColor: backgroundcolor ? (backgroundcolor instanceof Color ? backgroundcolor.ios : new Color(backgroundcolor).ios) : null,
         color: textColor ? (textColor instanceof Color ? textColor.ios : new Color(textColor).ios) : null,
