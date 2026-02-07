@@ -443,12 +443,23 @@ public class Font {
             }
             for (int i = 0, spanStart = 0, spanLength = 0, length = arrayOptions.length(); i < length; i++) {
                 JSONObject span = (JSONObject)arrayOptions.get(i);
-                String text = span.optString("text", "");
-                spanLength = text.length();
-                if (spanLength > 0) {
-                    ssb.insert(spanStart, text);
+                String html = span.optString("html", null);
+                if (html != null) {
+                    SpannableStringBuilder htmlSsb =  stringBuilderFromHtmlString( context,  fontFolder,  parentFontFamily,
+                        html, span.optBoolean("disableLinkDecoration", false), span.optInt("linkColor", 0));
+                    spanLength = htmlSsb.length();
+
+                    ssb.insert(spanStart, htmlSsb);
                     setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
                     spanStart += spanLength;
+                } else {
+                    String text = span.optString("text", "");
+                    spanLength = text.length();
+                    if (spanLength > 0) {
+                        ssb.insert(spanStart, text);
+                        setSpanModifiers(context, fontFolder, parentFontFamily, ssb, span, spanStart, spanStart + spanLength);
+                        spanStart += spanLength;
+                    }
                 }
             }
             return ssb;

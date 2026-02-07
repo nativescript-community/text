@@ -33,7 +33,8 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
 let FONT_SIZE_FACTOR;
 function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density?) {
     let text = span.text;
-    if (!text || (span.visibility && span.visibility !== 'visible')) {
+    const html = span.html;
+    if ((!text && !html) || (span.visibility && span.visibility !== 'visible')) {
         return null;
     }
     const textTransform = span.textTransform || parentView?.textTransform;
@@ -78,8 +79,12 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     const lineHeight = span.lineHeight || parent?.lineHeight;
     const fontSize = span.fontSize || parent?.fontSize;
     const letterSpacing = span.letterSpacing || parent?.letterSpacing;
+
+    const linkColor = span.linkColor || parentView?.['linkColor'];
+    const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : undefined;
     return JSON.stringify({
         text,
+        html,
         fontFamily,
         fontSize: fontSize ? fontSize * density : undefined,
         fontSizeDip: true,
@@ -91,14 +96,15 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         maxFontSize: maxFontSize ? maxFontSize * density : undefined,
         relativeSize: span.relativeSize,
         verticalTextAlignment,
+        linkColor: aLinkColor,
         lineHeight: lineHeight !== undefined ? lineHeight * density : undefined,
         letterSpacing: letterSpacing !== undefined ? letterSpacing * density : undefined,
         color: color ? color.android : undefined,
+        disableLinkDecoration: (span.linkDecoration && span.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,
         backgroundColor: backgroundColor ? backgroundColor.android : undefined
     });
 }
 
-// eslint-disable-next-line no-redeclare
 let ClickableSpan: ClickableSpan;
 
 function initializeClickableSpan(): void {
@@ -242,7 +248,7 @@ export function createNativeAttributedString(
         fontPath,
         theData.familyName || parentView?.['fontFamily'] || null,
         theData.text,
-        (theData.linkDecoration && theData.linkDecoration) !== 'underline' || parentView?.['linkUnderline'] === false,
+        (theData.linkDecoration && theData.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,
         aLinkColor
     );
     return result;
