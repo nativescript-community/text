@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.18](https://github.com/nativescript-community/text/compare/v1.6.17...v1.6.18) (2026-02-07)
+
+### Bug Fixes
+
+* **android:** span fontWeight fix ([21d9104](https://github.com/nativescript-community/text/commit/21d91042114db92f0d24c033354c16632d4c8c9c))
+
 ## [1.6.17](https://github.com/nativescript-community/text/compare/v1.6.16...v1.6.17) (2025-10-10)
 
 ### Bug Fixes
