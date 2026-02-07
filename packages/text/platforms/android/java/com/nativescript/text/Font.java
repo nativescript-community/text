@@ -336,7 +336,7 @@ public class Font {
             fontFamily = parentFontFamily;
         }
         Typeface typeface = null;
-        if (fontFamily != null) {
+        if (fontFamily != null || (!bold && fontWeight != null)) {
             String fontVariationSettings = span.optString("fontVariationSettings", null);
             typeface = createTypeface(context, fontFolder, fontFamily,fontWeight, bold, italic, fontVariationSettings);
             TypefaceSpan typefaceSpan = new CustomTypefaceSpan(fontFamily, typeface);
