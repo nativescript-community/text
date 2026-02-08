@@ -92,7 +92,7 @@ class NSTextUtils: NSObject {
   class func computeBaseLineOffset(align:String!, fontAscent:Float, fontDescent:Float, fontBottom:Float, fontTop:Float, fontSize:Float, maxFontSize:Float) -> Float {
     var result:Float = 0
     if (align == "top") {
-      result = -maxFontSize - fontBottom - fontTop
+      result = -maxFontSize - fontBottom - fontTop - (fontAscent - fontDescent) / 2
     } else if (align == "bottom") {
       result = fontBottom
     } else if (align == "text-top") {
@@ -249,7 +249,9 @@ class NSTextUtils: NSObject {
         
       }
       let verticalTextAlignment:String! = spanDetails.object(forKey: "verticalTextAlignment") as? String
+      var realVerticalTextAlignment:String! = nil
       if (verticalTextAlignment != nil) && (iosFont != nil) && !(verticalTextAlignment == "initial") && !(verticalTextAlignment == "stretch") {
+        realVerticalTextAlignment = verticalTextAlignment
         let fontSize:NSNumber! = fontSize != nil ? fontSize : NSNumber(value: Float(iosFont.pointSize))
         let ctFont:CTFont = iosFont
         let ascent:CGFloat = CTFontGetAscent(ctFont)
@@ -293,6 +295,21 @@ class NSTextUtils: NSObject {
           }
           paragraphStyle.maximumLineHeight = fLineHeight
           paragraphStyle.minimumLineHeight = fLineHeight
+          if (iosFont != nil){
+            let ctFont: CTFont = iosFont
+            let ascent = CTFontGetAscent(ctFont)
+            let descent = CTFontGetDescent(ctFont)
+            let fontSize:NSNumber! = fontSize != nil ? fontSize : NSNumber(value: Float(iosFont.pointSize))
+            let baseOffset = -computeBaseLineOffset(align: realVerticalTextAlignment != nil ? realVerticalTextAlignment : "top",
+                                                    fontAscent: -Float(ascent),
+                                                    fontDescent: Float(descent),
+                                                    fontBottom: -Float(iosFont.descender),
+                                                    fontTop: -Float(iosFont.ascender),
+                                                    fontSize: fontSize.floatValue,
+                                                    maxFontSize: Float(fLineHeight))
+            attributes.setObject(baseOffset, forKey:NSAttributedString.Key.baselineOffset as NSCopying as NSCopying)
+
+          }
         }
         attributes.setObject(paragraphStyle, forKey:NSAttributedString.Key.paragraphStyle as NSCopying as NSCopying)
       }
