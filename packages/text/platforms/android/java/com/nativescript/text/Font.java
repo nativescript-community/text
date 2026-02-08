@@ -508,7 +508,7 @@ public class Font {
             // Log.d(TAG, "fromHtml: " + ((System.nanoTime() - startTime)/1000000) + "ms");
             return converter.spannable();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "errro parsing html " + html, e);
         }
         return html;
     }
