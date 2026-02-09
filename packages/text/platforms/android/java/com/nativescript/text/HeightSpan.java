@@ -15,7 +15,6 @@ public class HeightSpan implements LineHeightSpan {
   private final int mHeight;
 
   public HeightSpan(float height) {
-    Log.d("JS", "HeightSpan " + height);
     this.mHeight = (int) Math.ceil(height);
   }
   public int getHeight() {
