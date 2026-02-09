@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.21](https://github.com/nativescript-community/text/compare/v1.6.20...v1.6.21) (2026-02-09)
+
+### Bug Fixes
+
+* **android:** removed unwanted log ([e94a709](https://github.com/nativescript-community/text/commit/e94a709f1b0d7ab3d3c06a62eb40b4f3cf16bfae))
+
 ## [1.6.20](https://github.com/nativescript-community/text/compare/v1.6.19...v1.6.20) (2026-02-08)
 
 ### Bug Fixes
