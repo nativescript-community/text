@@ -58,6 +58,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
+    let lineHeightFactor = density;
     if (!density) {
         // if (!FONT_SIZE_FACTOR) {
         //     FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext()) / Screen.mainScreen.scale;
@@ -67,6 +68,9 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         density = 1;
         // console.log('text FONT_SIZE_FACTOR', FONT_SIZE_FACTOR, Screen.mainScreen.scale)
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    }
+    if (density === 1) {
+        lineHeightFactor = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
     }
     let backgroundColor = span.backgroundColor || parent?.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
@@ -97,7 +101,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         relativeSize: span.relativeSize,
         verticalTextAlignment,
         linkColor: aLinkColor,
-        lineHeight: lineHeight !== undefined ? lineHeight * density : undefined,
+        lineHeight: lineHeight !== undefined ? lineHeight * lineHeightFactor : undefined,
         letterSpacing: letterSpacing !== undefined ? letterSpacing * density : undefined,
         color: color ? color.android : undefined,
         disableLinkDecoration: (span.linkDecoration && span.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,

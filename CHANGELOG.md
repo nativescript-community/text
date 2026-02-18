@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.21](https://github.com/nativescript-community/text/compare/v1.6.20...v1.6.21) (2026-02-09)
+
+### Bug Fixes
+
+* **android:** removed unwanted log ([e94a709](https://github.com/nativescript-community/text/commit/e94a709f1b0d7ab3d3c06a62eb40b4f3cf16bfae))
+
+## [1.6.20](https://github.com/nativescript-community/text/compare/v1.6.19...v1.6.20) (2026-02-08)
+
+### Bug Fixes
+
+* **android:**  lineHeight fix ([d945f4b](https://github.com/nativescript-community/text/commit/d945f4b1d3029fb8605d9de1765f698611734b29))
+* HeightSPan fix ([92d87c9](https://github.com/nativescript-community/text/commit/92d87c97ab3f9aa244280354e74265da4591d39d))
+* **ios:** lineHeight base line offset fix ([bfb9db2](https://github.com/nativescript-community/text/commit/bfb9db2c4e3a24347cf08a4321c97655fc4a031e))
+
 ## [1.6.19](https://github.com/nativescript-community/text/compare/v1.6.18...v1.6.19) (2026-02-07)
 
 ### Bug Fixes
