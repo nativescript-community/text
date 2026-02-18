@@ -10,7 +10,7 @@ type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 export function adjustMinMaxFontScale(value, view) {
     // Only for iOS
 }
-function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?) {
+function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?,scaleLineHeight?) {
     let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
     formattedString.spans.forEach((s) => {
         if (s.fontSize) {
@@ -31,7 +31,7 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
 }
 
 let FONT_SIZE_FACTOR;
-function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density?) {
+function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density = 1, scaleLineHeight = false) {
     let text = span.text;
     const html = span.html;
     if ((!text && !html) || (span.visibility && span.visibility !== 'visible')) {
@@ -231,13 +231,14 @@ export function createNativeAttributedString(
     parentView?: ViewBase,
     autoFontSizeEnabled = false,
     fontSizeRatio = 1, // used only on iOS,
-    density? // used only on Android
+    density = 1, // used only on Android,
+    scaleLineHeight = false // used only on Android,
 ) {
     if (!context) {
         init();
     }
     if (data instanceof FormattedString || data instanceof LightFormattedString || (data as ObjectSpans).spans) {
-        const strData = formattedStringToNativeString(data, undefined, this, density);
+        const strData = formattedStringToNativeString(data, undefined, this, density, scaleLineHeight);
         return com.nativescript.text.Font.stringBuilderFromFormattedString(context, fontPath, parentView?.['fontFamily'] || null, strData, null);
     }
     const theData = data as AttributedStringData;
