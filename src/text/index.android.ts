@@ -10,7 +10,7 @@ type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
 export function adjustMinMaxFontScale(value, view) {
     // Only for iOS
 }
-function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?,scaleLineHeight?) {
+function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?, scaleLineHeight?) {
     let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
     formattedString.spans.forEach((s) => {
         if (s.fontSize) {
@@ -22,7 +22,7 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
         parent = formattedString;
     }
     formattedString.spans.forEach((s, index) => {
-        const spanDetails = typeof s === 'string' ? s : spanToNativeString(s, parent, parentView, maxFontSize, index, density);
+        const spanDetails = typeof s === 'string' ? s : spanToNativeString(s, parent, parentView, maxFontSize, index, density, scaleLineHeight);
         if (spanDetails) {
             options.push(spanDetails);
         }
@@ -69,7 +69,8 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         // console.log('text FONT_SIZE_FACTOR', FONT_SIZE_FACTOR, Screen.mainScreen.scale)
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
-    if (density === 1) {
+    // this is only needed when used with Text/Label components. Not canvas
+    if (scaleLineHeight) {
         lineHeightFactor = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
     }
     let backgroundColor = span.backgroundColor || parent?.backgroundColor;

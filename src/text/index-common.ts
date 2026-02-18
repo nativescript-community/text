@@ -100,7 +100,7 @@ export function getTransformedText(text: string, textTransform: CoreTypes.TextTr
     }
 }
 
-export const cssProperty = (target: Object, key: string | symbol) => {
+export const cssProperty = (target: object, key: string | symbol) => {
     // property getter
     const getter = function () {
         return this.style[key];
@@ -300,7 +300,7 @@ export function overrideSpanAndFormattedString(useLightFormatString = true) {
         }
     };
     TextBase.prototype.createFormattedTextNative = function (value: LightFormattedString | FormattedString) {
-        return createNativeAttributedString(value as any, undefined, this, this['autoFontSize'], this['fontSizeRatio']);
+        return createNativeAttributedString(value as any, undefined, this, this['autoFontSize'], this['fontSizeRatio'], 1, true);
     };
     TextBase.prototype[colorProperty.setNative] = function (value) {
         if (value instanceof Color) {
