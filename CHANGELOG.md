@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.23](https://github.com/nativescript-community/text/compare/v1.6.22...v1.6.23) (2026-02-26)
+
+### Bug Fixes
+
+* **text:** android fix or verticalTextAlignment within spans ([923866c](https://github.com/nativescript-community/text/commit/923866cabe179298ece4fdb5eae5ccc2e178f3d0))
+
 ## [1.6.22](https://github.com/nativescript-community/text/compare/v1.6.21...v1.6.22) (2026-02-18)
 
 ### Bug Fixes
