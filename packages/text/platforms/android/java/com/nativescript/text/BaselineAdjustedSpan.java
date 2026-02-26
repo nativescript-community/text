@@ -23,56 +23,87 @@ public class BaselineAdjustedSpan extends CharacterStyle {
         this.updateState(ds);
     }
 
-    private int computeBaseLineOffset(String align, float fontAscent, float fontDescent, float fontBottom,
-            float fontTop, float fontSize, float maxFontSize) {
+    private int computeBaseLineOffset(String align, float fontAscent, float fontDescent, 
+            float fontBottom, float fontTop, float fontSize, float maxFontSize) {
+        
+        // Calculate metrics for max font size
+        Paint.FontMetrics maxMetrics = new Paint.FontMetrics();
+        float currentSize = fontSize;
+        Paint tempPaint = new Paint();
+        tempPaint.setTextSize(maxFontSize);
+        tempPaint.getFontMetrics(maxMetrics);
+        
+        // Current font height (from ascent to descent)
+        float currentHeight = fontDescent - fontAscent;
+        
+        // Max font height (from ascent to descent)
+        float maxHeight = maxMetrics.descent - maxMetrics.ascent;
+        
         int result = 0;
+        
         switch (align) {
             case "top":
-                result = (int) (-maxFontSize - fontBottom - fontTop);
+                // Align the top of current text with top of max text
+                // Need to shift down if current is smaller
+                result = (int) (maxMetrics.ascent - fontAscent);
                 break;
 
             case "bottom":
-                result = (int) fontBottom;
+                // Align the bottom of current text with bottom of max text
+                // Need to shift up if current is smaller
+                result = (int) (maxMetrics.descent - fontDescent);
                 break;
 
             case "text-top":
-                result = (int) (-maxFontSize - fontDescent - fontAscent);
+                // Align current ascent with max ascent (similar to top but uses ascent instead of top)
+                result = (int) (maxMetrics.ascent - fontAscent);
                 break;
 
             case "text-bottom":
-                result = (int) (fontBottom - fontDescent);
+                // Align current descent with max descent
+                result = (int) (maxMetrics.descent - fontDescent);
                 break;
 
             case "middle":
             case "center":
-                result = (int) ((fontAscent - fontDescent) / 2 - fontAscent - maxFontSize / 2);
+                // Center the text vertically within the max height
+                // Formula: shift = (maxHeight - currentHeight) / 2 + (maxAscent - currentAscent)
+                result = (int) ((maxHeight - currentHeight) / 2 + (maxMetrics.ascent - fontAscent));
                 break;
 
             case "super":
-                result = -(int) (maxFontSize - fontSize);
+                // Superscript: shift up by a percentage of max height
+                result = (int) (-maxHeight * 0.4f);
                 break;
 
             case "sub":
+                // Subscript: shift down by a percentage of max height
+                result = (int) (maxHeight * 0.25f);
+                break;
+
+            default:
                 result = 0;
                 break;
         }
+        
         return result;
     }
 
     public void updateState(TextPaint paint) {
         float stateFontSize = fontSize;
         float stateMaxFontSize = maxFontSize;
+        
         if (fontSize != -1) {
             paint.setTextSize(fontSize);
         } else {
             stateFontSize = paint.getTextSize();
             stateMaxFontSize = Math.max(stateMaxFontSize, stateFontSize);
         }
+        
         Paint.FontMetrics metrics = paint.getFontMetrics();
-        // TODO: when or why should we add bottom?
-        // result += metrics.bottom;
-        int baselineShift = computeBaseLineOffset(align, metrics.ascent, metrics.descent, metrics.bottom, metrics.top,
-                stateFontSize, stateMaxFontSize);
+        
+        int baselineShift = computeBaseLineOffset(align, metrics.ascent, metrics.descent, 
+                metrics.bottom, metrics.top, stateFontSize, stateMaxFontSize);
         paint.baselineShift = baselineShift;
     }
 }

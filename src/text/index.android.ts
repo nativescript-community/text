@@ -30,7 +30,6 @@ function formattedStringToNativeString(formattedString, parent?, parentView = fo
     return `[${options.join(',')}]`;
 }
 
-let FONT_SIZE_FACTOR;
 function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density = 1, scaleLineHeight = false) {
     let text = span.text;
     const html = span.html;
@@ -48,7 +47,7 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     }
     const textDecoration = span?.textDecoration || parent?.textDecoration || parentView?.textDecoration;
     const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
-    let verticalTextAlignment = span.verticalTextAlignment;
+    let verticalTextAlignment = span.verticalTextAlignment || parent?.verticalTextAlignment || parentView?.verticalTextAlignment;
 
     // We CANT use parent verticalTextAlignment. Else it would break line height
     // for multiple line text you want centered in the View
@@ -58,20 +57,14 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
     if (text && textTransform != null && textTransform !== 'none') {
         text = getTransformedText(text, textTransform);
     }
-    let lineHeightFactor = density;
+    let fontSizeFactor = density;
     if (!density) {
-        // if (!FONT_SIZE_FACTOR) {
-        //     FONT_SIZE_FACTOR = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext()) / Screen.mainScreen.scale;
-        // }
-        // that means not for canvaslabel
-        // density = FONT_SIZE_FACTOR;
         density = 1;
-        // console.log('text FONT_SIZE_FACTOR', FONT_SIZE_FACTOR, Screen.mainScreen.scale)
         verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
     }
     // this is only needed when used with Text/Label components. Not canvas
     if (scaleLineHeight) {
-        lineHeightFactor = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
+        fontSizeFactor = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
     }
     let backgroundColor = span.backgroundColor || parent?.backgroundColor;
     if (backgroundColor && !(backgroundColor instanceof Color)) {
@@ -91,19 +84,18 @@ function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, in
         text,
         html,
         fontFamily,
-        fontSize: fontSize ? fontSize * density : undefined,
-        fontSizeDip: true,
+        fontSize: fontSize ? fontSize * fontSizeFactor : undefined,
         fontWeight: fontWeight ? fontWeight + '' : undefined,
         fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
         textDecoration,
         textAlignment,
         tapIndex: span._tappable && index !== -1 ? index : undefined,
-        maxFontSize: maxFontSize ? maxFontSize * density : undefined,
+        maxFontSize: maxFontSize ? maxFontSize * fontSizeFactor : undefined,
         relativeSize: span.relativeSize,
         verticalTextAlignment,
         linkColor: aLinkColor,
-        lineHeight: lineHeight !== undefined ? lineHeight * lineHeightFactor : undefined,
-        letterSpacing: letterSpacing !== undefined ? letterSpacing * density : undefined,
+        lineHeight: lineHeight !== undefined ? lineHeight * fontSizeFactor : undefined,
+        letterSpacing: letterSpacing !== undefined ? letterSpacing * fontSizeFactor : undefined,
         color: color ? color.android : undefined,
         disableLinkDecoration: (span.linkDecoration && span.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,
         backgroundColor: backgroundColor ? backgroundColor.android : undefined
