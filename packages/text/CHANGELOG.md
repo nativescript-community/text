@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.22](https://github.com/nativescript-community/text/compare/v1.6.21...v1.6.22) (2026-02-18)
+
+**Note:** Version bump only for package @nativescript-community/text
+
 ## [1.6.21](https://github.com/nativescript-community/text/compare/v1.6.20...v1.6.21) (2026-02-09)
 
 ### Bug Fixes

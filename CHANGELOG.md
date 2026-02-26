@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.22](https://github.com/nativescript-community/text/compare/v1.6.21...v1.6.22) (2026-02-18)
+
+### Bug Fixes
+
+* lineHeight fix. Working with Labels and Canvas ([1b562bf](https://github.com/nativescript-community/text/commit/1b562bf1a9ac67e497e920efbe3df073d824b25c))
+
 ## [1.6.21](https://github.com/nativescript-community/text/compare/v1.6.20...v1.6.21) (2026-02-09)
 
 ### Bug Fixes
