@@ -7,6 +7,7 @@ export function installPlugin() {
     Vue.registerElement('CanvasView', () => require('@nativescript-community/ui-canvas').CanvasView);
     Vue.registerElement('CanvasLabel', () => require('@nativescript-community/ui-canvaslabel').CanvasLabel);
     Vue.registerElement('CSPan', () => require('@nativescript-community/ui-canvaslabel').Span);
+    Vue.registerElement('CGroup', () => require('@nativescript-community/ui-canvaslabel').Group);
     overrideSpanAndFormattedString();
 }
 
