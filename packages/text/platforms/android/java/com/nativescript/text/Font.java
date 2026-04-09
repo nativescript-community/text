@@ -519,6 +519,6 @@ public class Font {
     private static float FONT_SIZE_FACTOR = -1;
     public static float getFontSizeFactor(Context context) {
         return  android.util.TypedValue.applyDimension(
-            android.util.TypedValue.COMPLEX_UNIT_SP, 1, context.getResources().getDisplayMetrics());
+            android.util.TypedValue.COMPLEX_UNIT_SP, 1, context.getResources().getDisplayMetrics()) / context.getResources().getConfiguration().fontScale;
     }
 }

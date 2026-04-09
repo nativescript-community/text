@@ -1,138 +1,11 @@
-import { Color, CoreTypes, FormattedString, Screen, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
-import { Font, FontVariationSettings, FontWeightType } from '@nativescript/core/ui/styling/font';
-import { getTransformedText, textDecorationProperty } from '@nativescript/core/ui/text-base';
+import { Color, CoreTypes, FormattedString, Span, Utils, ViewBase, knownFolders, path, profile } from '@nativescript/core';
+import { Font, FontVariationSettings } from '@nativescript/core/ui/styling/font';
+import { getTransformedText } from '@nativescript/core/ui/text-base';
 import { ObjectSpans } from '.';
 import { LightFormattedString } from './index-common';
 export * from './index-common';
 
 type ClickableSpan = new (owner: Span) => android.text.style.ClickableSpan;
-
-export function adjustMinMaxFontScale(value, view) {
-    // Only for iOS
-}
-function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?, scaleLineHeight?) {
-    let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
-    formattedString.spans.forEach((s) => {
-        if (s.fontSize) {
-            maxFontSize = Math.max(maxFontSize, s.fontSize);
-        }
-    });
-    const options = [];
-    if (!parent) {
-        parent = formattedString;
-    }
-    formattedString.spans.forEach((s, index) => {
-        const spanDetails = typeof s === 'string' ? s : spanToNativeString(s, parent, parentView, maxFontSize, index, density, scaleLineHeight);
-        if (spanDetails) {
-            options.push(spanDetails);
-        }
-    });
-    return `[${options.join(',')}]`;
-}
-
-function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density = 1, scaleLineHeight = false) {
-    let text = span.text;
-    const html = span.html;
-    if ((!text && !html) || (span.visibility && span.visibility !== 'visible')) {
-        return null;
-    }
-    const textTransform = span.textTransform || parentView?.textTransform;
-    let fontWeight = span.fontWeight;
-    let fontStyle = span.fontStyle;
-    let fontFamily = span.fontFamily;
-    if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
-        fontFamily = fontFamily || parent?.fontFamily || parentView?.fontFamily;
-        fontWeight = fontWeight || parent?.fontWeight || parentView?.fontWeight;
-        fontStyle = fontStyle || parent?.fontStyle || parentView?.fontStyle;
-    }
-    const textDecoration = span?.textDecoration || parent?.textDecoration || parentView?.textDecoration;
-    const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
-    let verticalTextAlignment = span.verticalTextAlignment || parent?.verticalTextAlignment || parentView?.verticalTextAlignment;
-
-    // We CANT use parent verticalTextAlignment. Else it would break line height
-    // for multiple line text you want centered in the View
-    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
-    //     verticalTextAlignment = parentView?.verticalTextAlignment;
-    // }
-    if (text && textTransform != null && textTransform !== 'none') {
-        text = getTransformedText(text, textTransform);
-    }
-    let fontSizeFactor = density;
-    if (!density) {
-        density = 1;
-        verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
-    }
-    // this is only needed when used with Text/Label components. Not canvas
-    if (scaleLineHeight) {
-        fontSizeFactor = com.nativescript.text.Font.getFontSizeFactor(Utils.android.getApplicationContext());
-    }
-    let backgroundColor = span.backgroundColor || parent?.backgroundColor;
-    if (backgroundColor && !(backgroundColor instanceof Color)) {
-        backgroundColor = new Color(backgroundColor);
-    }
-    let color = span.color || parent?.color;
-    if (color && !(color instanceof Color)) {
-        color = new Color(color);
-    }
-    const lineHeight = span.lineHeight || parent?.lineHeight;
-    const fontSize = span.fontSize || parent?.fontSize;
-    const letterSpacing = span.letterSpacing || parent?.letterSpacing;
-
-    const linkColor = span.linkColor || parentView?.['linkColor'];
-    const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : undefined;
-    return JSON.stringify({
-        text,
-        html,
-        fontFamily,
-        fontSize: fontSize ? fontSize * fontSizeFactor : undefined,
-        fontWeight: fontWeight ? fontWeight + '' : undefined,
-        fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
-        textDecoration,
-        textAlignment,
-        tapIndex: span._tappable && index !== -1 ? index : undefined,
-        maxFontSize: maxFontSize ? maxFontSize * fontSizeFactor : undefined,
-        relativeSize: span.relativeSize,
-        verticalTextAlignment,
-        linkColor: aLinkColor,
-        lineHeight: lineHeight !== undefined ? lineHeight * fontSizeFactor : undefined,
-        letterSpacing: letterSpacing !== undefined ? letterSpacing * fontSizeFactor : undefined,
-        color: color ? color.android : undefined,
-        disableLinkDecoration: (span.linkDecoration && span.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,
-        backgroundColor: backgroundColor ? backgroundColor.android : undefined
-    });
-}
-
-let ClickableSpan: ClickableSpan;
-
-function initializeClickableSpan(): void {
-    if (ClickableSpan) {
-        return;
-    }
-
-    @NativeClass
-    class ClickableSpanImpl extends android.text.style.ClickableSpan {
-        owner: WeakRef<Span>;
-
-        constructor(owner: Span) {
-            super();
-            this.owner = new WeakRef(owner);
-            return global.__native(this);
-        }
-        onClick(view: android.view.View): void {
-            const owner = this.owner?.get();
-            if (owner) {
-                owner._emit(Span.linkTapEvent);
-            }
-            view.clearFocus();
-            view.invalidate();
-        }
-        updateDrawState(tp: android.text.TextPaint): void {
-            // don't style as link
-        }
-    }
-
-    ClickableSpan = ClickableSpanImpl;
-}
 
 export const typefaceCache: { [k: string]: android.graphics.Typeface } = {};
 let context: android.content.Context;
@@ -220,6 +93,136 @@ interface AttributedStringData {
     linkColor?: string | Color;
     linkDecoration?: string;
     textAlignment?: number | CoreTypes.TextAlignmentType;
+}
+
+export function adjustMinMaxFontScale(value, view) {
+    // Only for iOS
+}
+function formattedStringToNativeString(formattedString, parent?, parentView = formattedString.parent, density?, scaleLineHeight?) {
+    let maxFontSize = formattedString?.fontSize || parentView?.fontSize || 0;
+    formattedString.spans.forEach((s) => {
+        if (s.fontSize) {
+            maxFontSize = Math.max(maxFontSize, s.fontSize);
+        }
+    });
+    const options = [];
+    if (!parent) {
+        parent = formattedString;
+    }
+    formattedString.spans.forEach((s, index) => {
+        const spanDetails = typeof s === 'string' ? s : spanToNativeString(s, parent, parentView, maxFontSize, index, density, scaleLineHeight);
+        if (spanDetails) {
+            options.push(spanDetails);
+        }
+    });
+    return `[${options.join(',')}]`;
+}
+
+function spanToNativeString(span, parent: any, parentView: any, maxFontSize?, index = -1, density = 1, scaleLineHeight = false) {
+    if (!context) {
+        init();
+    }
+    let text = span.text;
+    const html = span.html;
+    if ((!text && !html) || (span.visibility && span.visibility !== 'visible')) {
+        return null;
+    }
+    const textTransform = span.textTransform || parentView?.textTransform;
+    let fontWeight = span.fontWeight;
+    let fontStyle = span.fontStyle;
+    let fontFamily = span.fontFamily;
+    if (fontFamily || (fontWeight && fontWeight !== 'normal') || fontStyle) {
+        fontFamily = fontFamily || parent?.fontFamily || parentView?.fontFamily;
+        fontWeight = fontWeight || parent?.fontWeight || parentView?.fontWeight;
+        fontStyle = fontStyle || parent?.fontStyle || parentView?.fontStyle;
+    }
+    const textDecoration = span?.textDecoration || parent?.textDecoration || parentView?.textDecoration;
+    const textAlignment = span.textAlignment || parent?.textAlignment || parentView?.textAlignment;
+    let verticalTextAlignment = span.verticalTextAlignment || parent?.verticalTextAlignment || parentView?.verticalTextAlignment;
+
+    // We CANT use parent verticalTextAlignment. Else it would break line height
+    // for multiple line text you want centered in the View
+    // if (!verticalTextAlignment || verticalTextAlignment === 'stretch') {
+    //     verticalTextAlignment = parentView?.verticalTextAlignment;
+    // }
+    if (text && textTransform != null && textTransform !== 'none') {
+        text = getTransformedText(text, textTransform);
+    }
+    let fontSizeFactor = density;
+    if (!density) {
+        density = 1;
+        verticalTextAlignment = span.verticalAlignment || parent?.verticalAlignment;
+    }
+    // this is only needed when used with Text/Label components. Not canvas
+    if (scaleLineHeight) {
+        fontSizeFactor = com.nativescript.text.Font.getFontSizeFactor(context);
+    }
+    let backgroundColor = span.backgroundColor || parent?.backgroundColor;
+    if (backgroundColor && !(backgroundColor instanceof Color)) {
+        backgroundColor = new Color(backgroundColor);
+    }
+    let color = span.color || parent?.color;
+    if (color && !(color instanceof Color)) {
+        color = new Color(color);
+    }
+    const lineHeight = span.lineHeight || parent?.lineHeight;
+    const fontSize = span.fontSize || parent?.fontSize;
+    const letterSpacing = span.letterSpacing || parent?.letterSpacing;
+
+    const linkColor = span.linkColor || parentView?.['linkColor'];
+    const aLinkColor = linkColor ? (linkColor instanceof Color ? linkColor : new Color(linkColor)).android : undefined;
+    return JSON.stringify({
+        text,
+        html,
+        fontFamily,
+        fontSize: fontSize ? fontSize * fontSizeFactor : undefined,
+        fontWeight: fontWeight ? fontWeight + '' : undefined,
+        fontStyle: fontStyle !== 'normal' ? fontStyle : undefined,
+        textDecoration,
+        textAlignment,
+        tapIndex: span._tappable && index !== -1 ? index : undefined,
+        maxFontSize: maxFontSize ? maxFontSize * fontSizeFactor : undefined,
+        relativeSize: span.relativeSize,
+        verticalTextAlignment,
+        linkColor: aLinkColor,
+        lineHeight: lineHeight !== undefined ? lineHeight * fontSizeFactor : undefined,
+        letterSpacing: letterSpacing !== undefined ? letterSpacing * fontSizeFactor : undefined,
+        color: color ? color.android : undefined,
+        disableLinkDecoration: (span.linkDecoration && span.linkDecoration !== 'underline') || parentView?.['linkUnderline'] === false,
+        backgroundColor: backgroundColor ? backgroundColor.android : undefined
+    });
+}
+
+let ClickableSpan: ClickableSpan;
+
+function initializeClickableSpan(): void {
+    if (ClickableSpan) {
+        return;
+    }
+
+    @NativeClass
+    class ClickableSpanImpl extends android.text.style.ClickableSpan {
+        owner: WeakRef<Span>;
+
+        constructor(owner: Span) {
+            super();
+            this.owner = new WeakRef(owner);
+            return global.__native(this);
+        }
+        onClick(view: android.view.View): void {
+            const owner = this.owner?.get();
+            if (owner) {
+                owner._emit(Span.linkTapEvent);
+            }
+            view.clearFocus();
+            view.invalidate();
+        }
+        updateDrawState(tp: android.text.TextPaint): void {
+            // don't style as link
+        }
+    }
+
+    ClickableSpan = ClickableSpanImpl;
 }
 
 export function createNativeAttributedString(
