@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.24](https://github.com/nativescript-community/text/compare/v1.6.23...v1.6.24) (2026-04-09)
+
+### Bug Fixes
+
+* **android:** font scale fix for spans ([a59c052](https://github.com/nativescript-community/text/commit/a59c0529042892636b248e45af45a648b3ed6915))
+
 ## [1.6.23](https://github.com/nativescript-community/text/compare/v1.6.22...v1.6.23) (2026-02-26)
 
 ### Bug Fixes
