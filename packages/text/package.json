@@ -3,7 +3,7 @@
     "version": "1.6.23",
     "description": "Expands the capabilities of NativeScript's text property.",
     "main": "./index",
-    "sideEffects": false,
+    "sideEffects": ["./index-common.js", "./index.ios.js", "./index.android.js"],
     "typings": "./index.d.ts",
     "nativescript": {
         "platforms": {
