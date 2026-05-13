@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.25](https://github.com/nativescript-community/text/compare/v1.6.24...v1.6.25) (2026-05-13)
+
+### Bug Fixes
+
+* sideEffects fix ([7919483](https://github.com/nativescript-community/text/commit/79194831dc4927ecc1b1d09fe61acf98b07f3c95))
+
 ## [1.6.24](https://github.com/nativescript-community/text/compare/v1.6.23...v1.6.24) (2026-04-09)
 
 ### Bug Fixes
