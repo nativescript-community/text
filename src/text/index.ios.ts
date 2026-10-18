@@ -11,7 +11,14 @@ export function disableIOSDTCoreText() {
 export function usingIOSDTCoreText() {
     return iOSUseDTCoreText;
 }
-DTCoreTextFontDescriptor.asyncPreloadFontLookupTable();
+let dtCoreTextFontsPreloaded = false;
+// Enumerating all system fonts at import crashed on iOS 27 during startup, so wait for the first HTML conversion.
+function preloadDTCoreTextFonts() {
+    if (!dtCoreTextFontsPreloaded) {
+        dtCoreTextFontsPreloaded = true;
+        DTCoreTextFontDescriptor.asyncPreloadFontLookupTable();
+    }
+}
 export function init() {}
 
 function _createNativeAttributedString({
@@ -52,6 +59,9 @@ function _createNativeAttributedString({
               .map((s) => `'${s}'`)
               .join(',')
         : null;
+    if (iOSUseDTCoreText) {
+        preloadDTCoreTextFonts();
+    }
     if (!trueFontFamily) {
         if (iOSUseDTCoreText) {
         } else {
